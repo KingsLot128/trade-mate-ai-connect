@@ -1,20 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseUrl = 'https://yahcbigzuknluctdoaba.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhaGNiaWd6dWtubHVjdGRvYWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MjQ1NTUsImV4cCI6MjA2NjEwMDU1NX0.vmHLbS-oaN0AJtk6d5Ow__pjj76bC0P_BU9FpqnDyIA'
 
-if (!supabaseUrl) {
-  console.error('Missing VITE_SUPABASE_URL environment variable')
-}
-
-if (!supabaseAnonKey) {
-  console.error('Missing VITE_SUPABASE_ANON_KEY environment variable')
-}
-
-// Create a mock client if environment variables are missing to prevent app crash
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : createClient('https://placeholder.supabase.co', 'placeholder-key')
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export type Database = {
   public: {

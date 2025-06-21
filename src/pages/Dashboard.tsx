@@ -5,6 +5,7 @@ import LoginForm from '@/components/auth/LoginForm';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import DashboardOverview from '@/components/dashboard/DashboardOverview';
 import CallsManager from '@/components/dashboard/CallsManager';
+import SetupGuide from '@/components/SetupGuide';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -28,6 +29,8 @@ const Dashboard = () => {
         return <DashboardOverview />;
       case 'calls':
         return <CallsManager />;
+      case 'setup':
+        return <SetupGuide />;
       case 'customers':
         return <div>Customers Management Coming Soon</div>;
       case 'appointments':
