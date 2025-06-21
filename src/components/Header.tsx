@@ -2,8 +2,11 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-4">
@@ -19,8 +22,11 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <Button variant="ghost">Features</Button>
             <Button variant="ghost">Pricing</Button>
-            <Button className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
-              Start Free Trial
+            <Button 
+              className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
+              onClick={() => navigate('/dashboard')}
+            >
+              Get Started
             </Button>
           </div>
         </nav>

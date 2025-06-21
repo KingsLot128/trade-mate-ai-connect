@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
 
 const CTA = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-green-600 text-white">
       <div className="container mx-auto max-w-4xl text-center">
@@ -13,11 +16,20 @@ const CTA = () => {
           Join hundreds of trade professionals who've increased their revenue with TradeMate AI
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-6">
-            Start Your Free 14-Day Trial
+          <Button 
+            size="lg" 
+            className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-6"
+            onClick={() => navigate('/dashboard')}
+          >
+            Start Your Free Trial
           </Button>
-          <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-6">
-            Schedule a Demo
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-6"
+            onClick={() => navigate('/dashboard')}
+          >
+            View Demo
           </Button>
         </div>
         <p className="text-sm mt-4 opacity-75">No credit card required • Setup in under 5 minutes</p>
