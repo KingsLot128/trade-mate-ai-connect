@@ -32,7 +32,5 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           protocol: ftp
           port: 21
-          local-dir: dist
+          local-dir: dist/
           server-dir: /public_html
-          git-ftp-args: --insecure
-
