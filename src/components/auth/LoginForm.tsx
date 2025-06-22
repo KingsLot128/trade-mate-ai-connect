@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +29,7 @@ const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await signUp(email, password, businessName);
+      await signUp(email, password, { businessName });
     } catch (error) {
       console.error('Sign up error:', error);
     } finally {

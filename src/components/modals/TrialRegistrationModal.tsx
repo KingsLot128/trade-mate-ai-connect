@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -91,9 +90,9 @@ const TrialRegistrationModal: React.FC<TrialRegistrationModalProps> = ({ open, o
       
       setStep(3);
       
-      // Track conversion event
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'sign_up', {
+      // Track conversion event (only if gtag is available)
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'sign_up', {
           method: 'email',
           business_type: formData.industry
         });

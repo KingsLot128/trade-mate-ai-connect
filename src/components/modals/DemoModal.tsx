@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -60,9 +59,9 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onOpenChange }) => {
         }
       }
 
-      // Track the lead capture event
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'generate_lead', {
+      // Track the lead capture event (only if gtag is available)
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'generate_lead', {
           event_category: 'Demo',
           event_label: 'Email Capture',
           value: 1
