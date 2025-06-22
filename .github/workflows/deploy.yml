@@ -27,13 +27,12 @@ jobs:
       - name: Build for production
         run: npm run build
 
-      # 4. Deploy `dist/` via FTP
-      - name: Deploy to Hostinger via FTP
+           - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: ${{82.197.84.48}}
-          username: ${{u618717242.trademateai.summitspark.net}}
-          password: ${{Joyjoseph1!}}
+          server: ${{ 82.197.84.48 }}
+          username: ${{ u618717242.trademateai.summitspark.net }}
+          password: ${{ Joyjoseph1 }}
           protocol: ftp
           port: 21
           local-dir: dist
