@@ -1,0 +1,41 @@
+name: Build & Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Pull down your code
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # 2. Set up Node
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. Install deps & build
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for production
+        run: npm run build
+
+      # 4. Deploy `dist/` via FTP
+      - name: Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ 82.197.84.48 }}
+          username: ${{ u618717242.trademateai.summitspark.net }}
+          password: ${{ Joyjoseph1! }}
+          protocol: ftp
+          port: 21
+          local-dir: dist
+          server-dir: /public_html
+          git-ftp-args: --insecure
