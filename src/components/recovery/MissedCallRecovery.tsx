@@ -189,7 +189,7 @@ const MissedCallRecovery = () => {
                       <PhoneMissed className="h-6 w-6 text-red-600" />
                     </div>
                     <div>
-                      <div className="font-medium">{formatPh neNumber(call.phone_number)}</div>
+                      <div className="font-medium">{formatPhoneNumber(call.phone_number)}</div>
                       <div className="text-sm text-gray-600 flex items-center">
                         <Clock className="h-3 w-3 mr-1" />
                         {new Date(call.created_at).toLocaleString()}
