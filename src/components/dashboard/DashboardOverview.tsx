@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Users, Calendar, TrendingUp, PhoneMissed, PhoneCall } from "lucide-react";
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import PWAInstall from '@/components/PWAInstall';
 
 interface DashboardStats {
   totalCalls: number;
@@ -141,6 +141,8 @@ const DashboardOverview = () => {
 
   return (
     <div className="space-y-6">
+      <PWAInstall />
+      
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <p className="text-muted-foreground">
