@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -6,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isConfigured: boolean;
   signUp: (email: string, password: string, businessName?: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -24,6 +26,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isConfigured, setIsConfigured] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,9 +36,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (!supabaseUrl || !supabaseAnonKey) {
       console.warn('Supabase environment variables not configured. Running in demo mode.');
+      setIsConfigured(false);
       setLoading(false);
       return;
     }
+
+    setIsConfigured(true);
 
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -53,12 +59,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string, businessName?: string) => {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    if (!supabaseUrl) {
+    if (!isConfigured) {
+      // Demo mode - simulate successful signup
       toast({
-        title: "Configuration Error",
-        description: "Supabase is not configured. Please set up your environment variables.",
-        variant: "destructive",
+        title: "Demo Mode",
+        description: "This is a demo. In production, you would receive a confirmation email.",
       });
       return;
     }
@@ -96,12 +101,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    if (!supabaseUrl) {
+    if (!isConfigured) {
+      // Demo mode - simulate successful login
       toast({
-        title: "Configuration Error",
-        description: "Supabase is not configured. Please set up your environment variables.",
-        variant: "destructive",
+        title: "Demo Mode",
+        description: "This is a demo. Login functionality requires backend configuration.",
       });
       return;
     }
@@ -127,12 +131,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    if (!supabaseUrl) {
+    if (!isConfigured) {
       toast({
-        title: "Configuration Error",
-        description: "Supabase is not configured. Please set up your environment variables.",
-        variant: "destructive",
+        title: "Demo Mode",
+        description: "This is a demo. Sign out functionality requires backend configuration.",
       });
       return;
     }
@@ -157,6 +159,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     user,
     loading,
+    isConfigured,
     signUp,
     signIn,
     signOut,
