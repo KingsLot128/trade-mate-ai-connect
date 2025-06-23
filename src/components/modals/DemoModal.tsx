@@ -50,7 +50,8 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onOpenChange }) => {
             name: name || null,
             company: company || null,
             requested_at: new Date().toISOString(),
-            status: 'pending'
+            status: 'pending',
+            notification_email: 'info@summitspark.net'
           });
 
         if (error) {
@@ -68,7 +69,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onOpenChange }) => {
         });
       }
 
-      console.log('Demo request captured:', { email, name, company });
+      console.log('Demo request captured:', { email, name, company, notificationEmail: 'info@summitspark.net' });
       setShowVideo(true);
       
       toast({

@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Phone } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -9,9 +8,12 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
-                <Phone className="h-5 w-5 text-white" />
-              </div>
+              <img 
+                src="/trademate-logo.svg" 
+                alt="TradeMate AI Logo" 
+                className="w-8 h-8"
+                loading="lazy"
+              />
               <span className="text-xl font-bold">TradeMate AI</span>
             </div>
             <p className="text-gray-400 text-sm">
@@ -35,7 +37,7 @@ const Footer = () => {
               <li><a href="#" className="hover:text-white transition-colors">About</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="mailto:info@summitspark.net" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
           
