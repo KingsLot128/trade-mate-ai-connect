@@ -1,12 +1,14 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Loader2, CheckCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface TrialRegistrationModalProps {
   open: boolean;
@@ -90,7 +92,6 @@ const TrialRegistrationModal: React.FC<TrialRegistrationModalProps> = ({ open, o
       
       setStep(3);
       
-      // Track conversion event (only if gtag is available)
       if (typeof window !== 'undefined' && (window as any).gtag) {
         (window as any).gtag('event', 'sign_up', {
           method: 'email',
@@ -129,6 +130,15 @@ const TrialRegistrationModal: React.FC<TrialRegistrationModalProps> = ({ open, o
       resetForm();
     }
     onOpenChange(open);
+  };
+
+  const getProgress = () => {
+    switch (step) {
+      case 1: return 33;
+      case 2: return 66;
+      case 3: return 100;
+      default: return 0;
+    }
   };
 
   const renderStep = () => {
@@ -184,7 +194,8 @@ const TrialRegistrationModal: React.FC<TrialRegistrationModalProps> = ({ open, o
               className="w-full bg-gradient-to-r from-blue-600 to-green-600"
               disabled={!validateStep1()}
             >
-              Continue to Account Setup
+              Continue
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
         );
@@ -210,7 +221,6 @@ const TrialRegistrationModal: React.FC<TrialRegistrationModalProps> = ({ open, o
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => {
-                  // Allow only numbers, spaces, dashes, parentheses, and plus
                   const cleanedValue = e.target.value.replace(/[^\d\s\-\(\)\+]/g, '');
                   setFormData({...formData, phone: cleanedValue});
                 }}
@@ -356,9 +366,12 @@ const TrialRegistrationModal: React.FC<TrialRegistrationModalProps> = ({ open, o
           <DialogTitle>{getStepTitle()}</DialogTitle>
           <DialogDescription>{getStepDescription()}</DialogDescription>
           {step < 3 && (
-            <div className="flex space-x-2 mt-4">
-              <div className={`h-2 w-full rounded-full ${step >= 1 ? 'bg-blue-600' : 'bg-gray-200'}`} />
-              <div className={`h-2 w-full rounded-full ${step >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`} />
+            <div className="space-y-2 mt-4">
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>Step {step} of 2</span>
+                <span>{getProgress()}% complete</span>
+              </div>
+              <Progress value={getProgress()} className="w-full" />
             </div>
           )}
         </DialogHeader>

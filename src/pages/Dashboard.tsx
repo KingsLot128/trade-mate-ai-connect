@@ -11,6 +11,10 @@ import SetupWizard from '@/components/onboarding/SetupWizard';
 import SmartCallHandler from '@/components/ai/SmartCallHandler';
 import MissedCallRecovery from '@/components/recovery/MissedCallRecovery';
 import RevenueTracker from '@/components/revenue/RevenueTracker';
+import CustomerManager from '@/components/crm/CustomerManager';
+import InventoryManager from '@/components/inventory/InventoryManager';
+import TeamManager from '@/components/team/TeamManager';
+import ScheduleManager from '@/components/scheduling/ScheduleManager';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -35,7 +39,6 @@ const Dashboard = () => {
         .eq('id', user.id)
         .single();
 
-      // If user doesn't have business info, show setup wizard
       if (!profile?.business_name || !profile?.industry) {
         setIsFirstTime(true);
       }
@@ -82,18 +85,16 @@ const Dashboard = () => {
       case 'revenue':
         return <RevenueTracker />;
       case 'customers':
-        return <div className="text-center py-12">
-          <h3 className="text-xl font-semibold mb-2">Customer Management</h3>
-          <p className="text-gray-600">Advanced customer management features coming soon...</p>
-        </div>;
+        return <CustomerManager />;
       case 'appointments':
-        return <div className="text-center py-12">
-          <h3 className="text-xl font-semibold mb-2">Appointment Scheduling</h3>
-          <p className="text-gray-600">Integrated calendar and scheduling features coming soon...</p>
-        </div>;
+        return <ScheduleManager />;
+      case 'inventory':
+        return <InventoryManager />;
+      case 'team':
+        return <TeamManager />;
       case 'settings':
         return <div className="text-center py-12">
-          <h3 className="text-xl font-semibel mb-2">Business Settings</h3>
+          <h3 className="text-xl font-semibold mb-2">Business Settings</h3>
           <p className="text-gray-600">Customize your AI assistant and business preferences...</p>
         </div>;
       default:
