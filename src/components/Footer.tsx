@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -26,30 +27,32 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Product</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="/features" className="hover:text-white transition-colors">Features</a></li>
-              <li><a href="/pricing" className="hover:text-white transition-colors">Pricing</a></li>
-              <li><a href="/dashboard" className="hover:text-white transition-colors">Dashboard</a></li>
-              <li><a href="/" className="hover:text-white transition-colors">Demo</a></li>
+              <li><Link to="/features" className="hover:text-white transition-colors">Features</Link></li>
+              <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link to="/dashboard" className="hover:text-white transition-colors">Dashboard</Link></li>
+              <li><Link to="/" className="hover:text-white transition-colors">Demo</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="/contact" className="hover:text-white transition-colors">Contact Us</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Support</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Enterprise</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Partnerships</a></li>
+              <li><Link to="/company" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link to="/support" className="hover:text-white transition-colors">Support</Link></li>
+              <li><Link to="/enterprise" className="hover:text-white transition-colors">Enterprise</Link></li>
+              <li><Link to="/partnerships" className="hover:text-white transition-colors">Partnerships</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-semibold mb-4">Resources</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="/contact" className="hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Security</a></li>
+              <li><Link to="/resources" className="hover:text-white transition-colors">Resources</Link></li>
+              <li><Link to="/help-center" className="hover:text-white transition-colors">Help Center</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/security" className="hover:text-white transition-colors">Security</Link></li>
             </ul>
           </div>
         </div>

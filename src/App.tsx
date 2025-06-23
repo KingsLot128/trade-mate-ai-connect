@@ -10,6 +10,15 @@ import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
+import Company from "./pages/Company";
+import Support from "./pages/Support";
+import Enterprise from "./pages/Enterprise";
+import Partnerships from "./pages/Partnerships";
+import Resources from "./pages/Resources";
+import HelpCenter from "./pages/HelpCenter";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Security from "./pages/Security";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +36,15 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/company" element={<Company />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/enterprise" element={<Enterprise />} />
+            <Route path="/partnerships" element={<Partnerships />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/security" element={<Security />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
