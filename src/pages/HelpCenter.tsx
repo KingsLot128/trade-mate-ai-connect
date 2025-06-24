@@ -1,14 +1,15 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Search, BookOpen, Play, Wrench, MessageCircle, Phone, Brain, Users, Calendar, DollarSign, ChevronRight, ExternalLink, Menu, X } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link } from 'react-router-dom';
+import { BookOpen, Play, Wrench, MessageCircle, Brain, Users, Calendar, DollarSign } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import HelpCenterSearchBar from '../components/help/HelpCenterSearchBar';
+import CategoryNavigation from '../components/help/CategoryNavigation';
+import ArticleCard from '../components/help/ArticleCard';
+import QuickActions from '../components/help/QuickActions';
+import AdditionalResources from '../components/help/AdditionalResources';
+import ContactSection from '../components/help/ContactSection';
 
 const HelpCenter = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -137,30 +138,6 @@ const HelpCenter = () => {
     }
   ];
 
-  const quickActions = [
-    {
-      title: "Start Free Trial",
-      description: "Get started with TradeMate AI today",
-      icon: Play,
-      action: "signup",
-      color: "bg-blue-50 text-blue-700 border-blue-200"
-    },
-    {
-      title: "Book a Demo",
-      description: "See TradeMate AI in action",
-      icon: Calendar,
-      action: "demo",
-      color: "bg-green-50 text-green-700 border-green-200"
-    },
-    {
-      title: "Contact Support",
-      description: "Get help from our team",
-      icon: MessageCircle,
-      action: "support",
-      color: "bg-purple-50 text-purple-700 border-purple-200"
-    }
-  ];
-
   const filteredArticles = articles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          article.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -205,111 +182,42 @@ const HelpCenter = () => {
         
         <main className="container mx-auto px-4 py-8 md:py-16">
           <div className="max-w-6xl mx-auto">
-            {/* Hero Section - Mobile Optimized */}
+            {/* Hero Section */}
             <div className="text-center mb-8 md:mb-12">
               <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-4">TradeMate AI Help Center</h1>
               <p className="text-lg md:text-xl text-gray-600 mb-6 md:mb-8 px-2">
                 Everything you need to maximize your AI-powered trade business
               </p>
               
-              {/* Search Bar - Mobile Optimized */}
-              <div className="max-w-2xl mx-auto mb-6 md:mb-8 px-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 md:h-5 md:w-5" />
-                  <Input
-                    type="text"
-                    placeholder="Search help articles..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-4 py-2 md:py-3 text-base md:text-lg"
-                  />
-                </div>
-              </div>
+              <HelpCenterSearchBar 
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+              />
 
-              {/* Quick Actions - Mobile Stack */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-8 md:mb-12">
-                {quickActions.map((action, index) => {
-                  const Icon = action.icon;
-                  return (
-                    <Card key={index} className={`${action.color} border hover:shadow-md transition-shadow cursor-pointer`}>
-                      <CardContent className="flex items-center p-3 md:p-4">
-                        <Icon className="h-6 w-6 md:h-8 md:w-8 mr-3 flex-shrink-0" />
-                        <div className="text-left">
-                          <h3 className="font-semibold text-sm md:text-base">{action.title}</h3>
-                          <p className="text-xs md:text-sm opacity-80">{action.description}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
+              <QuickActions />
             </div>
 
-            {/* Category Navigation - Mobile Optimized */}
-            <div className="mb-6 md:mb-8">
-              {/* Mobile Category Toggle */}
-              <div className="md:hidden mb-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowMobileCategories(!showMobileCategories)}
-                  className="w-full flex items-center justify-between"
-                >
-                  <span>Categories: {categories.find(c => c.id === selectedCategory)?.name}</span>
-                  {showMobileCategories ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-                </Button>
-              </div>
+            <CategoryNavigation
+              categories={categories}
+              selectedCategory={selectedCategory}
+              showMobileCategories={showMobileCategories}
+              onCategorySelect={setSelectedCategory}
+              onToggleMobileCategories={() => setShowMobileCategories(!showMobileCategories)}
+            />
 
-              {/* Category Buttons */}
-              <div className={`${showMobileCategories ? 'flex' : 'hidden'} md:flex flex-wrap gap-2 justify-center`}>
-                {categories.map((category) => {
-                  const Icon = category.icon;
-                  return (
-                    <Button
-                      key={category.id}
-                      variant={selectedCategory === category.id ? "default" : "outline"}
-                      onClick={() => {
-                        setSelectedCategory(category.id);
-                        setShowMobileCategories(false);
-                      }}
-                      className="flex items-center gap-2 text-xs md:text-sm px-2 md:px-4 py-1 md:py-2"
-                    >
-                      <Icon className="h-3 w-3 md:h-4 md:w-4" />
-                      <span className="hidden sm:inline">{category.name}</span>
-                      <span className="sm:hidden">{category.name.split(' ')[0]}</span>
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Featured Articles - Mobile Optimized */}
+            {/* Featured Articles */}
             {selectedCategory === 'all' && (
               <div className="mb-8 md:mb-12">
                 <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Featured Guides</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   {featuredArticles.map((article) => (
-                    <Card key={article.id} className="hover:shadow-lg transition-shadow cursor-pointer border-blue-200 bg-blue-50">
-                      <CardHeader className="pb-2 md:pb-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <Badge className="bg-blue-100 text-blue-800 text-xs">Featured</Badge>
-                          <span className="text-xs md:text-sm text-gray-500">{article.readTime}</span>
-                        </div>
-                        <CardTitle className="text-blue-900 text-base md:text-lg leading-tight">{article.title}</CardTitle>
-                        <CardDescription className="text-blue-700 text-sm md:text-base">{article.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs md:text-sm text-blue-600 capitalize">{article.category.replace('-', ' ')}</span>
-                          <ChevronRight className="h-4 w-4 text-blue-600" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <ArticleCard key={article.id} article={article} isFeatured />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* All Articles - Mobile Optimized */}
+            {/* All Articles */}
             <div className="mb-8 md:mb-12">
               <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">
                 {selectedCategory === 'all' ? 'All Articles' : categories.find(c => c.id === selectedCategory)?.name}
@@ -327,98 +235,14 @@ const HelpCenter = () => {
               ) : (
                 <div className="space-y-3 md:space-y-4">
                   {filteredArticles.map((article) => (
-                    <Card key={article.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                      <CardContent className="p-4 md:p-6">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 pr-4">
-                            <div className="flex items-start gap-2 md:gap-3 mb-2">
-                              <h3 className="text-base md:text-lg font-semibold text-gray-900 leading-tight">{article.title}</h3>
-                              {article.featured && (
-                                <Badge className="bg-blue-100 text-blue-800 text-xs flex-shrink-0">Featured</Badge>
-                              )}
-                            </div>
-                            <p className="text-sm md:text-base text-gray-600 mb-2 line-clamp-2">{article.description}</p>
-                            <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm text-gray-500">
-                              <span className="capitalize">{article.category.replace('-', ' ')}</span>
-                              <span>•</span>
-                              <span>{article.readTime}</span>
-                            </div>
-                          </div>
-                          <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-gray-400 flex-shrink-0" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <ArticleCard key={article.id} article={article} />
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Additional Resources - Mobile Optimized */}
-            <div className="border-t pt-8 md:pt-12">
-              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Additional Resources</h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-                {[
-                  { icon: Play, title: "Video Tutorials", desc: "Step-by-step video guides", color: "text-blue-600" },
-                  { icon: Users, title: "Community Forum", desc: "Connect with other users", color: "text-green-600" },
-                  { icon: BookOpen, title: "API Documentation", desc: "Technical integration guides", color: "text-purple-600" },
-                  { icon: MessageCircle, title: "Live Chat", desc: "Get instant support", color: "text-orange-600" }
-                ].map((resource, index) => {
-                  const Icon = resource.icon;
-                  return (
-                    <Card key={index} className="text-center hover:shadow-md transition-shadow">
-                      <CardContent className="p-3 md:p-6">
-                        <Icon className={`h-6 w-6 md:h-8 md:w-8 ${resource.color} mx-auto mb-2 md:mb-3`} />
-                        <h3 className="font-semibold text-sm md:text-base mb-1 md:mb-2">{resource.title}</h3>
-                        <p className="text-xs md:text-sm text-gray-600 mb-2 md:mb-4 line-clamp-2">{resource.desc}</p>
-                        {resource.title === "Live Chat" ? (
-                          <Link to="/support">
-                            <Button variant="outline" size="sm" className="w-full text-xs md:text-sm">
-                              <MessageCircle className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                              <span className="hidden sm:inline">Chat Now</span>
-                              <span className="sm:hidden">Chat</span>
-                            </Button>
-                          </Link>
-                        ) : (
-                          <Button variant="outline" size="sm" className="w-full text-xs md:text-sm">
-                            <ExternalLink className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                            <span className="hidden sm:inline">
-                              {resource.title === "Video Tutorials" ? "Watch Now" : 
-                               resource.title === "Community Forum" ? "Join Forum" : "View Docs"}
-                            </span>
-                            <span className="sm:hidden">
-                              {resource.title === "Video Tutorials" ? "Watch" : 
-                               resource.title === "Community Forum" ? "Join" : "View"}
-                            </span>
-                          </Button>
-                        )}
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Contact Section - Mobile Optimized */}
-            <div className="mt-8 md:mt-12 text-center bg-white rounded-xl p-6 md:p-8 shadow-sm border">
-              <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">Still Need Help?</h2>
-              <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
-                Our support team is here to help you succeed with TradeMate AI
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-                <Link to="/support">
-                  <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Contact Support
-                  </Button>
-                </Link>
-                <a href="mailto:support@summitspark.net">
-                  <Button variant="outline" className="w-full sm:w-auto">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Email Us
-                  </Button>
-                </a>
-              </div>
-            </div>
+            <AdditionalResources />
+            <ContactSection />
           </div>
         </main>
         
