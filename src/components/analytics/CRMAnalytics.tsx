@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +14,11 @@ interface CRMMetrics {
   topLeads: Array<{ name: string; score: number; company: string }>;
   dealsByStage: Array<{ stage: string; count: number; value: number }>;
   monthlyTrends: Array<{ month: string; contacts: number; deals: number }>;
+}
+
+interface StageData {
+  count: number;
+  value: number;
 }
 
 const CRMAnalytics = () => {
@@ -67,7 +71,7 @@ const CRMAnalytics = () => {
         })) || [];
 
       // Deals by stage
-      const stageGroups = deals?.reduce((acc, deal) => {
+      const stageGroups = deals?.reduce((acc: Record<string, StageData>, deal) => {
         const stage = deal.stage || 'unknown';
         if (!acc[stage]) {
           acc[stage] = { count: 0, value: 0 };
@@ -75,9 +79,9 @@ const CRMAnalytics = () => {
         acc[stage].count++;
         acc[stage].value += deal.amount || 0;
         return acc;
-      }, {} as Record<string, { count: number; value: number }>) || {};
+      }, {} as Record<string, StageData>) || {};
 
-      const dealsByStage = Object.entries(stageGroups).map(([stage, data]) => ({
+      const dealsByStage = Object.entries(stageGroups).map(([stage, data]: [string, StageData]) => ({
         stage: stage.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
         count: data.count,
         value: data.value
