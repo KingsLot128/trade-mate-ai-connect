@@ -22,8 +22,8 @@ const Pricing = () => {
           <Card className="p-8 hover:shadow-lg transition-all duration-300">
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold mb-2">Starter</h3>
-              <div className="text-4xl font-bold mb-2">$99<span className="text-lg font-normal text-gray-500">/month</span></div>
-              <p className="text-gray-600">Perfect for small operations</p>
+              <div className="text-4xl font-bold mb-2">$97<span className="text-lg font-normal text-gray-500">/month</span></div>
+              <p className="text-gray-600">Perfect for solo trade professionals</p>
             </div>
             <ul className="space-y-3 mb-8">
               <li className="flex items-center">
@@ -32,11 +32,19 @@ const Pricing = () => {
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                <span>Basic scheduling</span>
+                <span>Basic appointment scheduling</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                <span>Up to 100 calls/month</span>
+                <span>Up to 200 calls/month</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                <span>Email notifications</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                <span>Basic analytics dashboard</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
@@ -50,8 +58,8 @@ const Pricing = () => {
             <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500">Most Popular</Badge>
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold mb-2">Professional</h3>
-              <div className="text-4xl font-bold mb-2">$299<span className="text-lg font-normal text-gray-500">/month</span></div>
-              <p className="text-gray-600">For growing businesses</p>
+              <div className="text-4xl font-bold mb-2">$197<span className="text-lg font-normal text-gray-500">/month</span></div>
+              <p className="text-gray-600">Ideal for growing trade businesses</p>
             </div>
             <ul className="space-y-3 mb-8">
               <li className="flex items-center">
@@ -60,15 +68,19 @@ const Pricing = () => {
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                <span>Advanced scheduling</span>
+                <span>Unlimited calls</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                <span>Automated follow-ups</span>
+                <span>Advanced appointment scheduling</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                <span>Up to 500 calls/month</span>
+                <span>Lead qualification & scoring</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                <span>SMS notifications</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
@@ -85,8 +97,8 @@ const Pricing = () => {
           <Card className="p-8 hover:shadow-lg transition-all duration-300">
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
-              <div className="text-4xl font-bold mb-2">$499+<span className="text-lg font-normal text-gray-500">/month</span></div>
-              <p className="text-gray-600">For established operations</p>
+              <div className="text-4xl font-bold mb-2">$397<span className="text-lg font-normal text-gray-500">/month</span></div>
+              <p className="text-gray-600">For large operations and franchises</p>
             </div>
             <ul className="space-y-3 mb-8">
               <li className="flex items-center">
@@ -95,15 +107,19 @@ const Pricing = () => {
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                <span>Unlimited calls</span>
+                <span>Multi-location support</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                <span>Custom integrations</span>
+                <span>Custom AI training</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
                 <span>White-label options</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                <span>Advanced integrations</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-3" />

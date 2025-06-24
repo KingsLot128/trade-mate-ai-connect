@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Phone, LogOut, Settings, Users, Calendar, BarChart3, Wrench, Bot, PhoneMissed, DollarSign } from "lucide-react";
+import { Phone, LogOut, Settings, Users, Calendar, BarChart3, Wrench, Bot, PhoneMissed, DollarSign, Brain } from "lucide-react";
 import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardLayoutProps {
@@ -18,6 +18,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, activeTab, 
     { id: 'setup', label: 'Setup Guide', icon: Wrench },
     { id: 'calls', label: 'Calls', icon: Phone },
     { id: 'ai-assistant', label: 'AI Assistant', icon: Bot },
+    { id: 'insights', label: 'AI Insights', icon: Brain },
     { id: 'recovery', label: 'Missed Calls', icon: PhoneMissed },
     { id: 'revenue', label: 'Revenue', icon: DollarSign },
     { id: 'customers', label: 'Customers', icon: Users },
