@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { Phone, Calendar, DollarSign, Play } from "lucide-react";
 import TrialRegistrationModal from './modals/TrialRegistrationModal';
 import DemoModal from './modals/DemoModal';
+import FeatureCard from './ui/FeatureCard';
 
 const Hero = () => {
   const [showTrialModal, setShowTrialModal] = useState(false);
@@ -34,7 +34,7 @@ const Hero = () => {
   return (
     <>
       {/* Main Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-[#2C3E50]">
         {/* Background Pattern */}
         <div 
           className="absolute inset-0 opacity-20"
@@ -47,35 +47,35 @@ const Hero = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Side - Content */}
             <div className="text-center lg:text-left space-y-8">
-              <Badge className="inline-flex items-center gap-2 bg-teal-500/20 text-teal-300 border-teal-500/30 hover:bg-teal-500/30 px-4 py-2 text-sm font-medium">
-                🚀 AI-Powered Call Management
+              <Badge className="inline-flex items-center gap-2 bg-[#1ABC9C]/20 text-[#1ABC9C] border-[#1ABC9C]/30 hover:bg-[#1ABC9C]/30 px-4 py-2 text-sm font-medium">
+                🚀 AI-Powered Trade Management
               </Badge>
               
               <div className="space-y-6">
-                <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                  <span className="text-white">Never Miss</span>
+                <h1 className="tm-heading-xl leading-tight">
+                  <span className="text-white">Transform Your</span>
                   <br />
-                  <span className="text-teal-400">Another Job</span>
+                  <span className="text-[#1ABC9C]">Trade Business</span>
                 </h1>
                 
                 <p className="text-xl text-gray-300 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-                  AI-powered call handling & scheduling for trades. Convert every missed call into a paying customer.
+                  AI-powered call handling, CRM integration, and business automation for trade professionals. Never miss another opportunity.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button 
                   size="lg" 
-                  className="trademate-btn-primary text-lg px-8 py-6 h-auto"
+                  className="tm-btn-primary text-lg px-8 py-6 h-auto"
                   onClick={() => setShowDemoModal(true)}
                 >
                   <Play className="w-5 h-5 mr-2" />
-                  Get Your Free Demo
+                  Get Free Demo
                 </Button>
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="text-lg px-8 py-6 h-auto border-2 border-teal-400 text-teal-400 hover:bg-teal-400 hover:text-slate-900 bg-transparent"
+                  className="text-lg px-8 py-6 h-auto border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C] hover:text-white bg-transparent hover:scale-[1.03] transition-all duration-300"
                   onClick={() => setShowTrialModal(true)}
                 >
                   Start Free Trial
@@ -85,95 +85,112 @@ const Hero = () => {
               {/* Trust Indicators */}
               <div className="flex items-center justify-center lg:justify-start gap-8 pt-8 text-gray-400">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-teal-400">500+</div>
+                  <div className="text-2xl font-bold text-[#1ABC9C]">500+</div>
                   <div className="text-sm">Trade Pros</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-teal-400">99.9%</div>
+                  <div className="text-2xl font-bold text-[#1ABC9C]">99.9%</div>
                   <div className="text-sm">Uptime</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-teal-400">40%</div>
+                  <div className="text-2xl font-bold text-[#1ABC9C]">40%</div>
                   <div className="text-sm">More Revenue</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Side - Visual */}
+            {/* Right Side - Enhanced Visual */}
             <div className="relative">
-              {/* Main Dashboard Mockup */}
-              <div className="relative bg-white rounded-2xl shadow-2xl p-6 transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-6">
-                  {/* Dashboard Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-slate-800">TradeMate AI Dashboard</h3>
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  </div>
-                  
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-3 gap-4 mb-6">
-                    <div className="bg-white rounded-lg p-4 text-center shadow-sm">
-                      <div className="text-2xl font-bold text-teal-600">247</div>
-                      <div className="text-sm text-gray-600">Calls Today</div>
+              {/* Device Frame */}
+              <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-4 shadow-2xl transform rotate-2 hover:rotate-0 transition-all duration-700">
+                {/* Screen */}
+                <div className="bg-white rounded-2xl p-6 shadow-inner">
+                  <div className="bg-gradient-to-br from-[#ECF0F1] to-blue-50 rounded-xl p-6">
+                    {/* Dashboard Header */}
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-lg font-semibold text-[#2C3E50] font-montserrat">TradeMate AI Dashboard</h3>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-[#1ABC9C] rounded-full animate-pulse"></div>
+                        <span className="text-xs text-[#2C3E50] font-medium">Live</span>
+                      </div>
                     </div>
-                    <div className="bg-white rounded-lg p-4 text-center shadow-sm">
-                      <div className="text-2xl font-bold text-blue-600">89</div>
-                      <div className="text-sm text-gray-600">Jobs Booked</div>
+                    
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-3 gap-3 mb-6">
+                      <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-gray-100">
+                        <div className="text-xl font-bold text-[#1ABC9C]">247</div>
+                        <div className="text-xs text-[#BDC3C7]">Calls Today</div>
+                      </div>
+                      <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-gray-100">
+                        <div className="text-xl font-bold text-[#2C3E50]">89</div>
+                        <div className="text-xs text-[#BDC3C7]">Jobs Booked</div>
+                      </div>
+                      <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-gray-100">
+                        <div className="text-xl font-bold text-green-600">$12K</div>
+                        <div className="text-xs text-[#BDC3C7]">Revenue</div>
+                      </div>
                     </div>
-                    <div className="bg-white rounded-lg p-4 text-center shadow-sm">
-                      <div className="text-2xl font-bold text-green-600">$12K</div>
-                      <div className="text-sm text-gray-600">Revenue</div>
+                    
+                    {/* Enhanced Chart Area */}
+                    <div className="bg-gradient-to-r from-[#1ABC9C] to-[#2C3E50] rounded-lg h-24 flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                      <span className="text-white font-medium relative z-10">Real-time Analytics</span>
                     </div>
-                  </div>
-                  
-                  {/* Chart Area */}
-                  <div className="bg-gradient-to-r from-teal-500 to-blue-600 rounded-lg h-32 flex items-center justify-center">
-                    <span className="text-white font-medium">Live Analytics</span>
                   </div>
                 </div>
               </div>
 
-              {/* Floating Phone Element */}
-              <div className="absolute -top-8 -left-8 bg-teal-500 rounded-2xl p-4 shadow-xl animate-bounce">
-                <Phone className="w-8 h-8 text-white" />
+              {/* Enhanced Floating Elements */}
+              <div className="absolute -top-6 -left-6 bg-[#1ABC9C] rounded-2xl p-3 shadow-xl animate-bounce">
+                <Phone className="w-6 h-6 text-white" />
               </div>
 
-              {/* Floating Calendar Element */}
-              <div className="absolute -bottom-8 -right-8 bg-blue-600 rounded-2xl p-4 shadow-xl animate-pulse">
-                <Calendar className="w-8 h-8 text-white" />
+              <div className="absolute -bottom-6 -right-6 bg-[#2C3E50] rounded-2xl p-3 shadow-xl animate-pulse">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+
+              <div className="absolute top-1/2 -right-4 bg-gradient-to-r from-[#1ABC9C] to-green-500 rounded-xl p-2 shadow-lg animate-pulse">
+                <DollarSign className="w-4 h-4 text-white" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Feature Showcase Strip */}
-      <section className="py-20 bg-gradient-to-r from-slate-50 to-blue-50">
+      {/* Enhanced Feature Showcase */}
+      <section className="py-20 bg-gradient-to-r from-[#ECF0F1] to-blue-50">
         <div className="container mx-auto max-w-6xl px-4">
+          <div className="text-center mb-16">
+            <h2 className="tm-heading-lg mb-4">Powerful Features for Trade Professionals</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Streamline your operations with AI-powered tools designed specifically for trades and service businesses.
+            </p>
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 scroll-fade-in bg-white border-0 shadow-lg">
-              <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <Phone className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">24/7 Call Answering</h3>
-              <p className="text-gray-600 leading-relaxed">AI handles every call professionally, even when you're on-site working.</p>
-            </Card>
+            <FeatureCard
+              icon={Phone}
+              title="24/7 AI Call Handling"
+              description="Never miss a call again. Our AI assistant handles inquiries professionally, books appointments, and captures leads even when you're busy on-site."
+              gradient="from-[#1ABC9C] to-teal-600"
+              delay="0s"
+            />
 
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 scroll-fade-in bg-white border-0 shadow-lg" style={{animationDelay: '0.2s'}}>
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <Calendar className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">Instant Scheduling</h3>
-              <p className="text-gray-600 leading-relaxed">Automatically books appointments based on your real-time availability.</p>
-            </Card>
+            <FeatureCard
+              icon={Calendar}
+              title="Smart Scheduling"
+              description="Automatically coordinate appointments based on your real-time availability, job location, and customer preferences with intelligent routing."
+              gradient="from-blue-500 to-[#2C3E50]"
+              delay="0.2s"
+            />
 
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 scroll-fade-in bg-white border-0 shadow-lg" style={{animationDelay: '0.4s'}}>
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <DollarSign className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">Recover Lost Revenue</h3>
-              <p className="text-gray-600 leading-relaxed">Convert every missed call into a paying customer with smart follow-ups.</p>
-            </Card>
+            <FeatureCard
+              icon={DollarSign}
+              title="Revenue Recovery"
+              description="Convert every missed opportunity into revenue with smart follow-ups, automated quotes, and seamless CRM integration."
+              gradient="from-green-500 to-emerald-600"
+              delay="0.4s"
+            />
           </div>
         </div>
       </section>
