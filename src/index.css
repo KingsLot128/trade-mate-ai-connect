@@ -3,8 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap');
+/* Import Google Fonts with proper weights */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
 
@@ -94,31 +94,37 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
   }
 }
 
 @layer components {
   .trademate-btn-primary {
-    @apply bg-[#1ABC9C] text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:bg-[#16A085] hover:scale-105 active:scale-95;
+    @apply bg-[#1ABC9C] text-white font-medium px-8 py-4 rounded-xl transition-all duration-300 hover:bg-[#16A085] hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl;
   }
 
   .trademate-heading {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-weight: 600;
     color: var(--trademate-blue);
+    letter-spacing: -0.025em;
   }
 
   .scroll-fade-in {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s ease-out;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .scroll-fade-in.animate {
@@ -127,7 +133,7 @@
   }
 
   .hover-scale {
-    transition: transform 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hover-scale:hover {
@@ -135,6 +141,19 @@
   }
 
   .hover-scale:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
+  }
+
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #2C3E50 0%, #1ABC9C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
