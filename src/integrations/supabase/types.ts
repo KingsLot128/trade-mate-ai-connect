@@ -9,7 +9,314 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      automation_events: {
+        Row: {
+          created_at: string
+          event_data: Json
+          event_type: string
+          id: string
+          processed: boolean | null
+          processed_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_data: Json
+          event_type: string
+          id?: string
+          processed?: boolean | null
+          processed_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json
+          event_type?: string
+          id?: string
+          processed?: boolean | null
+          processed_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      crm_contacts: {
+        Row: {
+          address: string | null
+          company: string | null
+          created_at: string
+          custom_fields: Json | null
+          email: string | null
+          external_id: string | null
+          id: string
+          integration_id: string | null
+          job_title: string | null
+          last_contact_date: string | null
+          lead_score: number | null
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          company?: string | null
+          created_at?: string
+          custom_fields?: Json | null
+          email?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id?: string | null
+          job_title?: string | null
+          last_contact_date?: string | null
+          lead_score?: number | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          company?: string | null
+          created_at?: string
+          custom_fields?: Json | null
+          email?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id?: string | null
+          job_title?: string | null
+          last_contact_date?: string | null
+          lead_score?: number | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_contacts_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_deals: {
+        Row: {
+          actual_close_date: string | null
+          amount: number | null
+          contact_id: string | null
+          created_at: string
+          custom_fields: Json | null
+          description: string | null
+          expected_close_date: string | null
+          external_id: string | null
+          id: string
+          integration_id: string | null
+          name: string
+          probability: number | null
+          stage: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actual_close_date?: string | null
+          amount?: number | null
+          contact_id?: string | null
+          created_at?: string
+          custom_fields?: Json | null
+          description?: string | null
+          expected_close_date?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id?: string | null
+          name: string
+          probability?: number | null
+          stage?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actual_close_date?: string | null
+          amount?: number | null
+          contact_id?: string | null
+          created_at?: string
+          custom_fields?: Json | null
+          description?: string | null
+          expected_close_date?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id?: string | null
+          name?: string
+          probability?: number | null
+          stage?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_deals_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_deals_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_invoices: {
+        Row: {
+          amount: number
+          contact_id: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          external_id: string | null
+          id: string
+          integration_id: string | null
+          invoice_number: string
+          line_items: Json | null
+          paid_date: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id?: string | null
+          invoice_number: string
+          line_items?: Json | null
+          paid_date?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id?: string | null
+          invoice_number?: string
+          line_items?: Json | null
+          paid_date?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_invoices_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_invoices_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integrations: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          provider: string
+          refresh_token: string | null
+          settings: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          provider: string
+          refresh_token?: string | null
+          settings?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          provider?: string
+          refresh_token?: string | null
+          settings?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      workflow_rules: {
+        Row: {
+          actions: Json | null
+          conditions: Json | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          name: string
+          trigger_event: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actions?: Json | null
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          trigger_event: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actions?: Json | null
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          trigger_event?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
