@@ -10,6 +10,8 @@ import CTA from '../components/CTA';
 import Footer from '../components/Footer';
 
 const Index = () => {
+  console.log('Index page rendering');
+  
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <Header />
