@@ -13,6 +13,9 @@ import AIInsights from '@/components/insights/AIInsights';
 import SmartCallHandler from '@/components/ai/SmartCallHandler';
 import SetupWizard from '@/components/onboarding/SetupWizard';
 import SetupGuide from '@/components/SetupGuide';
+import CallsLog from '@/components/calls/CallsLog';
+import ContactsList from '@/components/crm/ContactsList';
+import DealsPipeline from '@/components/deals/DealsPipeline';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -100,11 +103,11 @@ const Dashboard = () => {
       case 'setup':
         return <SetupGuide />;
       case 'calls':
-        return import('../components/calls/CallsLog').then(module => React.createElement(module.default));
+        return <CallsLog />;
       case 'contacts': 
-        return import('../components/crm/ContactsList').then(module => React.createElement(module.default));
+        return <ContactsList />;
       case 'deals':
-        return import('../components/deals/DealsPipeline').then(module => React.createElement(module.default));
+        return <DealsPipeline />;
       case 'ai-assistant':
         return <SmartCallHandler />;
       case 'insights':
