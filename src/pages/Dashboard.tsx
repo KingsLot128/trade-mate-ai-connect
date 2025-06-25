@@ -100,7 +100,11 @@ const Dashboard = () => {
       case 'setup':
         return <SetupGuide />;
       case 'calls':
-        return <CallsManager />;
+        return import('../components/calls/CallsLog').then(module => React.createElement(module.default));
+      case 'contacts': 
+        return import('../components/crm/ContactsList').then(module => React.createElement(module.default));
+      case 'deals':
+        return import('../components/deals/DealsPipeline').then(module => React.createElement(module.default));
       case 'ai-assistant':
         return <SmartCallHandler />;
       case 'insights':
