@@ -20,14 +20,14 @@ const Header = () => {
   return (
     <>
       <header className="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 sm:py-4">
+        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">
           <nav className="flex items-center justify-between">
             {/* Logo - Mobile Optimized */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
-                <Phone className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+            <Link to="/" className="flex items-center space-x-1 sm:space-x-2 min-w-0 flex-shrink">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Phone className="h-3.5 w-3.5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <span className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              <span className="text-base sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent whitespace-nowrap">
                 TradeMate AI
               </span>
             </Link>
@@ -165,8 +165,9 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2"
+              className="lg:hidden p-1 sm:p-2 flex-shrink-0"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -176,31 +177,31 @@ const Header = () => {
           {isMenuOpen && (
             <div className="lg:hidden mt-4 pb-4 border-t pt-4">
               <div className="flex flex-col space-y-3">
-                <Link to="/features" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link to="/features" className="text-gray-600 hover:text-blue-600 font-medium py-2">
                   Features
                 </Link>
-                <Link to="/insights" className="text-gray-600 hover:text-blue-600 font-medium flex items-center">
+                <Link to="/insights" className="text-gray-600 hover:text-blue-600 font-medium flex items-center py-2">
                   <Brain className="h-4 w-4 mr-2" />
                   AI Insights
                 </Link>
-                <Link to="/pricing" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link to="/pricing" className="text-gray-600 hover:text-blue-600 font-medium py-2">
                   Pricing
                 </Link>
-                <Link to="/company" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link to="/company" className="text-gray-600 hover:text-blue-600 font-medium py-2">
                   About
                 </Link>
-                <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium py-2">
                   Contact
                 </Link>
-                <div className="pt-3 border-t flex flex-col space-y-2">
+                <div className="pt-3 border-t flex flex-col space-y-3">
                   <Button 
                     variant="ghost" 
                     onClick={() => setShowDemoModal(true)}
-                    className="justify-start"
+                    className="justify-start w-full"
                   >
                     Watch Demo
                   </Button>
-                  <Link to="/dashboard">
+                  <Link to="/dashboard" className="w-full">
                     <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
                       Get Started
                     </Button>
