@@ -1,0 +1,38 @@
+
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <circle cx="256" cy="256" r="240" fill="url(#gradient)" stroke="url(#strokeGradient)" stroke-width="8"/>
+  
+  <!-- Phone icon -->
+  <path d="M180 140c-8 0-15 7-15 15v202c0 8 7 15 15 15h152c8 0 15-7 15-15V155c0-8-7-15-15-15H180zm0-20h152c19 0 35 16 35 35v202c0 19-16 35-35 35H180c-19 0-35-16-35-35V155c0-19 16-35 35-35z" fill="white"/>
+  <rect x="185" y="160" width="142" height="120" rx="8" fill="white"/>
+  
+  <!-- AI Brain/Circuit pattern -->
+  <circle cx="220" cy="200" r="6" fill="url(#gradient)"/>
+  <circle cx="256" cy="200" r="6" fill="url(#gradient)"/>
+  <circle cx="292" cy="200" r="6" fill="url(#gradient)"/>
+  <circle cx="238" cy="230" r="6" fill="url(#gradient)"/>
+  <circle cx="274" cy="230" r="6" fill="url(#gradient)"/>
+  <circle cx="256" cy="260" r="6" fill="url(#gradient)"/>
+  
+  <!-- Connecting lines -->
+  <path d="M226 200h24M262 200h24M244 230h24M256 206v18M256 236v18" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Speaker/sound waves -->
+  <path d="M190 320h12v12h-12z" fill="white"/>
+  <path d="M210 318c6 2 10 8 10 14s-4 12-10 14M225 314c12 4 20 15 20 26s-8 22-20 26" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+  
+  <!-- Home button -->
+  <circle cx="256" cy="390" r="15" fill="white"/>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#16a34a"/>
+    </linearGradient>
+    <linearGradient id="strokeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1d4ed8"/>
+      <stop offset="100%" style="stop-color:#15803d"/>
+    </linearGradient>
+  </defs>
+</svg>

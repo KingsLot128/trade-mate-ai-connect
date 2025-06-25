@@ -1,9 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Users, Calendar, TrendingUp, PhoneMissed, PhoneCall } from "lucide-react";
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import PWAInstall from '@/components/PWAInstall';
+import DashboardChart from './DashboardChart';
 
 interface DashboardStats {
   totalCalls: number;
@@ -26,6 +28,24 @@ const DashboardOverview = () => {
   });
   const [loading, setLoading] = useState(true);
 
+  // Chart data
+  const callsData = [
+    { name: 'Mon', calls: 12, answered: 10 },
+    { name: 'Tue', calls: 19, answered: 16 },
+    { name: 'Wed', calls: 15, answered: 13 },
+    { name: 'Thu', calls: 22, answered: 18 },
+    { name: 'Fri', calls: 18, answered: 15 },
+    { name: 'Sat', calls: 8, answered: 7 },
+    { name: 'Sun', calls: 5, answered: 4 },
+  ];
+
+  const revenueData = [
+    { name: 'Week 1', revenue: 2400 },
+    { name: 'Week 2', revenue: 1398 },
+    { name: 'Week 3', revenue: 9800 },
+    { name: 'Week 4', revenue: 3908 },
+  ];
+
   useEffect(() => {
     const fetchStats = async () => {
       if (!user) return;
@@ -37,13 +57,11 @@ const DashboardOverview = () => {
           .select('status')
           .eq('user_id', user.id);
 
-        // Fetch customers data
         const { data: customers } = await supabase
           .from('customers')
           .select('id')
           .eq('user_id', user.id);
 
-        // Fetch today's appointments
         const today = new Date().toISOString().split('T')[0];
         const { data: appointments } = await supabase
           .from('appointments')
@@ -173,6 +191,26 @@ const DashboardOverview = () => {
             </Card>
           );
         })}
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <DashboardChart
+          title="Call Activity"
+          description="Daily calls and answer rates"
+          data={callsData}
+          type="line"
+          dataKey="calls"
+          color="#3b82f6"
+        />
+        <DashboardChart
+          title="Weekly Revenue"
+          description="Revenue generated per week"
+          data={revenueData}
+          type="bar"
+          dataKey="revenue"
+          color="#10b981"
+        />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

@@ -1,9 +1,12 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+/* Import specified fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
 
+/* Global Design Tokens - TradeMate AI */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -15,7 +18,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 210 29% 24%; /* Slate Blue #2C3E50 */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -24,8 +27,8 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 168 76% 42%; /* Teal #1ABC9C */
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -37,47 +40,39 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* TradeMate AI Brand Colors */
+    --tm-slate-blue: #2C3E50;
+    --tm-teal: #1ABC9C;
+    --tm-light-gray: #ECF0F1;
+    --tm-medium-gray: #BDC3C7;
+    --tm-dark-gray: #34495E;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
@@ -99,5 +94,95 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+}
+
+@layer components {
+  /* TradeMate AI Primary Button */
+  .tm-btn-primary {
+    @apply bg-[#1ABC9C] text-white font-medium px-8 py-4 rounded-xl transition-all duration-300 hover:bg-[#16A085] hover:scale-[1.03] active:scale-95 shadow-lg hover:shadow-xl;
+  }
+
+  /* TradeMate AI Secondary Button */
+  .tm-btn-secondary {
+    @apply bg-[#2C3E50] text-white font-medium px-8 py-4 rounded-xl transition-all duration-300 hover:bg-[#34495E] hover:scale-[1.03] active:scale-95 shadow-lg hover:shadow-xl;
+  }
+
+  /* TradeMate AI Heading Styles */
+  .tm-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: var(--tm-slate-blue);
+    letter-spacing: -0.025em;
+  }
+
+  .tm-heading-xl {
+    @apply tm-heading text-5xl lg:text-7xl;
+  }
+
+  .tm-heading-lg {
+    @apply tm-heading text-3xl lg:text-4xl;
+  }
+
+  .tm-heading-md {
+    @apply tm-heading text-2xl lg:text-3xl;
+  }
+
+  /* Animation Classes */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .scroll-fade-in.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hover-scale {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.03);
+  }
+
+  .hover-scale:active {
+    transform: scale(0.98);
+  }
+
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #2C3E50 0%, #1ABC9C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Card Hover Effects */
+  .feature-card {
+    @apply transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] cursor-pointer;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-8px) scale(1.02);
   }
 }
