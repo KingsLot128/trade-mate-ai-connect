@@ -17,6 +17,8 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showDemoModal, setShowDemoModal] = useState(false);
 
+  console.log('Header rendering, isMenuOpen:', isMenuOpen);
+
   return (
     <>
       <header className="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
@@ -163,47 +165,73 @@ const Header = () => {
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Make sure it's visible */}
             <button
-              className="lg:hidden p-1 sm:p-2 flex-shrink-0"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 flex-shrink-0 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+              onClick={() => {
+                console.log('Mobile menu button clicked, current state:', isMenuOpen);
+                setIsMenuOpen(!isMenuOpen);
+              }}
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </nav>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu - Make sure it shows properly */}
           {isMenuOpen && (
-            <div className="lg:hidden mt-4 pb-4 border-t pt-4">
+            <div className="lg:hidden mt-4 pb-4 border-t pt-4 bg-white rounded-lg shadow-lg">
               <div className="flex flex-col space-y-3">
-                <Link to="/features" className="text-gray-600 hover:text-blue-600 font-medium py-2">
+                <Link 
+                  to="/features" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Features
                 </Link>
-                <Link to="/insights" className="text-gray-600 hover:text-blue-600 font-medium flex items-center py-2">
+                <Link 
+                  to="/insights" 
+                  className="text-gray-600 hover:text-blue-600 font-medium flex items-center py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   <Brain className="h-4 w-4 mr-2" />
                   AI Insights
                 </Link>
-                <Link to="/pricing" className="text-gray-600 hover:text-blue-600 font-medium py-2">
+                <Link 
+                  to="/pricing" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Pricing
                 </Link>
-                <Link to="/company" className="text-gray-600 hover:text-blue-600 font-medium py-2">
+                <Link 
+                  to="/company" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   About
                 </Link>
-                <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium py-2">
+                <Link 
+                  to="/contact" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Contact
                 </Link>
                 <div className="pt-3 border-t flex flex-col space-y-3">
                   <Button 
                     variant="ghost" 
-                    onClick={() => setShowDemoModal(true)}
+                    onClick={() => {
+                      setShowDemoModal(true);
+                      setIsMenuOpen(false);
+                    }}
                     className="justify-start w-full"
                   >
                     Watch Demo
                   </Button>
-                  <Link to="/dashboard" className="w-full">
+                  <Link to="/dashboard" className="w-full" onClick={() => setIsMenuOpen(false)}>
                     <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
-                      Get Started
+                      Get Started / Dashboard
                     </Button>
                   </Link>
                 </div>
