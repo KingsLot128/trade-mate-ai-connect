@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Phone, Menu, X, Brain } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Phone, Menu, X, Brain, LogOut, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '@/contexts/AuthContext';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,13 +12,31 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import DemoModal from './modals/DemoModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showDemoModal, setShowDemoModal] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
-  console.log('Header rendering, isMenuOpen:', isMenuOpen);
+  console.log('Header rendering, user:', user?.email, 'isMenuOpen:', isMenuOpen);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
 
   return (
     <>
@@ -150,7 +169,7 @@ const Header = () => {
               </NavigationMenu>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Desktop */}
             <div className="hidden lg:flex items-center space-x-4">
               <Button 
                 variant="ghost" 
@@ -158,14 +177,58 @@ const Header = () => {
               >
                 Watch Demo
               </Button>
-              <Link to="/dashboard">
-                <Button className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
-                  Get Started
-                </Button>
-              </Link>
+              
+              {user ? (
+                <div className="flex items-center space-x-2">
+                  <Link to="/dashboard">
+                    <Button variant="outline">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
+                        <User className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end">
+                      <DropdownMenuItem disabled>
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">{user.email}</p>
+                          <p className="text-xs leading-none text-muted-foreground">
+                            Signed in
+                          </p>
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard">Dashboard</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleSignOut}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Sign out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="ghost">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
 
-            {/* Mobile Menu Button - Make sure it's visible */}
+            {/* Mobile Menu Button */}
             <button
               className="lg:hidden p-2 flex-shrink-0 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               onClick={() => {
@@ -178,7 +241,7 @@ const Header = () => {
             </button>
           </nav>
 
-          {/* Mobile Menu - Make sure it shows properly */}
+          {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="lg:hidden mt-4 pb-4 border-t pt-4 bg-white rounded-lg shadow-lg">
               <div className="flex flex-col space-y-3">
@@ -218,6 +281,8 @@ const Header = () => {
                 >
                   Contact
                 </Link>
+                
+                {/* Mobile Auth Section */}
                 <div className="pt-3 border-t flex flex-col space-y-3">
                   <Button 
                     variant="ghost" 
@@ -229,11 +294,43 @@ const Header = () => {
                   >
                     Watch Demo
                   </Button>
-                  <Link to="/dashboard" className="w-full" onClick={() => setIsMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
-                      Get Started / Dashboard
-                    </Button>
-                  </Link>
+                  
+                  {user ? (
+                    <>
+                      <div className="px-4 py-2 text-sm text-gray-600">
+                        Signed in as {user.email}
+                      </div>
+                      <Link to="/dashboard" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="outline" className="w-full">
+                          Dashboard
+                        </Button>
+                      </Link>
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => {
+                          handleSignOut();
+                          setIsMenuOpen(false);
+                        }}
+                        className="w-full justify-start text-red-600"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/auth" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start">
+                          Sign In
+                        </Button>
+                      </Link>
+                      <Link to="/auth" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
+                          Get Started
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

@@ -16,7 +16,8 @@ import SetupGuide from '@/components/SetupGuide';
 import CallsLog from '@/components/calls/CallsLog';
 import ContactsList from '@/components/crm/ContactsList';
 import DealsPipeline from '@/components/deals/DealsPipeline';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import { useSearchParams } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -76,24 +77,13 @@ const Dashboard = () => {
     setActiveTab('overview');
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-
   // Show setup wizard for first-time users or when explicitly requested
   if (showSetupWizard) {
-    return <SetupWizard onComplete={handleSetupComplete} />;
+    return (
+      <ProtectedRoute>
+        <SetupWizard onComplete={handleSetupComplete} />
+      </ProtectedRoute>
+    );
   }
 
   const renderActiveTab = () => {
@@ -139,9 +129,11 @@ const Dashboard = () => {
   };
 
   return (
-    <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab}>
-      {renderActiveTab()}
-    </DashboardLayout>
+    <ProtectedRoute>
+      <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab}>
+        {renderActiveTab()}
+      </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 
