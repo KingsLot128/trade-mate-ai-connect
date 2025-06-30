@@ -9,6 +9,7 @@ interface UserMetadata {
   industry?: string;
   businessSize?: string;
   phone?: string;
+  fullName?: string;
 }
 
 interface AuthContextType {
@@ -46,15 +47,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data, error } = await supabase.from('profiles').select('count').limit(1);
       
       if (error && error.code === 'PGRST301') {
-        // Table doesn't exist - likely not configured
         console.warn('Supabase database not fully configured. Running in demo mode.');
         setIsConfigured(false);
       } else if (error && error.message.includes('JWT')) {
-        // JWT/Auth issues - partial configuration
         console.warn('Supabase authentication not configured. Running in demo mode.');
         setIsConfigured(false);
       } else {
-        // Appears to be properly configured
         setIsConfigured(true);
         
         // Get initial session
@@ -79,25 +77,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, metadata?: UserMetadata) => {
     if (!isConfigured) {
-      // Demo mode - simulate successful signup with detailed feedback
-      console.log('Demo signup attempt:', { email, ...metadata });
-      
       toast({
         title: "Demo Mode Active",
         description: `Registration simulated for ${email}. Full functionality available when backend is configured.`,
       });
-      
-      // Simulate async operation
       await new Promise(resolve => setTimeout(resolve, 1500));
       return;
     }
 
     try {
+      console.log('Attempting signup with:', { email, metadata });
+      
       const signUpData = {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
+            full_name: metadata?.fullName || '',
             business_name: metadata?.businessName || '',
             industry: metadata?.industry || '',
             business_size: metadata?.businessSize || '',
@@ -119,26 +116,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      // Try to create profile record if user was created
       if (data.user && !data.user.email_confirmed_at) {
-        try {
-          await supabase.from('profiles').insert({
-            id: data.user.id,
-            email: email,
-            business_name: metadata?.businessName,
-            industry: metadata?.industry,
-            phone: metadata?.phone,
-          });
-        } catch (profileError) {
-          console.warn('Could not create profile record:', profileError);
-          // Don't throw - registration was successful
-        }
+        toast({
+          title: "Registration Successful!",
+          description: "Please check your email to confirm your account and activate your 14-day free trial.",
+        });
+      } else if (data.user) {
+        toast({
+          title: "Welcome!",
+          description: "Your account has been created successfully.",
+        });
       }
-
-      toast({
-        title: "Registration Successful!",
-        description: "Please check your email to confirm your account and activate your 14-day free trial.",
-      });
 
     } catch (error) {
       console.error('Registration process failed:', error);

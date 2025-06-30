@@ -16,6 +16,8 @@ import SetupGuide from '@/components/SetupGuide';
 import CallsLog from '@/components/calls/CallsLog';
 import ContactsList from '@/components/crm/ContactsList';
 import DealsPipeline from '@/components/deals/DealsPipeline';
+import ProposalManager from '@/components/proposals/ProposalManager';
+import AdminUserManagement from '@/components/admin/AdminUserManagement';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useSearchParams } from 'react-router-dom';
 
@@ -25,6 +27,7 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'overview');
   const [showSetupWizard, setShowSetupWizard] = useState(false);
   const [isFirstTime, setIsFirstTime] = useState(false);
+  const [userRole, setUserRole] = useState<string>('user');
 
   useEffect(() => {
     const checkUserSetup = async () => {
@@ -34,8 +37,8 @@ const Dashboard = () => {
         // Check if user has completed setup
         const { data: profile } = await supabase
           .from('profiles')
-          .select('business_name, industry, phone')
-          .eq('id', user.id)
+          .select('business_name, industry, phone, full_name')
+          .eq('user_id', user.id)
           .single();
 
         const { data: settings } = await supabase
@@ -50,6 +53,10 @@ const Dashboard = () => {
           setIsFirstTime(true);
           setShowSetupWizard(true);
         }
+
+        // Check user role (in production, this would come from JWT or user metadata)
+        const isAdmin = user.email === 'ajose002@gmail.com'; // Demo admin check
+        setUserRole(isAdmin ? 'admin' : 'user');
       } catch (error) {
         console.error('Error checking user setup:', error);
         // If there's an error, assume first time user
@@ -98,6 +105,8 @@ const Dashboard = () => {
         return <ContactsList />;
       case 'deals':
         return <DealsPipeline />;
+      case 'proposals':
+        return <ProposalManager />;
       case 'ai-assistant':
         return <SmartCallHandler />;
       case 'insights':
@@ -110,6 +119,8 @@ const Dashboard = () => {
         return <CustomerManager />;
       case 'appointments':
         return <ScheduleManager />;
+      case 'admin-users':
+        return userRole === 'admin' ? <AdminUserManagement /> : <DashboardOverview />;
       case 'settings':
         return (
           <div className="text-center py-12">
@@ -130,7 +141,11 @@ const Dashboard = () => {
 
   return (
     <ProtectedRoute>
-      <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab}>
+      <DashboardLayout 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab}
+        userRole={userRole}
+      >
         {renderActiveTab()}
       </DashboardLayout>
     </ProtectedRoute>

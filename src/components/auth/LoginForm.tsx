@@ -10,9 +10,12 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('ajose002@gmail.com');
+  const [password, setPassword] = useState('Test1!');
   const [businessName, setBusinessName] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [industry, setIndustry] = useState('');
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const [showResetForm, setShowResetForm] = useState(false);
@@ -36,7 +39,12 @@ const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await signUp(email, password, { businessName });
+      await signUp(email, password, { 
+        businessName, 
+        fullName, 
+        phone, 
+        industry 
+      });
     } catch (error) {
       console.error('Sign up error:', error);
     } finally {
@@ -197,6 +205,16 @@ const LoginForm = () => {
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
+                  <Label htmlFor="full-name">Full Name</Label>
+                  <Input
+                    id="full-name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="business-name">Business Name</Label>
                   <Input
                     id="business-name"
@@ -204,6 +222,26 @@ const LoginForm = () => {
                     placeholder="Your Business Name"
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="+1 (555) 123-4567"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="industry">Industry</Label>
+                  <Input
+                    id="industry"
+                    type="text"
+                    placeholder="e.g., Plumbing, Electrical, HVAC"
+                    value={industry}
+                    onChange={(e) => setIndustry(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
