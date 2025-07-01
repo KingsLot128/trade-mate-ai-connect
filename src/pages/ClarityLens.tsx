@@ -233,8 +233,8 @@ const ClarityLens = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase.functions.invoke('ai-insights', {
-        body: { userId: user.id }
+      const { data, error } = await supabase.functions.invoke('ai-business-advisor', {
+        body: { userId: user.id, analysisType: 'recommendations' }
       });
 
       if (error) throw error;

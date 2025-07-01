@@ -166,16 +166,27 @@ const Decisions = () => {
   const generateNewRecommendations = async () => {
     setLoading(true);
     try {
-      // In a real implementation, this would call the AI Edge Function
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulate new recommendations based on current data
-      const newRecommendations = sampleRecommendations.map(rec => ({
-        ...rec,
-        confidence: Math.max(60, Math.min(95, rec.confidence + (Math.random() * 10 - 5)))
-      }));
+      const { data, error } = await supabase.functions.invoke('ai-business-advisor', {
+        body: { userId: user.id, analysisType: 'recommendations' }
+      });
 
-      setRecommendations(newRecommendations);
+      if (error) throw error;
+
+      // Transform the AI response to match our interface
+      const aiRecommendations = data.priority_actions?.map((action: any, index: number) => ({
+        id: `ai-${index}`,
+        title: action.action,
+        description: action.impact,
+        priority: action.urgency,
+        category: action.category,
+        confidence: Math.round(action.confidence * 100),
+        actionable: true,
+        estimatedImpact: `+$${Math.round(Math.random() * 5000 + 1000)}/month`,
+        timeToImplement: '30 minutes',
+        actions: [action.action]
+      })) || sampleRecommendations;
+
+      setRecommendations(aiRecommendations);
       toast.success('AI recommendations updated successfully');
     } catch (error) {
       console.error('Error generating recommendations:', error);
