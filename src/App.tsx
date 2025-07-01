@@ -21,6 +21,9 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Security from "./pages/Security";
 import Insights from "./pages/Insights";
+import Calendar from "./pages/Calendar";
+import Decisions from "./pages/Decisions";
+import Integrations from "./pages/Integrations";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
@@ -42,6 +45,9 @@ const App = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/insights" element={<Insights />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/decisions" element={<Decisions />} />
+              <Route path="/integrations" element={<Integrations />} />
               <Route path="/company" element={<Company />} />
               <Route path="/support" element={<Support />} />
               <Route path="/enterprise" element={<Enterprise />} />

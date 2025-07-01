@@ -38,15 +38,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const navigationItems = [
     { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'decisions', label: 'Decision Feed', icon: Brain },
     { id: 'calls', label: 'Call Log', icon: Phone },
     { id: 'contacts', label: 'Contacts', icon: Users },
     { id: 'deals', label: 'Deals Pipeline', icon: TrendingUp },
     { id: 'proposals', label: 'AI Proposals', icon: FileText },
     { id: 'revenue', label: 'Revenue', icon: DollarSign },
-    { id: 'appointments', label: 'Schedule', icon: Calendar },
+    { id: 'calendar', label: 'Calendar Hub', icon: Calendar },
     { id: 'recovery', label: 'Missed Calls', icon: PhoneMissed },
     { id: 'insights', label: 'AI Insights', icon: BarChart3 },
-    { id: 'ai-assistant', label: 'AI Assistant', icon: Brain },
+    { id: 'integrations', label: 'Integrations', icon: Settings },
   ];
 
   const adminItems = [

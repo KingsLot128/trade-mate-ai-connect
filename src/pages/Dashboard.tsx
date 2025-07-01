@@ -18,6 +18,9 @@ import ContactsList from '@/components/crm/ContactsList';
 import DealsPipeline from '@/components/deals/DealsPipeline';
 import ProposalManager from '@/components/proposals/ProposalManager';
 import AdminUserManagement from '@/components/admin/AdminUserManagement';
+import IntegrationsManager from '@/components/integrations/IntegrationsManager';
+import Calendar from './Calendar';
+import Decisions from './Decisions';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useSearchParams } from 'react-router-dom';
 
@@ -97,6 +100,8 @@ const Dashboard = () => {
     switch (activeTab) {
       case 'overview':
         return <DashboardOverview />;
+      case 'decisions':
+        return <Decisions />;
       case 'setup':
         return <SetupGuide />;
       case 'calls':
@@ -117,8 +122,12 @@ const Dashboard = () => {
         return <RevenueTracker />;
       case 'customers':
         return <CustomerManager />;
+      case 'calendar':
+        return <Calendar />;
       case 'appointments':
         return <ScheduleManager />;
+      case 'integrations':
+        return <IntegrationsManager />;
       case 'admin-users':
         return userRole === 'admin' ? <AdminUserManagement /> : <DashboardOverview />;
       case 'settings':
