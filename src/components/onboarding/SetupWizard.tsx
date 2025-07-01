@@ -64,9 +64,14 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
         .update({
           business_name: setupData.businessName,
           industry: setupData.industry,
-          phone: setupData.phone
+          phone: setupData.phone,
+          primary_service_types: [setupData.industry],
+          business_goals: 'Grow business and improve efficiency',
+          target_customer_type: 'Homeowners and businesses',
+          competition_level: 'medium',
+          pricing_strategy: 'competitive'
         })
-        .eq('id', user.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
 

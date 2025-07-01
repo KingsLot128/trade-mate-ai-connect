@@ -24,6 +24,7 @@ import Insights from "./pages/Insights";
 import Calendar from "./pages/Calendar";
 import Decisions from "./pages/Decisions";
 import Integrations from "./pages/Integrations";
+import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
@@ -48,6 +49,7 @@ const App = () => {
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/decisions" element={<Decisions />} />
               <Route path="/integrations" element={<Integrations />} />
+              <Route path="/clarity-lens" element={<ClarityLens />} />
               <Route path="/company" element={<Company />} />
               <Route path="/support" element={<Support />} />
               <Route path="/enterprise" element={<Enterprise />} />

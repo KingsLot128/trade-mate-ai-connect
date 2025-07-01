@@ -38,6 +38,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const navigationItems = [
     { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'clarity-lens', label: 'Clarity Lens', icon: Brain },
     { id: 'decisions', label: 'Decision Feed', icon: Brain },
     { id: 'calls', label: 'Call Log', icon: Phone },
     { id: 'contacts', label: 'Contacts', icon: Users },

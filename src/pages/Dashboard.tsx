@@ -21,6 +21,7 @@ import AdminUserManagement from '@/components/admin/AdminUserManagement';
 import IntegrationsManager from '@/components/integrations/IntegrationsManager';
 import Calendar from './Calendar';
 import Decisions from './Decisions';
+import ClarityLens from './ClarityLens';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useSearchParams } from 'react-router-dom';
 
@@ -100,6 +101,8 @@ const Dashboard = () => {
     switch (activeTab) {
       case 'overview':
         return <DashboardOverview />;
+      case 'clarity-lens':
+        return <ClarityLens />;
       case 'decisions':
         return <Decisions />;
       case 'setup':
