@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Onboarding from "./pages/Onboarding";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
@@ -27,6 +28,7 @@ import Integrations from "./pages/Integrations";
 import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import AuthGuard from "./components/auth/AuthGuard";
 
 const queryClient = new QueryClient();
 
@@ -40,16 +42,49 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
+              <Route path="/auth" element={
+                <AuthGuard requireAuth={false}>
+                  <Auth />
+                </AuthGuard>
+              } />
+              <Route path="/onboarding" element={
+                <AuthGuard requireAuth={true} requireComplete={false}>
+                  <Onboarding />
+                </AuthGuard>
+              } />
               <Route path="/features" element={<Features />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/insights" element={<Insights />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/decisions" element={<Decisions />} />
-              <Route path="/integrations" element={<Integrations />} />
-              <Route path="/clarity-lens" element={<ClarityLens />} />
+              <Route path="/dashboard" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <Dashboard />
+                </AuthGuard>
+              } />
+              <Route path="/insights" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <Insights />
+                </AuthGuard>
+              } />
+              <Route path="/calendar" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <Calendar />
+                </AuthGuard>
+              } />
+              <Route path="/decisions" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <Decisions />
+                </AuthGuard>
+              } />
+              <Route path="/integrations" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <Integrations />
+                </AuthGuard>
+              } />
+              <Route path="/clarity-lens" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <ClarityLens />
+                </AuthGuard>
+              } />
               <Route path="/company" element={<Company />} />
               <Route path="/support" element={<Support />} />
               <Route path="/enterprise" element={<Enterprise />} />

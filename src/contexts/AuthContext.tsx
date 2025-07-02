@@ -16,9 +16,11 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   isConfigured: boolean;
+  isProfileComplete: boolean;
   signUp: (email: string, password: string, metadata?: UserMetadata) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  checkProfileComplete: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,6 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isConfigured, setIsConfigured] = useState(false);
+  const [isProfileComplete, setIsProfileComplete] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -58,11 +61,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Get initial session
         const { data: { session } } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
+        if (session?.user) {
+          checkProfileComplete();
+        }
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
           console.log('Auth state changed:', event, session?.user?.email);
           setUser(session?.user ?? null);
+          if (session?.user) {
+            checkProfileComplete();
+          }
         });
 
         return () => subscription.unsubscribe();
@@ -162,6 +171,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const checkProfileComplete = async () => {
+    if (!user) {
+      setIsProfileComplete(false);
+      return;
+    }
+
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('business_name, industry, phone')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error checking profile:', error);
+        setIsProfileComplete(false);
+        return;
+      }
+
+      // Consider profile complete if basic business info is filled
+      const isComplete = profile && 
+        profile.business_name && 
+        profile.industry && 
+        profile.phone;
+      
+      setIsProfileComplete(!!isComplete);
+    } catch (error) {
+      console.error('Profile check failed:', error);
+      setIsProfileComplete(false);
+    }
+  };
+
   const signOut = async () => {
     if (!isConfigured) {
       toast({
@@ -183,6 +224,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
+      // Reset profile state on signout
+      setIsProfileComplete(false);
+
       toast({
         title: "Signed out successfully",
         description: "You have been logged out of your account.",
@@ -198,9 +242,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     loading,
     isConfigured,
+    isProfileComplete,
     signUp,
     signIn,
     signOut,
+    checkProfileComplete,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
