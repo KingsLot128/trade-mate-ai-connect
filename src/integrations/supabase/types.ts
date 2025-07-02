@@ -9,6 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_decisions: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          decision_type: string
+          description: string
+          estimated_value: string | null
+          id: string
+          impact: string
+          priority: number | null
+          reasoning: string | null
+          scheduled_for: string | null
+          status: string | null
+          time_to_implement: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          decision_type: string
+          description: string
+          estimated_value?: string | null
+          id?: string
+          impact: string
+          priority?: number | null
+          reasoning?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          time_to_implement?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          decision_type?: string
+          description?: string
+          estimated_value?: string | null
+          id?: string
+          impact?: string
+          priority?: number | null
+          reasoning?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          time_to_implement?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           created_at: string | null
@@ -59,6 +110,45 @@ export type Database = {
           id?: string
           processed?: boolean | null
           processed_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      business_insights: {
+        Row: {
+          confidence_score: number | null
+          created_at: string | null
+          data_source: Json | null
+          description: string
+          expires_at: string | null
+          id: string
+          impact_estimation: string | null
+          insight_type: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string | null
+          data_source?: Json | null
+          description: string
+          expires_at?: string | null
+          id?: string
+          impact_estimation?: string | null
+          insight_type: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string | null
+          data_source?: Json | null
+          description?: string
+          expires_at?: string | null
+          id?: string
+          impact_estimation?: string | null
+          insight_type?: string
+          title?: string
           user_id?: string
         }
         Relationships: []
@@ -429,6 +519,33 @@ export type Database = {
           service_type?: string | null
           tags?: string[] | null
           timeline_urgency?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      decision_interactions: {
+        Row: {
+          action: string
+          created_at: string | null
+          decision_id: string
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          decision_id: string
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          decision_id?: string
+          id?: string
+          notes?: string | null
           user_id?: string
         }
         Relationships: []

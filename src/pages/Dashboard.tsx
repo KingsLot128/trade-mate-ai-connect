@@ -19,6 +19,7 @@ import DealsPipeline from '@/components/deals/DealsPipeline';
 import ProposalManager from '@/components/proposals/ProposalManager';
 import AdminUserManagement from '@/components/admin/AdminUserManagement';
 import IntegrationsManager from '@/components/integrations/IntegrationsManager';
+import DecisionFeed from '@/components/dashboard/DecisionFeed';
 import Calendar from './Calendar';
 import Decisions from './Decisions';
 import ClarityLens from './ClarityLens';
@@ -101,10 +102,10 @@ const Dashboard = () => {
     switch (activeTab) {
       case 'overview':
         return <DashboardOverview />;
+      case 'decisions':
+        return <DecisionFeed />;
       case 'clarity-lens':
         return <ClarityLens />;
-      case 'decisions':
-        return <Decisions />;
       case 'setup':
         return <SetupGuide />;
       case 'calls':
