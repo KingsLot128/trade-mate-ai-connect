@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import PWAInstall from '@/components/PWAInstall';
 import DashboardChart from './DashboardChart';
 import BusinessHealthWidget from './BusinessHealthWidget';
-import QuickInsights from './QuickInsights';
+import AIInsightsPreview from '@/components/insights/AIInsightsPreview';
 
 interface DashboardStats {
   totalCalls: number;
@@ -170,10 +170,10 @@ const DashboardOverview = () => {
         </p>
       </div>
 
-      {/* Business Health and Quick Insights */}
+      {/* Business Health and AI Insights */}
       <div className="grid gap-6 md:grid-cols-2">
         <BusinessHealthWidget />
-        <QuickInsights />
+        <AIInsightsPreview />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
