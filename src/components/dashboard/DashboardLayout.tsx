@@ -52,6 +52,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   ];
 
   const adminItems = [
+    { id: 'admin-dashboard', label: 'Admin Dashboard', icon: Shield },
     { id: 'admin-users', label: 'User Management', icon: UserCog },
   ];
 

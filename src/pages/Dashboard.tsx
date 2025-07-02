@@ -18,6 +18,7 @@ import ContactsList from '@/components/crm/ContactsList';
 import DealsPipeline from '@/components/deals/DealsPipeline';
 import ProposalManager from '@/components/proposals/ProposalManager';
 import AdminUserManagement from '@/components/admin/AdminUserManagement';
+import AdminDashboard from '@/components/admin/AdminDashboard';
 import IntegrationsManager from '@/components/integrations/IntegrationsManager';
 import DecisionFeed from '@/components/dashboard/DecisionFeed';
 import Calendar from './Calendar';
@@ -132,6 +133,8 @@ const Dashboard = () => {
         return <ScheduleManager />;
       case 'integrations':
         return <IntegrationsManager />;
+      case 'admin-dashboard':
+        return userRole === 'admin' ? <AdminDashboard /> : <DashboardOverview />;
       case 'admin-users':
         return userRole === 'admin' ? <AdminUserManagement /> : <DashboardOverview />;
       case 'settings':
