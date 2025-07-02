@@ -75,15 +75,18 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
 
       if (error) throw error;
 
-      // Create business settings
+      // Update business settings (use upsert to handle existing records)
       await supabase
         .from('business_settings')
-        .insert({
+        .upsert({
           user_id: user.id,
+          company_name: setupData.businessName,
           greeting_message: setupData.greetingTemplate,
           ai_personality: `Professional ${setupData.industry} assistant`,
           auto_scheduling: true,
           follow_up_enabled: true
+        }, {
+          onConflict: 'user_id'
         });
 
       toast({
