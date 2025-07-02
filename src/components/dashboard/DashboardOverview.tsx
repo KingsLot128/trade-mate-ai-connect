@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import PWAInstall from '@/components/PWAInstall';
 import DashboardChart from './DashboardChart';
+import BusinessHealthWidget from './BusinessHealthWidget';
+import QuickInsights from './QuickInsights';
 
 interface DashboardStats {
   totalCalls: number;
@@ -166,6 +168,12 @@ const DashboardOverview = () => {
         <p className="text-muted-foreground">
           Overview of your business performance and AI assistant activity.
         </p>
+      </div>
+
+      {/* Business Health and Quick Insights */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <BusinessHealthWidget />
+        <QuickInsights />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

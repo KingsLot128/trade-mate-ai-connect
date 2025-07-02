@@ -63,6 +63,33 @@ export type Database = {
         }
         Relationships: []
       }
+      business_metrics: {
+        Row: {
+          context: Json | null
+          id: string
+          metric_type: string
+          recorded_at: string | null
+          user_id: string
+          value: number
+        }
+        Insert: {
+          context?: Json | null
+          id?: string
+          metric_type: string
+          recorded_at?: string | null
+          user_id: string
+          value: number
+        }
+        Update: {
+          context?: Json | null
+          id?: string
+          metric_type?: string
+          recorded_at?: string | null
+          user_id?: string
+          value?: number
+        }
+        Relationships: []
+      }
       business_settings: {
         Row: {
           address: string | null
@@ -504,6 +531,33 @@ export type Database = {
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_quiz_responses: {
+        Row: {
+          chaos_contribution: number | null
+          created_at: string | null
+          id: string
+          question_id: string
+          response: Json
+          user_id: string
+        }
+        Insert: {
+          chaos_contribution?: number | null
+          created_at?: string | null
+          id?: string
+          question_id: string
+          response: Json
+          user_id: string
+        }
+        Update: {
+          chaos_contribution?: number | null
+          created_at?: string | null
+          id?: string
+          question_id?: string
+          response?: Json
           user_id?: string
         }
         Relationships: []
