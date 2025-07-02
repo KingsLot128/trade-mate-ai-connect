@@ -92,14 +92,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             full_name: metadata?.fullName || '',
             business_name: metadata?.businessName || '',
             industry: metadata?.industry || '',
             business_size: metadata?.businessSize || '',
-            phone: metadata?.phone || '',
-            trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+            phone: metadata?.phone || ''
           }
         }
       };
@@ -116,15 +114,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      if (data.user && !data.user.email_confirmed_at) {
-        toast({
-          title: "Registration Successful!",
-          description: "Please check your email to confirm your account and activate your 14-day free trial.",
-        });
-      } else if (data.user) {
+      if (data.user) {
         toast({
           title: "Welcome!",
-          description: "Your account has been created successfully.",
+          description: "Your account has been created successfully. You can now sign in.",
         });
       }
 
