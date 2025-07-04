@@ -17,10 +17,14 @@ interface AuthContextType {
   loading: boolean;
   isConfigured: boolean;
   isProfileComplete: boolean;
+  isQuizCompleted: boolean;
+  onboardingStep: string;
+  setupPreference: string;
   signUp: (email: string, password: string, metadata?: UserMetadata) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   checkProfileComplete: () => Promise<void>;
+  updateUserState: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,6 +42,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isConfigured, setIsConfigured] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+  const [onboardingStep, setOnboardingStep] = useState('not_started');
+  const [setupPreference, setSetupPreference] = useState('minimal');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -62,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { data: { session } } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
         if (session?.user) {
-          checkProfileComplete();
+          updateUserState();
         }
 
         // Listen for auth changes
@@ -70,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.log('Auth state changed:', event, session?.user?.email);
           setUser(session?.user ?? null);
           if (session?.user) {
-            checkProfileComplete();
+            updateUserState();
           }
         });
 
@@ -171,22 +178,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const checkProfileComplete = async () => {
+  const updateUserState = async () => {
     if (!user) {
       setIsProfileComplete(false);
+      setIsQuizCompleted(false);
+      setOnboardingStep('not_started');
+      setSetupPreference('minimal');
       return;
     }
 
     try {
       const { data: profile, error } = await supabase
         .from('profiles')
-        .select('business_name, industry, phone')
+        .select('business_name, industry, phone, quiz_completed_at, onboarding_step, setup_preference')
         .eq('user_id', user.id)
         .maybeSingle();
 
       if (error) {
-        console.error('Error checking profile:', error);
-        setIsProfileComplete(false);
+        console.error('Error checking user state:', error);
         return;
       }
 
@@ -197,10 +206,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         profile.phone;
       
       setIsProfileComplete(!!isComplete);
+      setIsQuizCompleted(!!profile?.quiz_completed_at);
+      setOnboardingStep(profile?.onboarding_step || 'not_started');
+      setSetupPreference(profile?.setup_preference || 'minimal');
     } catch (error) {
-      console.error('Profile check failed:', error);
-      setIsProfileComplete(false);
+      console.error('User state check failed:', error);
     }
+  };
+
+  const checkProfileComplete = async () => {
+    // This function is kept for backwards compatibility
+    await updateUserState();
   };
 
   const signOut = async () => {
@@ -224,8 +240,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      // Reset profile state on signout
+      // Reset all state on signout
       setIsProfileComplete(false);
+      setIsQuizCompleted(false);
+      setOnboardingStep('not_started');
+      setSetupPreference('minimal');
 
       toast({
         title: "Signed out successfully",
@@ -243,10 +262,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     isConfigured,
     isProfileComplete,
+    isQuizCompleted,
+    onboardingStep,
+    setupPreference,
     signUp,
     signIn,
     signOut,
     checkProfileComplete,
+    updateUserState,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

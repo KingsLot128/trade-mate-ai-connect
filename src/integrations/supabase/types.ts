@@ -550,6 +550,66 @@ export type Database = {
         }
         Relationships: []
       }
+      enhanced_recommendations: {
+        Row: {
+          confidence_score: number | null
+          content: Json
+          created_at: string | null
+          estimated_read_time: number | null
+          expected_impact: string | null
+          hook: string
+          id: string
+          is_active: boolean | null
+          personalized_score: number | null
+          priority_score: number | null
+          reasoning: string
+          recommendation_id: string
+          recommendation_type: string
+          stream_type: string | null
+          time_to_implement: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          content: Json
+          created_at?: string | null
+          estimated_read_time?: number | null
+          expected_impact?: string | null
+          hook: string
+          id?: string
+          is_active?: boolean | null
+          personalized_score?: number | null
+          priority_score?: number | null
+          reasoning: string
+          recommendation_id: string
+          recommendation_type: string
+          stream_type?: string | null
+          time_to_implement?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          content?: Json
+          created_at?: string | null
+          estimated_read_time?: number | null
+          expected_impact?: string | null
+          hook?: string
+          id?: string
+          is_active?: boolean | null
+          personalized_score?: number | null
+          priority_score?: number | null
+          reasoning?: string
+          recommendation_id?: string
+          recommendation_type?: string
+          stream_type?: string | null
+          time_to_implement?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       integrations: {
         Row: {
           access_token: string | null
@@ -589,6 +649,39 @@ export type Database = {
         }
         Relationships: []
       }
+      magic_link_tokens: {
+        Row: {
+          claimed_at: string | null
+          created_at: string | null
+          email: string
+          expires_at: string
+          id: string
+          quiz_data: Json
+          token: string
+          user_id: string | null
+        }
+        Insert: {
+          claimed_at?: string | null
+          created_at?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          quiz_data: Json
+          token: string
+          user_id?: string | null
+        }
+        Update: {
+          claimed_at?: string | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          quiz_data?: Json
+          token?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           biggest_challenge: string | null
@@ -605,9 +698,11 @@ export type Database = {
           id: string
           industry: string | null
           industry_percentile: number | null
+          onboarding_step: string | null
           phone: string | null
           pricing_strategy: string | null
           primary_service_types: string[] | null
+          quiz_completed_at: string | null
           revenue_predictability_score: number | null
           seasonal_patterns: string | null
           service_area_radius: number | null
@@ -633,9 +728,11 @@ export type Database = {
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          onboarding_step?: string | null
           phone?: string | null
           pricing_strategy?: string | null
           primary_service_types?: string[] | null
+          quiz_completed_at?: string | null
           revenue_predictability_score?: number | null
           seasonal_patterns?: string | null
           service_area_radius?: number | null
@@ -661,9 +758,11 @@ export type Database = {
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          onboarding_step?: string | null
           phone?: string | null
           pricing_strategy?: string | null
           primary_service_types?: string[] | null
+          quiz_completed_at?: string | null
           revenue_predictability_score?: number | null
           seasonal_patterns?: string | null
           service_area_radius?: number | null
@@ -672,6 +771,48 @@ export type Database = {
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      recommendation_interactions: {
+        Row: {
+          business_impact: Json | null
+          created_at: string | null
+          feedback_rating: number | null
+          id: string
+          interaction_type: string
+          metadata: Json | null
+          outcome_reported: string | null
+          recommendation_id: string
+          scroll_depth: number | null
+          time_spent: number | null
+          user_id: string
+        }
+        Insert: {
+          business_impact?: Json | null
+          created_at?: string | null
+          feedback_rating?: number | null
+          id?: string
+          interaction_type: string
+          metadata?: Json | null
+          outcome_reported?: string | null
+          recommendation_id: string
+          scroll_depth?: number | null
+          time_spent?: number | null
+          user_id: string
+        }
+        Update: {
+          business_impact?: Json | null
+          created_at?: string | null
+          feedback_rating?: number | null
+          id?: string
+          interaction_type?: string
+          metadata?: Json | null
+          outcome_reported?: string | null
+          recommendation_id?: string
+          scroll_depth?: number | null
+          time_spent?: number | null
           user_id?: string
         }
         Relationships: []
@@ -720,6 +861,36 @@ export type Database = {
           created_at?: string | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_setup_preferences: {
+        Row: {
+          created_at: string | null
+          id: string
+          onboarding_completed: boolean | null
+          preferences_data: Json | null
+          setup_preference: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          onboarding_completed?: boolean | null
+          preferences_data?: Json | null
+          setup_preference: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          onboarding_completed?: boolean | null
+          preferences_data?: Json | null
+          setup_preference?: string
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []

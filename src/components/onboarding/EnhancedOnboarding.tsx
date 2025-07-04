@@ -14,6 +14,7 @@ import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, CheckCircle, Brain, Target, Zap } from 'lucide-react';
 import { ChaosQuizResponse, processQuizResults, ChaosResults } from '@/utils/chaosScoring';
 import DataVault from '@/components/privacy/DataVault';
+import SetupPreferenceSelector from './SetupPreferenceSelector';
 
 interface FormData {
   // Basic business info
@@ -42,11 +43,16 @@ interface FormData {
 }
 
 const EnhancedOnboarding = () => {
-  const { user, checkProfileComplete } = useAuth();
+  const { user, checkProfileComplete, isQuizCompleted, onboardingStep } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(() => {
+    // Smart step initialization based on user state
+    if (isQuizCompleted && onboardingStep === 'preferences') return 6;
+    if (isQuizCompleted) return 5;
+    return 1;
+  });
   const [chaosResults, setChaosResults] = useState<ChaosResults | null>(null);
   const [formData, setFormData] = useState<FormData>({
     businessName: '',
@@ -214,6 +220,37 @@ const EnhancedOnboarding = () => {
       toast({
         title: "Error",
         description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePreferenceSelect = async (option: any) => {
+    try {
+      setLoading(true);
+      
+      // Save preference to database
+      await supabase
+        .from('profiles')
+        .update({ 
+          setup_preference: option.id,
+          onboarding_step: 'preferences_selected'
+        })
+        .eq('user_id', user?.id);
+
+      toast({
+        title: "Preference Saved",
+        description: `We'll set you up with ${option.title.toLowerCase()}.`,
+      });
+
+      setStep(7); // Go to final completion
+    } catch (error) {
+      console.error('Error saving preference:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save preference. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -694,6 +731,41 @@ const EnhancedOnboarding = () => {
               </div>
             )}
 
+            {/* Complete Setup Button */}
+            <div className="pt-4">
+              <Button 
+                onClick={() => setStep(6)}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3"
+              >
+                <ArrowRight className="h-5 w-5 mr-2" />
+                Choose Your Setup Style
+              </Button>
+            </div>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="space-y-6">
+            <SetupPreferenceSelector 
+              onPreferenceSelect={handlePreferenceSelect}
+              chaosScore={chaosResults?.chaos_score}
+              clarityZone={chaosResults?.clarity_zone}
+            />
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="text-center space-y-6">
+            <div className="space-y-4">
+              <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
+              <h2 className="text-2xl font-bold">You're All Set!</h2>
+              <p className="text-lg text-muted-foreground">
+                Your personalized business intelligence dashboard is ready
+              </p>
+            </div>
+
             {/* Data Privacy & Security */}
             <DataVault />
 
@@ -709,7 +781,7 @@ const EnhancedOnboarding = () => {
                 ) : (
                   <CheckCircle className="h-5 w-5 mr-2" />
                 )}
-                Complete Setup & Access Dashboard
+                Access Your Dashboard
               </Button>
             </div>
           </div>
