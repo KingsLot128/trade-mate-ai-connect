@@ -30,6 +30,10 @@ import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import AuthGuard from "./components/auth/AuthGuard";
+import EnhancedQuizInterface from "./components/quiz/EnhancedQuizInterface";
+import VisualIntegrationHub from "./components/integrations/VisualIntegrationHub";
+import BusinessHealthScore from "./components/gamification/BusinessHealthScore";
+import MultiStreamFeed from "./components/enhanced-feed/MultiStreamFeed";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +86,22 @@ const App = () => {
                 </AuthGuard>
               } />
               <Route path="/integrations/oauth/callback" element={<OAuthCallback />} />
+              <Route path="/enhanced-quiz" element={<EnhancedQuizInterface />} />
+              <Route path="/integration-hub" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <VisualIntegrationHub />
+                </AuthGuard>
+              } />
+              <Route path="/business-health" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <BusinessHealthScore />
+                </AuthGuard>
+              } />
+              <Route path="/intelligence-feed" element={
+                <AuthGuard requireAuth={true} requireComplete={true}>
+                  <MultiStreamFeed />
+                </AuthGuard>
+              } />
               <Route path="/clarity-lens" element={
                 <AuthGuard requireAuth={true} requireComplete={true}>
                   <ClarityLens />
