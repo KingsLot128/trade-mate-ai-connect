@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, CheckCircle, Brain, Target, Zap } from 'lucide-react';
 import { ChaosQuizResponse, processQuizResults, ChaosResults } from '@/utils/chaosScoring';
+import DataVault from '@/components/privacy/DataVault';
 
 interface FormData {
   // Basic business info
@@ -692,6 +693,9 @@ const EnhancedOnboarding = () => {
                 </ul>
               </div>
             )}
+
+            {/* Data Privacy & Security */}
+            <DataVault />
 
             {/* Complete Setup Button */}
             <div className="pt-4">
