@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useOAuth } from '@/hooks/useOAuth';
 import IntegrationCard from './IntegrationCard';
 import { toast } from 'sonner';
 
@@ -57,6 +58,16 @@ const IntegrationHub = () => {
   const [activeCategory, setActiveCategory] = useState('accounting');
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const { connect, isConnecting, isConnected, checkAllConnections } = useOAuth({
+    onSuccess: (provider, data) => {
+      toast.success(`Successfully connected ${provider}!`);
+      loadConnectedIntegrations();
+    },
+    onError: (provider, error) => {
+      console.error(`OAuth error for ${provider}:`, error);
+    }
+  });
 
   const categories = [
     { id: 'accounting', label: 'Accounting', icon: '💰', description: 'Financial data and insights' },
@@ -173,7 +184,17 @@ const IntegrationHub = () => {
         isConnected: data?.some(conn => conn.provider === integration.provider) || false
       }));
       
-      setIntegrations(getRecommendedIntegrations(updatedIntegrations));
+      // Check OAuth connections
+      const oauthProviders = updatedIntegrations.map(i => i.provider);
+      const oauthStatus = await checkAllConnections(oauthProviders);
+      
+      // Merge connection status
+      const finalIntegrations = updatedIntegrations.map(integration => ({
+        ...integration,
+        isConnected: integration.isConnected || oauthStatus[integration.provider] || false
+      }));
+      
+      setIntegrations(getRecommendedIntegrations(finalIntegrations));
     } catch (error) {
       console.error('Error loading integrations:', error);
     } finally {
@@ -241,15 +262,8 @@ const IntegrationHub = () => {
 
   const handleConnect = async (provider: string) => {
     try {
-      const redirectUrl = `${window.location.origin}/integrations/callback`;
-      
-      const { data } = await supabase.functions.invoke('oauth-start', {
-        body: { provider, redirectUrl }
-      });
-
-      if (data.oauthUrl) {
-        window.location.href = data.oauthUrl;
-      }
+      toast.info(`Connecting to ${availableIntegrations.find(i => i.provider === provider)?.name}...`);
+      await connect(provider);
     } catch (error) {
       console.error('OAuth start error:', error);
       toast.error('Failed to start integration');
@@ -382,7 +396,8 @@ const IntegrationHub = () => {
                   provider={integration.provider}
                   name={integration.name}
                   description={integration.description}
-                  isConnected={integration.isConnected}
+                  isConnected={integration.isConnected || isConnected(integration.provider)}
+                  isLoading={isConnecting(integration.provider)}
                   lastSync={connectedIntegrations.find(c => c.provider === integration.provider)?.updated_at}
                   onConnect={() => handleConnect(integration.provider)}
                   onSync={() => handleSync(integration.provider)}

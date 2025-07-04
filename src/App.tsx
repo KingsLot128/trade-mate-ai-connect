@@ -25,6 +25,7 @@ import Insights from "./pages/Insights";
 import Calendar from "./pages/Calendar";
 import Decisions from "./pages/Decisions";
 import Integrations from "./pages/Integrations";
+import OAuthCallback from "./pages/OAuthCallback";
 import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
@@ -80,6 +81,7 @@ const App = () => {
                   <Integrations />
                 </AuthGuard>
               } />
+              <Route path="/integrations/oauth/callback" element={<OAuthCallback />} />
               <Route path="/clarity-lens" element={
                 <AuthGuard requireAuth={true} requireComplete={true}>
                   <ClarityLens />
