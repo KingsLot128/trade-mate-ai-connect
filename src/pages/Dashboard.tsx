@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import DashboardOverview from '@/components/dashboard/DashboardOverview';
+import EnhancedDashboardOverview from '@/components/dashboard/EnhancedDashboardOverview';
 import CallsManager from '@/components/dashboard/CallsManager';
 import ScheduleManager from '@/components/scheduling/ScheduleManager';
 import CustomerManager from '@/components/crm/CustomerManager';
@@ -21,6 +21,10 @@ import AdminUserManagement from '@/components/admin/AdminUserManagement';
 import AdminDashboard from '@/components/admin/AdminDashboard';
 import IntegrationsManager from '@/components/integrations/IntegrationsManager';
 import DecisionFeed from '@/components/dashboard/DecisionFeed';
+import BusinessHealthScore from '@/components/gamification/BusinessHealthScore';
+import MultiStreamFeed from '@/components/enhanced-feed/MultiStreamFeed';
+import UnifiedToolsInterface from '@/components/builtin-tools/UnifiedToolsInterface';
+import VisualIntegrationHub from '@/components/integrations/VisualIntegrationHub';
 import Calendar from './Calendar';
 import Decisions from './Decisions';
 import ClarityLens from './ClarityLens';
@@ -102,7 +106,15 @@ const Dashboard = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'overview':
-        return <DashboardOverview />;
+        return <EnhancedDashboardOverview />;
+      case 'business-health':
+        return <BusinessHealthScore />;
+      case 'intelligence-feed':
+        return <MultiStreamFeed />;
+      case 'builtin-tools':
+        return <UnifiedToolsInterface />;
+      case 'integration-hub':
+        return <VisualIntegrationHub />;
       case 'decisions':
         return <DecisionFeed />;
       case 'clarity-lens':
@@ -134,9 +146,9 @@ const Dashboard = () => {
       case 'integrations':
         return <IntegrationsManager />;
       case 'admin-dashboard':
-        return userRole === 'admin' ? <AdminDashboard /> : <DashboardOverview />;
+        return userRole === 'admin' ? <AdminDashboard /> : <EnhancedDashboardOverview />;
       case 'admin-users':
-        return userRole === 'admin' ? <AdminUserManagement /> : <DashboardOverview />;
+        return userRole === 'admin' ? <AdminUserManagement /> : <EnhancedDashboardOverview />;
       case 'settings':
         return (
           <div className="text-center py-12">
@@ -151,7 +163,7 @@ const Dashboard = () => {
           </div>
         );
       default:
-        return <DashboardOverview />;
+        return <EnhancedDashboardOverview />;
     }
   };
 

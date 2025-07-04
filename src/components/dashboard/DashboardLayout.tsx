@@ -38,17 +38,20 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const navigationItems = [
     { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'business-health', label: 'Business Health', icon: Brain, badge: 'NEW', badgeColor: 'bg-green-500' },
+    { id: 'intelligence-feed', label: 'Intelligence Feed', icon: Brain, badge: 'AI', badgeColor: 'bg-purple-500' },
     { id: 'clarity-lens', label: 'Clarity Lens', icon: Brain },
     { id: 'decisions', label: 'Decision Feed', icon: Brain },
     { id: 'calls', label: 'Call Log', icon: Phone },
     { id: 'contacts', label: 'Contacts', icon: Users },
     { id: 'deals', label: 'Deals Pipeline', icon: TrendingUp },
     { id: 'proposals', label: 'AI Proposals', icon: FileText },
+    { id: 'builtin-tools', label: 'Smart Tools', icon: Settings, badge: 'SMART', badgeColor: 'bg-blue-500' },
     { id: 'revenue', label: 'Revenue', icon: DollarSign },
     { id: 'calendar', label: 'Calendar Hub', icon: Calendar },
     { id: 'recovery', label: 'Missed Calls', icon: PhoneMissed },
     { id: 'insights', label: 'AI Insights', icon: BarChart3 },
-    { id: 'integrations', label: 'Integrations', icon: Settings },
+    { id: 'integration-hub', label: 'Integration Hub', icon: Settings, badge: 'HUB', badgeColor: 'bg-indigo-500' },
   ];
 
   const adminItems = [
@@ -91,13 +94,21 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     key={item.id}
                     variant={activeTab === item.id ? "default" : "ghost"}
                     className={cn(
-                      "w-full justify-start",
+                      "w-full justify-start relative",
                       activeTab === item.id && "bg-gradient-to-r from-blue-600 to-green-600"
                     )}
                     onClick={() => onTabChange(item.id)}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {item.label}
+                    {item.badge && (
+                      <span className={cn(
+                        "absolute -top-1 -right-1 text-xs px-1.5 py-0.5 rounded-full text-white font-bold",
+                        item.badgeColor
+                      )}>
+                        {item.badge}
+                      </span>
+                    )}
                   </Button>
                 );
               })}
