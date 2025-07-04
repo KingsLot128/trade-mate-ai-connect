@@ -10,8 +10,8 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('ajose002@gmail.com');
-  const [password, setPassword] = useState('Test1!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');

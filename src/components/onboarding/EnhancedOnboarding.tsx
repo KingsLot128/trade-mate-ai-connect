@@ -157,7 +157,8 @@ const EnhancedOnboarding = () => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          user_id: user.id,
           business_name: formData.businessName,
           industry: formData.industry,
           phone: formData.phone,
@@ -177,9 +178,10 @@ const EnhancedOnboarding = () => {
           revenue_predictability_score: formData.revenue_predictability,
           customer_acquisition_method: formData.customer_acquisition,
           biggest_challenge: formData.biggest_challenge,
+          quiz_completed_at: new Date().toISOString(),
+          onboarding_step: 'completed',
           updated_at: new Date().toISOString()
-        })
-        .eq('user_id', user.id);
+        });
 
       if (error) throw error;
 
@@ -234,11 +236,11 @@ const EnhancedOnboarding = () => {
       // Save preference to database
       await supabase
         .from('profiles')
-        .update({ 
+        .upsert({ 
+          user_id: user?.id,
           setup_preference: option.id,
           onboarding_step: 'preferences_selected'
-        })
-        .eq('user_id', user?.id);
+        });
 
       toast({
         title: "Preference Saved",
