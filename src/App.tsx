@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Onboarding from "./pages/Onboarding";
+import EnhancedOnboarding from "./components/onboarding/EnhancedOnboarding";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
@@ -49,7 +49,7 @@ const App = () => {
               } />
               <Route path="/onboarding" element={
                 <AuthGuard requireAuth={true} requireComplete={false}>
-                  <Onboarding />
+                  <EnhancedOnboarding />
                 </AuthGuard>
               } />
               <Route path="/features" element={<Features />} />

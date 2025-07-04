@@ -591,19 +591,27 @@ export type Database = {
       }
       profiles: {
         Row: {
+          biggest_challenge: string | null
           business_goals: string | null
           business_name: string | null
+          chaos_score: number | null
+          clarity_zone: string | null
           competition_level: string | null
           created_at: string | null
+          customer_acquisition_method: string | null
+          daily_overwhelm_score: number | null
           email: string | null
           full_name: string | null
           id: string
           industry: string | null
+          industry_percentile: number | null
           phone: string | null
           pricing_strategy: string | null
           primary_service_types: string[] | null
+          revenue_predictability_score: number | null
           seasonal_patterns: string | null
           service_area_radius: number | null
+          setup_preference: string | null
           target_customer_type: string | null
           typical_project_range_max: number | null
           typical_project_range_min: number | null
@@ -611,19 +619,27 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          biggest_challenge?: string | null
           business_goals?: string | null
           business_name?: string | null
+          chaos_score?: number | null
+          clarity_zone?: string | null
           competition_level?: string | null
           created_at?: string | null
+          customer_acquisition_method?: string | null
+          daily_overwhelm_score?: number | null
           email?: string | null
           full_name?: string | null
           id?: string
           industry?: string | null
+          industry_percentile?: number | null
           phone?: string | null
           pricing_strategy?: string | null
           primary_service_types?: string[] | null
+          revenue_predictability_score?: number | null
           seasonal_patterns?: string | null
           service_area_radius?: number | null
+          setup_preference?: string | null
           target_customer_type?: string | null
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
@@ -631,19 +647,27 @@ export type Database = {
           user_id: string
         }
         Update: {
+          biggest_challenge?: string | null
           business_goals?: string | null
           business_name?: string | null
+          chaos_score?: number | null
+          clarity_zone?: string | null
           competition_level?: string | null
           created_at?: string | null
+          customer_acquisition_method?: string | null
+          daily_overwhelm_score?: number | null
           email?: string | null
           full_name?: string | null
           id?: string
           industry?: string | null
+          industry_percentile?: number | null
           phone?: string | null
           pricing_strategy?: string | null
           primary_service_types?: string[] | null
+          revenue_predictability_score?: number | null
           seasonal_patterns?: string | null
           service_area_radius?: number | null
+          setup_preference?: string | null
           target_customer_type?: string | null
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
