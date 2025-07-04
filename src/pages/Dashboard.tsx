@@ -57,7 +57,7 @@ const Dashboard = () => {
           .eq('user_id', user.id)
           .single();
 
-        const hasCompletedSetup = profile?.business_name && profile?.industry && settings?.company_name;
+        const hasCompletedSetup = profile?.business_name && profile?.industry && profile?.phone;
         
         if (!hasCompletedSetup) {
           setIsFirstTime(true);
