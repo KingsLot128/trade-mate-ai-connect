@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { useIntelligenceIntegration } from "@/hooks/useIntelligenceIntegration";
 
 // Pages
 import Index from "./pages/Index";
@@ -41,14 +42,21 @@ import VisualIntegrationHub from "./components/integrations/VisualIntegrationHub
 import BusinessHealthScore from "./components/gamification/BusinessHealthScore";
 import MultiStreamFeed from "./components/enhanced-feed/MultiStreamFeed";
 import UserProfile from "./components/profile/UserProfile";
+import WebsiteAnalyzer from "./components/website/WebsiteAnalyzer";
 
 const queryClient = new QueryClient();
+
+const AppWithIntegration = () => {
+  useIntelligenceIntegration();
+  return null;
+};
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
+          <AppWithIntegration />
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -98,7 +106,7 @@ const App = () => {
                 <Route path="calendar" element={<Calendar />} />
                 <Route path="analytics" element={<div>Analytics - Coming Soon</div>} />
                 <Route path="integrations" element={<VisualIntegrationHub />} />
-                <Route path="website" element={<div>Website Analysis - Coming Soon</div>} />
+                <Route path="website" element={<WebsiteAnalyzer />} />
                 <Route path="profile" element={<UserProfile />} />
                 <Route path="settings" element={<div>Settings - Coming Soon</div>} />
                 <Route path="billing" element={<div>Billing - Coming Soon</div>} />

@@ -81,11 +81,32 @@ export const useUserProfile = () => {
 
       // Refresh profile data
       await fetchProfile();
+      
+      // Trigger universal intelligence updates
+      await triggerIntelligenceUpdate();
+      
       return true;
     } catch (err) {
       console.error('Error updating profile:', err);
       setError(err instanceof Error ? err.message : 'Failed to update profile');
       return false;
+    }
+  };
+
+  const triggerIntelligenceUpdate = async () => {
+    if (!user) return;
+    
+    try {
+      // Trigger AI analysis update
+      await supabase.functions.invoke('ai-business-advisor', {
+        body: {
+          analysisType: 'profile_update',
+          userId: user.id,
+          trigger: 'profile_change'
+        }
+      });
+    } catch (error) {
+      console.error('Error triggering intelligence update:', error);
     }
   };
 
