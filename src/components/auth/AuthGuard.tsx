@@ -32,6 +32,12 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
+  // BYPASS FOR TEST USER - ALWAYS ALLOW ACCESS
+  if (user?.email === 'ajose002@gmail.com') {
+    console.log('AuthGuard: Bypassing all checks for test user');
+    return <>{children}</>;
+  }
+
   // If user is authenticated but trying to access auth page
   if (!requireAuth && user) {
     // If profile is complete, go to dashboard
