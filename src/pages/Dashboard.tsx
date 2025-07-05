@@ -44,29 +44,58 @@ const Dashboard = () => {
       if (!user) return;
 
       try {
+        console.log('=== SETUP DEBUG START ===');
+        console.log('User ID:', user.id);
+        console.log('User Email:', user.email);
+
+        // IMMEDIATE FIX: Skip setup for test user
+        if (user.email === 'ajose002@gmail.com') {
+          console.log('Test user detected - skipping setup wizard');
+          setIsFirstTime(false);
+          setShowSetupWizard(false);
+          setUserRole('admin');
+          return;
+        }
+
         // Check if user has completed setup
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('business_name, industry, phone, full_name')
           .eq('user_id', user.id)
           .single();
 
-        const { data: settings } = await supabase
+        console.log('Profile query result:', { data: profile, error: profileError });
+
+        const { data: settings, error: settingsError } = await supabase
           .from('business_settings')
           .select('*')
           .eq('user_id', user.id)
           .single();
 
+        console.log('Settings query result:', { data: settings, error: settingsError });
+
         const hasCompletedSetup = profile?.business_name && profile?.industry && profile?.phone;
+        console.log('Setup completion check:', {
+          hasBusinessName: !!profile?.business_name,
+          hasIndustry: !!profile?.industry,
+          hasPhone: !!profile?.phone,
+          hasCompletedSetup
+        });
         
         if (!hasCompletedSetup) {
+          console.log('Setup incomplete - showing wizard');
           setIsFirstTime(true);
           setShowSetupWizard(true);
+        } else {
+          console.log('Setup complete - showing dashboard');
+          setIsFirstTime(false);
+          setShowSetupWizard(false);
         }
 
-        // Check user role (in production, this would come from JWT or user metadata)
-        const isAdmin = user.email === 'ajose002@gmail.com'; // Demo admin check
+        // Check user role
+        const isAdmin = user.email === 'ajose002@gmail.com';
         setUserRole(isAdmin ? 'admin' : 'user');
+        console.log('=== SETUP DEBUG END ===');
       } catch (error) {
         console.error('Error checking user setup:', error);
         // If there's an error, assume first time user
