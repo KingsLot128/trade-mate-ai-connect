@@ -32,6 +32,7 @@ import OAuthCallback from "./pages/OAuthCallback";
 import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import Recommendations from "./pages/Recommendations";
 import AuthGuard from "./components/auth/AuthGuard";
 import { EnhancedAuthGuard } from "./components/auth/EnhancedAuthGuard";
 import { IntelligentRedirect } from "./components/routing/IntelligentRedirect";
@@ -89,7 +90,7 @@ const App = () => {
                 <Route path="feed" element={<MultiStreamFeed />} />
                 <Route path="health" element={<BusinessHealthScore />} />
                 <Route path="clarity" element={<ClarityLens />} />
-                <Route path="recommendations" element={<Insights />} />
+                <Route path="recommendations" element={<Recommendations />} />
                 <Route path="calls" element={<div>Call Log - Coming Soon</div>} />
                 <Route path="contacts" element={<div>Contacts - Coming Soon</div>} />
                 <Route path="deals" element={<div>Deals Pipeline - Coming Soon</div>} />
