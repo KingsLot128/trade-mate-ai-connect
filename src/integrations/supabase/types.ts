@@ -102,6 +102,72 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_recommendations: {
+        Row: {
+          actions: Json | null
+          business_sizes: string[] | null
+          complexity: string | null
+          created_at: string | null
+          description: string | null
+          engagement_data: Json | null
+          expected_impact: string | null
+          expires_at: string | null
+          hook: string | null
+          id: string
+          industries: string[] | null
+          priority: string | null
+          reasoning: string | null
+          recommendation_type: string
+          source: string | null
+          status: string | null
+          time_to_implement: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          actions?: Json | null
+          business_sizes?: string[] | null
+          complexity?: string | null
+          created_at?: string | null
+          description?: string | null
+          engagement_data?: Json | null
+          expected_impact?: string | null
+          expires_at?: string | null
+          hook?: string | null
+          id?: string
+          industries?: string[] | null
+          priority?: string | null
+          reasoning?: string | null
+          recommendation_type: string
+          source?: string | null
+          status?: string | null
+          time_to_implement?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          actions?: Json | null
+          business_sizes?: string[] | null
+          complexity?: string | null
+          created_at?: string | null
+          description?: string | null
+          engagement_data?: Json | null
+          expected_impact?: string | null
+          expires_at?: string | null
+          hook?: string | null
+          id?: string
+          industries?: string[] | null
+          priority?: string | null
+          reasoning?: string | null
+          recommendation_type?: string
+          source?: string | null
+          status?: string | null
+          time_to_implement?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           created_at: string | null
@@ -882,6 +948,105 @@ export type Database = {
           recommendation_id?: string
           scroll_depth?: number | null
           time_spent?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      unified_business_profiles: {
+        Row: {
+          ai_preferences: Json | null
+          created_at: string | null
+          id: string
+          integration_data: Json | null
+          intelligence_score: number | null
+          last_updated: string | null
+          profile_completeness: number | null
+          profile_data: Json | null
+          user_id: string
+          website_data: Json | null
+        }
+        Insert: {
+          ai_preferences?: Json | null
+          created_at?: string | null
+          id?: string
+          integration_data?: Json | null
+          intelligence_score?: number | null
+          last_updated?: string | null
+          profile_completeness?: number | null
+          profile_data?: Json | null
+          user_id: string
+          website_data?: Json | null
+        }
+        Update: {
+          ai_preferences?: Json | null
+          created_at?: string | null
+          id?: string
+          integration_data?: Json | null
+          intelligence_score?: number | null
+          last_updated?: string | null
+          profile_completeness?: number | null
+          profile_data?: Json | null
+          user_id?: string
+          website_data?: Json | null
+        }
+        Relationships: []
+      }
+      user_engagement: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          page_path: string | null
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          page_path?: string | null
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          page_path?: string | null
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_photos: {
+        Row: {
+          created_at: string | null
+          file_size: number | null
+          file_type: string | null
+          id: string
+          photo_type: string | null
+          photo_url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+          photo_type?: string | null
+          photo_url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+          photo_type?: string | null
+          photo_url?: string
           user_id?: string
         }
         Relationships: []
