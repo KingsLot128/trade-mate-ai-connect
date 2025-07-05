@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -18,7 +18,10 @@ import {
   DollarSign,
   BarChart3,
   UserCog,
-  Shield
+  Shield,
+  Menu,
+  X,
+  User
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -35,6 +38,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   userRole = 'user'
 }) => {
   const { signOut } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigationItems = [
     { id: 'overview', label: 'Overview', icon: Home },
@@ -59,6 +63,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     { id: 'admin-users', label: 'User Management', icon: UserCog },
   ];
 
+  const userItems = [
+    { id: 'profile', label: 'My Profile', icon: User },
+  ];
+
   const settingsItems = [
     { id: 'setup', label: 'Setup Guide', icon: Settings },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -74,8 +82,33 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {/* Mobile Menu Button */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="bg-white/90 backdrop-blur-sm"
+        >
+          {sidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </Button>
+      </div>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-sm border-r">
+      <div className={cn(
+        "bg-white shadow-sm border-r transition-transform duration-300 ease-in-out z-40",
+        "w-64 lg:w-64 lg:relative lg:translate-x-0",
+        "fixed lg:static h-full",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
         <div className="p-6">
           <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
             TradeMate AI
@@ -97,7 +130,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                       "w-full justify-start relative",
                       activeTab === item.id && "bg-gradient-to-r from-blue-600 to-green-600"
                     )}
-                    onClick={() => onTabChange(item.id)}
+                    onClick={() => {
+                      onTabChange(item.id);
+                      setSidebarOpen(false);
+                    }}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {item.label}
@@ -134,7 +170,44 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                           "w-full justify-start",
                           activeTab === item.id && "bg-gradient-to-r from-blue-600 to-green-600"
                         )}
-                        onClick={() => onTabChange(item.id)}
+                        onClick={() => {
+                          onTabChange(item.id);
+                          setSidebarOpen(false);
+                        }}
+                      >
+                        <Icon className="mr-2 h-4 w-4" />
+                        {item.label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {/* User Profile Section - Only for regular users */}
+            {userRole !== 'admin' && (
+              <>
+                <div className="pt-4 pb-2">
+                  <div className="flex items-center px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <User className="mr-2 h-3 w-3" />
+                    Profile
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  {userItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Button
+                        key={item.id}
+                        variant={activeTab === item.id ? "default" : "ghost"}
+                        className={cn(
+                          "w-full justify-start",
+                          activeTab === item.id && "bg-gradient-to-r from-blue-600 to-green-600"
+                        )}
+                        onClick={() => {
+                          onTabChange(item.id);
+                          setSidebarOpen(false);
+                        }}
                       >
                         <Icon className="mr-2 h-4 w-4" />
                         {item.label}
@@ -162,7 +235,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                       "w-full justify-start",
                       activeTab === item.id && "bg-gradient-to-r from-blue-600 to-green-600"
                     )}
-                    onClick={() => onTabChange(item.id)}
+                    onClick={() => {
+                      onTabChange(item.id);
+                      setSidebarOpen(false);
+                    }}
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {item.label}
@@ -188,7 +264,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
-        <main className="p-6">
+        <main className="p-3 lg:p-6 pt-16 lg:pt-6">
           {children}
         </main>
       </div>

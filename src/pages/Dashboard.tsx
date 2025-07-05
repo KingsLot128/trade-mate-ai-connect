@@ -25,6 +25,7 @@ import BusinessHealthScore from '@/components/gamification/BusinessHealthScore';
 import MultiStreamFeed from '@/components/enhanced-feed/MultiStreamFeed';
 import UnifiedToolsInterface from '@/components/builtin-tools/UnifiedToolsInterface';
 import VisualIntegrationHub from '@/components/integrations/VisualIntegrationHub';
+import UserProfile from '@/components/profile/UserProfile';
 import Calendar from './Calendar';
 import Decisions from './Decisions';
 import ClarityLens from './ClarityLens';
@@ -178,6 +179,8 @@ const Dashboard = () => {
         return userRole === 'admin' ? <AdminDashboard /> : <EnhancedDashboardOverview />;
       case 'admin-users':
         return userRole === 'admin' ? <AdminUserManagement /> : <EnhancedDashboardOverview />;
+      case 'profile':
+        return userRole !== 'admin' ? <UserProfile /> : <EnhancedDashboardOverview />;
       case 'settings':
         return (
           <div className="text-center py-12">
