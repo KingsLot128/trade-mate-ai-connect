@@ -43,6 +43,9 @@ import BusinessHealthScore from "./components/gamification/BusinessHealthScore";
 import MultiStreamFeed from "./components/enhanced-feed/MultiStreamFeed";
 import UserProfile from "./components/profile/UserProfile";
 import WebsiteAnalyzer from "./components/website/WebsiteAnalyzer";
+import CallsManager from "./components/calls/CallsManager";
+import ContactsManager from "./components/contacts/ContactsManager";
+import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
 
 const queryClient = new QueryClient();
 
@@ -99,12 +102,12 @@ const App = () => {
                 <Route path="health" element={<BusinessHealthScore />} />
                 <Route path="clarity" element={<ClarityLens />} />
                 <Route path="recommendations" element={<Recommendations />} />
-                <Route path="calls" element={<div>Call Log - Coming Soon</div>} />
-                <Route path="contacts" element={<div>Contacts - Coming Soon</div>} />
+                <Route path="calls" element={<CallsManager />} />
+                <Route path="contacts" element={<ContactsManager />} />
                 <Route path="deals" element={<div>Deals Pipeline - Coming Soon</div>} />
                 <Route path="tools" element={<div>Smart Tools - Coming Soon</div>} />
                 <Route path="calendar" element={<Calendar />} />
-                <Route path="analytics" element={<div>Analytics - Coming Soon</div>} />
+                <Route path="analytics" element={<AnalyticsDashboard />} />
                 <Route path="integrations" element={<VisualIntegrationHub />} />
                 <Route path="website" element={<WebsiteAnalyzer />} />
                 <Route path="profile" element={<UserProfile />} />
