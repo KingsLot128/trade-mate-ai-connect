@@ -208,11 +208,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      // Consider profile complete if basic business info is filled
-      const isComplete = profile && 
-        profile.business_name && 
-        profile.industry && 
-        profile.phone;
+      // Consider profile complete if onboarding is marked complete OR all required fields are filled
+      const isComplete = profile && (
+        profile.onboarding_step === 'completed' ||
+        (profile.business_name && profile.industry && profile.phone && profile.quiz_completed_at)
+      );
       
       setIsProfileComplete(!!isComplete);
       setIsQuizCompleted(!!profile?.quiz_completed_at);

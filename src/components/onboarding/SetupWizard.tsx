@@ -12,6 +12,7 @@ import ChaosIndexDisplay from '@/components/dashboard/ChaosIndexDisplay';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { trackSetupCompletion, initializeTracking } from '@/utils/dataTracking';
 
 interface SetupWizardProps {
   onComplete: () => void;
@@ -129,6 +130,10 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
           target_customer_type: 'Homeowners and businesses',
           competition_level: 'medium',
           pricing_strategy: 'competitive',
+          onboarding_step: 'completed',
+          quiz_completed_at: new Date().toISOString(),
+          setup_preference: 'minimal',
+          chaos_score: calculateChaosIndex(),
           updated_at: new Date().toISOString()
         }, {
           onConflict: 'user_id'
@@ -237,6 +242,10 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
         title: "Setup Complete! 🎉",
         description: `Your Chaos Index: ${chaosIndex.toFixed(1)}. Your Observer OS is ready!`,
       });
+
+      // Track setup completion for business intelligence
+      const tracker = initializeTracking(user.id);
+      await trackSetupCompletion(setupData, chaosIndex);
 
       onComplete();
     } catch (error) {
