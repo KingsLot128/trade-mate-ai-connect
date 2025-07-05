@@ -117,7 +117,7 @@ export const useIntelligenceIntegration = () => {
         .from('unified_business_profiles')
         .upsert({
           user_id: user.id,
-          profile_data: unifiedProfile,
+          profile_data: unifiedProfile as any,
           intelligence_score: calculateIntelligenceScore(unifiedProfile),
           last_updated: new Date().toISOString()
         }, { onConflict: 'user_id' });
@@ -162,9 +162,9 @@ export const useIntelligenceIntegration = () => {
         .limit(1)
         .single();
 
-      if (websiteAnalysis && websiteAnalysis.recommendations) {
+      if (websiteAnalysis && websiteAnalysis.recommendations && Array.isArray(websiteAnalysis.recommendations)) {
         // Convert website recommendations to enhanced recommendations
-        for (const rec of websiteAnalysis.recommendations) {
+        for (const rec of websiteAnalysis.recommendations as any[]) {
           await supabase
             .from('enhanced_recommendations')
             .upsert({
@@ -238,24 +238,34 @@ export const useIntelligenceIntegration = () => {
       .order('created_at', { ascending: false })
       .limit(50);
 
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('chaos_score')
+      .eq('user_id', user?.id)
+      .single();
+
     return {
       engagementPatterns: engagements?.map(e => e.event_type) || [],
       implementationRate: 0.7, // Would be calculated from actual data
-      preferredComplexity: 'medium' as const,
-      focusAreas: ['efficiency', 'revenue'],
-      activeHours: [],
-      deviceUsage: {}
-    };
+      preferredComplexity: 'moderate' as const,
+      growthAmbition: (profile?.chaos_score || 50) > 70 ? 'maintain' : 
+                     (profile?.chaos_score || 50) > 40 ? 'grow' : 'scale'
+    } as const;
   };
 
   const getIndustryBenchmarks = (industry: string) => {
-    return {
-      averageChaosScore: 55,
-      commonChallenges: ['time management', 'customer acquisition'],
-      effectiveStrategies: ['automation', 'customer focus'],
-      seasonalTrends: { 'spring': 1.0, 'summer': 1.0, 'fall': 1.0, 'winter': 1.0 },
-      peerPerformance: { avgRevenue: 100000, avgMargin: 0.20 }
+    const benchmarks = {
+      'construction': {
+        financial: { averageRevenue: 25000, averageExpenses: 18000 },
+        sales: { averageConversionRate: 15, averageDealSize: 5000 }
+      },
+      'consulting': {
+        financial: { averageRevenue: 15000, averageExpenses: 8000 },
+        sales: { averageConversionRate: 25, averageDealSize: 2500 }
+      }
     };
+
+    return benchmarks[industry as keyof typeof benchmarks] || benchmarks.consulting;
   };
 
   const getWebsiteImplementationSteps = (rec: any): string[] => {

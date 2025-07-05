@@ -85,8 +85,8 @@ const WebsiteAnalyzer = () => {
           seo_score: mockAnalysis.seoScore,
           design_score: mockAnalysis.designScore,
           conversion_score: mockAnalysis.conversionScore,
-          analysis_data: mockAnalysis,
-          recommendations: mockAnalysis.recommendations,
+          analysis_data: mockAnalysis as any,
+          recommendations: mockAnalysis.recommendations as any,
           last_analyzed: new Date().toISOString()
         }, { onConflict: 'user_id,website_url' });
 
