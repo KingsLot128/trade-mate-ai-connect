@@ -116,10 +116,11 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
     if (!user) return;
 
     try {
-      // Update profile with enhanced data
+      // Update profile with enhanced data (use upsert to handle new profiles)
       const { error: profileError } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          user_id: user.id,
           business_name: setupData.businessName,
           industry: setupData.industry,
           phone: setupData.phone,
@@ -127,9 +128,11 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
           business_goals: `Revenue: ${setupData.revenueTarget}, Efficiency: ${setupData.efficiencyGoal}`,
           target_customer_type: 'Homeowners and businesses',
           competition_level: 'medium',
-          pricing_strategy: 'competitive'
-        })
-        .eq('user_id', user.id);
+          pricing_strategy: 'competitive',
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
 
       if (profileError) throw profileError;
 
