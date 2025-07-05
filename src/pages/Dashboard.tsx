@@ -1,214 +1,113 @@
-
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/lib/supabase';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import EnhancedDashboardOverview from '@/components/dashboard/EnhancedDashboardOverview';
-import CallsManager from '@/components/dashboard/CallsManager';
-import ScheduleManager from '@/components/scheduling/ScheduleManager';
-import CustomerManager from '@/components/crm/CustomerManager';
-import RevenueTracker from '@/components/revenue/RevenueTracker';
-import MissedCallRecovery from '@/components/recovery/MissedCallRecovery';
-import AIInsights from '@/components/insights/AIInsights';
-import SmartCallHandler from '@/components/ai/SmartCallHandler';
-import SetupWizard from '@/components/onboarding/SetupWizard';
-import SetupGuide from '@/components/SetupGuide';
-import CallsLog from '@/components/calls/CallsLog';
-import ContactsList from '@/components/crm/ContactsList';
-import DealsPipeline from '@/components/deals/DealsPipeline';
-import ProposalManager from '@/components/proposals/ProposalManager';
-import AdminUserManagement from '@/components/admin/AdminUserManagement';
-import AdminDashboard from '@/components/admin/AdminDashboard';
-import IntegrationsManager from '@/components/integrations/IntegrationsManager';
-import DecisionFeed from '@/components/dashboard/DecisionFeed';
-import BusinessHealthScore from '@/components/gamification/BusinessHealthScore';
-import MultiStreamFeed from '@/components/enhanced-feed/MultiStreamFeed';
-import UnifiedToolsInterface from '@/components/builtin-tools/UnifiedToolsInterface';
-import VisualIntegrationHub from '@/components/integrations/VisualIntegrationHub';
-import UserProfile from '@/components/profile/UserProfile';
-import Calendar from './Calendar';
-import Decisions from './Decisions';
-import ClarityLens from './ClarityLens';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import { useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { BusinessHealthDashboard } from '@/components/dashboard/BusinessHealthDashboard';
+import { ChaosIndexWidget } from '@/components/dashboard/ChaosIndexWidget';
+import { QuickMetricsGrid } from '@/components/dashboard/QuickMetricsGrid';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Sparkles, Target, TrendingUp } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { user, loading } = useAuth();
-  const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'overview');
-  const [showSetupWizard, setShowSetupWizard] = useState(false);
-  const [isFirstTime, setIsFirstTime] = useState(false);
-  const [userRole, setUserRole] = useState<string>('user');
-
-  useEffect(() => {
-    const checkUserSetup = async () => {
-      if (!user) return;
-
-      try {
-        console.log('=== SETUP DEBUG START ===');
-        console.log('User ID:', user.id);
-        console.log('User Email:', user.email);
-
-        // IMMEDIATE FIX: Skip setup for test user
-        if (user.email === 'ajose002@gmail.com') {
-          console.log('Test user detected - skipping setup wizard');
-          setIsFirstTime(false);
-          setShowSetupWizard(false);
-          setUserRole('admin');
-          return;
-        }
-
-        // Check if user has completed setup
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('business_name, industry, phone, full_name')
-          .eq('user_id', user.id)
-          .single();
-
-        console.log('Profile query result:', { data: profile, error: profileError });
-
-        const { data: settings, error: settingsError } = await supabase
-          .from('business_settings')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
-
-        console.log('Settings query result:', { data: settings, error: settingsError });
-
-        const hasCompletedSetup = profile?.business_name && profile?.industry && profile?.phone;
-        console.log('Setup completion check:', {
-          hasBusinessName: !!profile?.business_name,
-          hasIndustry: !!profile?.industry,
-          hasPhone: !!profile?.phone,
-          hasCompletedSetup
-        });
-        
-        if (!hasCompletedSetup) {
-          console.log('Setup incomplete - showing wizard');
-          setIsFirstTime(true);
-          setShowSetupWizard(true);
-        } else {
-          console.log('Setup complete - showing dashboard');
-          setIsFirstTime(false);
-          setShowSetupWizard(false);
-        }
-
-        // Check user role
-        const isAdmin = user.email === 'ajose002@gmail.com';
-        setUserRole(isAdmin ? 'admin' : 'user');
-        console.log('=== SETUP DEBUG END ===');
-      } catch (error) {
-        console.error('Error checking user setup:', error);
-        // If there's an error, assume first time user
-        setIsFirstTime(true);
-        setShowSetupWizard(true);
-      }
-    };
-
-    if (user && !loading) {
-      checkUserSetup();
-    }
-  }, [user, loading]);
-
-  // Update active tab when URL changes
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab) {
-      setActiveTab(tab);
-    }
-  }, [searchParams]);
-
-  const handleSetupComplete = () => {
-    setShowSetupWizard(false);
-    setIsFirstTime(false);
-    setActiveTab('overview');
-  };
-
-  // Show setup wizard for first-time users or when explicitly requested
-  if (showSetupWizard) {
-    return (
-      <ProtectedRoute>
-        <SetupWizard onComplete={handleSetupComplete} />
-      </ProtectedRoute>
-    );
-  }
-
-  const renderActiveTab = () => {
-    switch (activeTab) {
-      case 'overview':
-        return <EnhancedDashboardOverview />;
-      case 'business-health':
-        return <BusinessHealthScore />;
-      case 'intelligence-feed':
-        return <MultiStreamFeed />;
-      case 'builtin-tools':
-        return <UnifiedToolsInterface />;
-      case 'integration-hub':
-        return <VisualIntegrationHub />;
-      case 'decisions':
-        return <DecisionFeed />;
-      case 'clarity-lens':
-        return <ClarityLens />;
-      case 'setup':
-        return <SetupGuide />;
-      case 'calls':
-        return <CallsLog />;
-      case 'contacts': 
-        return <ContactsList />;
-      case 'deals':
-        return <DealsPipeline />;
-      case 'proposals':
-        return <ProposalManager />;
-      case 'ai-assistant':
-        return <SmartCallHandler />;
-      case 'insights':
-        return <AIInsights />;
-      case 'recovery':
-        return <MissedCallRecovery />;
-      case 'revenue':
-        return <RevenueTracker />;
-      case 'customers':
-        return <CustomerManager />;
-      case 'calendar':
-        return <Calendar />;
-      case 'appointments':
-        return <ScheduleManager />;
-      case 'integrations':
-        return <IntegrationsManager />;
-      case 'admin-dashboard':
-        return userRole === 'admin' ? <AdminDashboard /> : <EnhancedDashboardOverview />;
-      case 'admin-users':
-        return userRole === 'admin' ? <AdminUserManagement /> : <EnhancedDashboardOverview />;
-      case 'profile':
-        return userRole !== 'admin' ? <UserProfile /> : <EnhancedDashboardOverview />;
-      case 'settings':
-        return (
-          <div className="text-center py-12">
-            <h3 className="text-lg font-medium mb-2">Settings</h3>
-            <p className="text-gray-600 mb-4">Manage your account and business settings</p>
-            <button 
-              onClick={() => setShowSetupWizard(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Run Setup Wizard Again
-            </button>
-          </div>
-        );
-      default:
-        return <EnhancedDashboardOverview />;
-    }
-  };
+  const navigate = useNavigate();
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab}
-        userRole={userRole}
-      >
-        {renderActiveTab()}
-      </DashboardLayout>
-    </ProtectedRoute>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Business Intelligence Dashboard</h1>
+          <p className="text-muted-foreground">
+            Real-time insights into your business health and performance
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => navigate('/recommendations')}>
+            <Sparkles className="h-4 w-4 mr-2" />
+            View Insights
+          </Button>
+          <Button onClick={() => navigate('/clarity')}>
+            <Target className="h-4 w-4 mr-2" />
+            ClarityLens
+          </Button>
+        </div>
+      </div>
+
+      {/* Quick Metrics Grid */}
+      <QuickMetricsGrid />
+
+      {/* Main Dashboard Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Business Health (takes 2 columns) */}
+        <div className="lg:col-span-2">
+          <BusinessHealthDashboard />
+        </div>
+
+        {/* Sidebar Widgets */}
+        <div className="space-y-6">
+          {/* Chaos Index Widget */}
+          <ChaosIndexWidget />
+
+          {/* Quick Actions Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button 
+                variant="outline" 
+                className="w-full justify-between"
+                onClick={() => navigate('/feed')}
+              >
+                <span>Intelligence Feed</span>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full justify-between"
+                onClick={() => navigate('/integrations')}
+              >
+                <span>Connect Tools</span>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full justify-between"
+                onClick={() => navigate('/health')}
+              >
+                <span>Health Score</span>
+                <TrendingUp className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Progress Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Today's Focus</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Profile Setup</span>
+                  <span className="text-sm font-medium">85%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Business Health</span>
+                  <span className="text-sm font-medium">Good</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Active Recommendations</span>
+                  <span className="text-sm font-medium">3</span>
+                </div>
+                <Button size="sm" variant="secondary" className="w-full">
+                  View All Progress
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 };
 
