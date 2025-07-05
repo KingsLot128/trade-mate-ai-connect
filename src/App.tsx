@@ -33,6 +33,8 @@ import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import AuthGuard from "./components/auth/AuthGuard";
+import { EnhancedAuthGuard } from "./components/auth/EnhancedAuthGuard";
+import { IntelligentRedirect } from "./components/routing/IntelligentRedirect";
 import EnhancedQuizInterface from "./components/quiz/EnhancedQuizInterface";
 import VisualIntegrationHub from "./components/integrations/VisualIntegrationHub";
 import BusinessHealthScore from "./components/gamification/BusinessHealthScore";
@@ -70,11 +72,18 @@ const App = () => {
               {/* Landing page */}
               <Route path="/" element={<Index />} />
               
+              {/* Intelligent redirect for authenticated users */}
+              <Route path="/redirect" element={
+                <EnhancedAuthGuard requireAuth={true}>
+                  <IntelligentRedirect />
+                </EnhancedAuthGuard>
+              } />
+              
               {/* Protected routes with main layout */}
               <Route path="/" element={
-                <AuthGuard requireAuth={true} requireComplete={true}>
+                <EnhancedAuthGuard requireAuth={true} requireComplete={true}>
                   <MainLayout />
-                </AuthGuard>
+                </EnhancedAuthGuard>
               }>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="feed" element={<MultiStreamFeed />} />
@@ -98,9 +107,9 @@ const App = () => {
               
               {/* Onboarding (separate layout) */}
               <Route path="/onboarding" element={
-                <AuthGuard requireAuth={true} requireComplete={false}>
+                <EnhancedAuthGuard requireAuth={true} requireComplete={false}>
                   <EnhancedOnboarding />
-                </AuthGuard>
+                </EnhancedAuthGuard>
               } />
 
               {/* OAuth callback */}
