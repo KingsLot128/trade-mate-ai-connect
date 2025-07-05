@@ -116,7 +116,7 @@ const UserProfile: React.FC = () => {
         .from('ai_preferences')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       setUserProfile(profile);
       setBusinessSettings(settings);
@@ -209,8 +209,13 @@ const UserProfile: React.FC = () => {
         .from('ai_preferences')
         .upsert({
           user_id: user.id,
-          ...aiPreferences,
-          preferences_data: aiPreferences
+          frequency: aiPreferences.frequency,
+          focus_areas: aiPreferences.focus_areas,
+          complexity: aiPreferences.complexity,
+          benchmarking: aiPreferences.benchmarking,
+          predictive: aiPreferences.predictive,
+          competitive: aiPreferences.competitive,
+          preferences_data: JSON.stringify(aiPreferences)
         });
 
       toast({

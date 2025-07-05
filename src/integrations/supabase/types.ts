@@ -60,6 +60,48 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_preferences: {
+        Row: {
+          benchmarking: boolean | null
+          competitive: boolean | null
+          complexity: string | null
+          created_at: string | null
+          focus_areas: string[] | null
+          frequency: string | null
+          id: string
+          predictive: boolean | null
+          preferences_data: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          benchmarking?: boolean | null
+          competitive?: boolean | null
+          complexity?: string | null
+          created_at?: string | null
+          focus_areas?: string[] | null
+          frequency?: string | null
+          id?: string
+          predictive?: boolean | null
+          preferences_data?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          benchmarking?: boolean | null
+          competitive?: boolean | null
+          complexity?: string | null
+          created_at?: string | null
+          focus_areas?: string[] | null
+          frequency?: string | null
+          id?: string
+          predictive?: boolean | null
+          preferences_data?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           created_at: string | null
@@ -686,7 +728,10 @@ export type Database = {
         Row: {
           biggest_challenge: string | null
           business_goals: string | null
+          business_health_score: number | null
+          business_level: number | null
           business_name: string | null
+          business_size: string | null
           chaos_score: number | null
           clarity_zone: string | null
           competition_level: string | null
@@ -698,9 +743,12 @@ export type Database = {
           id: string
           industry: string | null
           industry_percentile: number | null
+          location: string | null
           onboarding_step: string | null
           phone: string | null
+          photo_url: string | null
           pricing_strategy: string | null
+          primary_goal: string | null
           primary_service_types: string[] | null
           quiz_completed_at: string | null
           revenue_predictability_score: number | null
@@ -708,15 +756,21 @@ export type Database = {
           service_area_radius: number | null
           setup_preference: string | null
           target_customer_type: string | null
+          target_revenue: string | null
           typical_project_range_max: number | null
           typical_project_range_min: number | null
           updated_at: string | null
           user_id: string
+          website_url: string | null
+          years_in_business: number | null
         }
         Insert: {
           biggest_challenge?: string | null
           business_goals?: string | null
+          business_health_score?: number | null
+          business_level?: number | null
           business_name?: string | null
+          business_size?: string | null
           chaos_score?: number | null
           clarity_zone?: string | null
           competition_level?: string | null
@@ -728,9 +782,12 @@ export type Database = {
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          location?: string | null
           onboarding_step?: string | null
           phone?: string | null
+          photo_url?: string | null
           pricing_strategy?: string | null
+          primary_goal?: string | null
           primary_service_types?: string[] | null
           quiz_completed_at?: string | null
           revenue_predictability_score?: number | null
@@ -738,15 +795,21 @@ export type Database = {
           service_area_radius?: number | null
           setup_preference?: string | null
           target_customer_type?: string | null
+          target_revenue?: string | null
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
           updated_at?: string | null
           user_id: string
+          website_url?: string | null
+          years_in_business?: number | null
         }
         Update: {
           biggest_challenge?: string | null
           business_goals?: string | null
+          business_health_score?: number | null
+          business_level?: number | null
           business_name?: string | null
+          business_size?: string | null
           chaos_score?: number | null
           clarity_zone?: string | null
           competition_level?: string | null
@@ -758,9 +821,12 @@ export type Database = {
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          location?: string | null
           onboarding_step?: string | null
           phone?: string | null
+          photo_url?: string | null
           pricing_strategy?: string | null
+          primary_goal?: string | null
           primary_service_types?: string[] | null
           quiz_completed_at?: string | null
           revenue_predictability_score?: number | null
@@ -768,10 +834,13 @@ export type Database = {
           service_area_radius?: number | null
           setup_preference?: string | null
           target_customer_type?: string | null
+          target_revenue?: string | null
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
           updated_at?: string | null
           user_id?: string
+          website_url?: string | null
+          years_in_business?: number | null
         }
         Relationships: []
       }
@@ -892,6 +961,45 @@ export type Database = {
           setup_preference?: string
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      website_analysis: {
+        Row: {
+          analysis_data: Json | null
+          conversion_score: number | null
+          created_at: string | null
+          design_score: number | null
+          id: string
+          last_analyzed: string | null
+          recommendations: Json | null
+          seo_score: number | null
+          user_id: string
+          website_url: string
+        }
+        Insert: {
+          analysis_data?: Json | null
+          conversion_score?: number | null
+          created_at?: string | null
+          design_score?: number | null
+          id?: string
+          last_analyzed?: string | null
+          recommendations?: Json | null
+          seo_score?: number | null
+          user_id: string
+          website_url: string
+        }
+        Update: {
+          analysis_data?: Json | null
+          conversion_score?: number | null
+          created_at?: string | null
+          design_score?: number | null
+          id?: string
+          last_analyzed?: string | null
+          recommendations?: Json | null
+          seo_score?: number | null
+          user_id?: string
+          website_url?: string
         }
         Relationships: []
       }
