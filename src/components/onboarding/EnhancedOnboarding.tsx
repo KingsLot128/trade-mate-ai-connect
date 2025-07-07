@@ -43,16 +43,11 @@ interface FormData {
 }
 
 const EnhancedOnboarding = () => {
-  const { user, checkProfileComplete, isQuizCompleted, onboardingStep } = useAuth();
+  const { user, refreshProfileCompletion, isProfileComplete } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(() => {
-    // Smart step initialization based on user state
-    if (isQuizCompleted && onboardingStep === 'preferences') return 6;
-    if (isQuizCompleted) return 5;
-    return 1;
-  });
+  const [step, setStep] = useState(1);
   const [chaosResults, setChaosResults] = useState<ChaosResults | null>(null);
   const [formData, setFormData] = useState<FormData>({
     businessName: '',
@@ -208,7 +203,7 @@ const EnhancedOnboarding = () => {
           });
       }
 
-      await checkProfileComplete();
+      await refreshProfileCompletion();
       
       toast({
         title: "Profile Complete!",

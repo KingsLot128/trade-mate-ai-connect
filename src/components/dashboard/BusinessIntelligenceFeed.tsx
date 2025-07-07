@@ -22,7 +22,7 @@ interface Recommendation {
 }
 
 const BusinessIntelligenceFeed = () => {
-  const { user, isQuizCompleted, setupPreference } = useAuth();
+  const { user, isProfileComplete } = useAuth();
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [activeStream, setActiveStream] = useState('forYou');
   const [loading, setLoading] = useState(true);
@@ -36,10 +36,10 @@ const BusinessIntelligenceFeed = () => {
   ];
 
   useEffect(() => {
-    if (user && isQuizCompleted) {
+    if (user && isProfileComplete) {
       loadRecommendations();
     }
-  }, [user, isQuizCompleted, activeStream]);
+  }, [user, isProfileComplete, activeStream]);
 
   const loadRecommendations = async () => {
     if (!user) return;
@@ -176,7 +176,7 @@ const BusinessIntelligenceFeed = () => {
     }
   };
 
-  if (!isQuizCompleted) {
+  if (!isProfileComplete) {
     return (
       <div className="text-center py-12">
         <div className="text-lg font-semibold mb-2">Complete Your Assessment First</div>
