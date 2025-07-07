@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { completionChecker } from '@/lib/auth/CompletionChecker';
 
 interface UserMetadata {
   businessName?: string;
@@ -17,14 +18,12 @@ interface AuthContextType {
   loading: boolean;
   isConfigured: boolean;
   isProfileComplete: boolean;
-  isQuizCompleted: boolean;
-  onboardingStep: string;
-  setupPreference: string;
+  error: string | null;
   signUp: (email: string, password: string, metadata?: UserMetadata) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  checkProfileComplete: () => Promise<void>;
-  updateUserState: () => Promise<void>;
+  refreshProfileCompletion: () => Promise<void>;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,9 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isConfigured, setIsConfigured] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
-  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
-  const [onboardingStep, setOnboardingStep] = useState('not_started');
-  const [setupPreference, setSetupPreference] = useState('minimal');
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -69,15 +66,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { data: { session } } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
         if (session?.user) {
-          updateUserState();
+          await checkProfileCompletion(session.user);
         }
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-          console.log('Auth state changed:', event, session?.user?.email);
+          console.log('🔄 Auth state change:', event, session?.user?.email);
           setUser(session?.user ?? null);
           if (session?.user) {
-            updateUserState();
+            await checkProfileCompletion(session.user);
+          } else {
+            setIsProfileComplete(false);
           }
         });
 
@@ -178,54 +177,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const updateUserState = async () => {
-    if (!user) {
-      setIsProfileComplete(false);
-      setIsQuizCompleted(false);
-      setOnboardingStep('not_started');
-      setSetupPreference('minimal');
-      return;
-    }
-
-    // IMMEDIATE FIX: Force complete profile for test user
-    if (user.email === 'ajose002@gmail.com') {
-      setIsProfileComplete(true);
-      setIsQuizCompleted(true);
-      setOnboardingStep('completed');
-      setSetupPreference('minimal');
-      return;
-    }
-
+  const checkProfileCompletion = async (user: User) => {
     try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('business_name, industry, phone, quiz_completed_at, onboarding_step, setup_preference')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error checking user state:', error);
-        return;
-      }
-
-      // Consider profile complete if onboarding is marked complete OR all required fields are filled
-      const isComplete = profile && (
-        profile.onboarding_step === 'completed' ||
-        (profile.business_name && profile.industry && profile.phone && profile.quiz_completed_at)
-      );
+      console.log('🔍 Checking profile completion for:', user.email);
       
-      setIsProfileComplete(!!isComplete);
-      setIsQuizCompleted(!!profile?.quiz_completed_at);
-      setOnboardingStep(profile?.onboarding_step || 'not_started');
-      setSetupPreference(profile?.setup_preference || 'minimal');
+      const isComplete = await completionChecker.checkUserCompletion(user.id, user.email);
+      setIsProfileComplete(isComplete);
+      setError(null);
+      
+      console.log('✅ Profile completion status:', isComplete);
     } catch (error) {
-      console.error('User state check failed:', error);
+      console.error('❌ Profile completion check failed:', error);
+      setError('Failed to check profile completion');
+      setIsProfileComplete(false);
     }
   };
 
-  const checkProfileComplete = async () => {
-    // This function is kept for backwards compatibility
-    await updateUserState();
+  const refreshProfileCompletion = async () => {
+    if (user) {
+      await checkProfileCompletion(user);
+    }
   };
 
   const signOut = async () => {
@@ -238,22 +209,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const { error } = await supabase.auth.signOut();
+      setLoading(true);
+      setError(null);
       
-      if (error) {
-        toast({
-          title: "Sign Out Error",
-          description: error.message,
-          variant: "destructive",
-        });
-        throw error;
+      // Clear completion cache
+      if (user) {
+        completionChecker.clearCache(user.id);
       }
-
-      // Reset all state on signout
+      
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // Clear local state
+      setUser(null);
       setIsProfileComplete(false);
-      setIsQuizCompleted(false);
-      setOnboardingStep('not_started');
-      setSetupPreference('minimal');
 
       toast({
         title: "Signed out successfully",
@@ -261,9 +230,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
     } catch (error) {
-      console.error('Sign out failed:', error);
-      throw error;
+      console.error('❌ Sign out failed:', error);
+      setError('Sign out failed');
+      toast({
+        title: "Sign Out Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const clearError = () => {
+    setError(null);
   };
 
   const value = {
@@ -271,14 +251,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     isConfigured,
     isProfileComplete,
-    isQuizCompleted,
-    onboardingStep,
-    setupPreference,
+    error,
     signUp,
     signIn,
     signOut,
-    checkProfileComplete,
-    updateUserState,
+    refreshProfileCompletion,
+    clearError,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

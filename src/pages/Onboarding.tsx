@@ -13,7 +13,7 @@ import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
 
 const Onboarding = () => {
-  const { user, checkProfileComplete } = useAuth();
+  const { user, refreshProfileCompletion } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -103,7 +103,7 @@ const Onboarding = () => {
 
       if (error) throw error;
 
-      await checkProfileComplete();
+      await refreshProfileCompletion();
       
       toast({
         title: "Profile Complete!",

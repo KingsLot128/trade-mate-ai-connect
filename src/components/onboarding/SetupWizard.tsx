@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { trackSetupCompletion, initializeTracking } from '@/utils/dataTracking';
+import { onboardingManager, OnboardingData } from '@/lib/onboarding/OnboardingManager';
 
 interface SetupWizardProps {
   onComplete: () => void;
@@ -117,142 +118,53 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
     if (!user) return;
 
     try {
-      // Update profile with enhanced data (use upsert to handle new profiles)
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          user_id: user.id,
-          business_name: setupData.businessName,
-          industry: setupData.industry,
-          phone: setupData.phone,
-          primary_service_types: [setupData.industry],
-          business_goals: `Revenue: ${setupData.revenueTarget}, Efficiency: ${setupData.efficiencyGoal}`,
-          target_customer_type: 'Homeowners and businesses',
-          competition_level: 'medium',
-          pricing_strategy: 'competitive',
-          onboarding_step: 'completed',
-          quiz_completed_at: new Date().toISOString(),
-          setup_preference: 'minimal',
-          chaos_score: calculateChaosIndex(),
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id'
-        });
+      console.log('🚀 Starting setup completion...');
+      
+      // Prepare onboarding data
+      const onboardingData: OnboardingData = {
+        businessName: setupData.businessName,
+        industry: setupData.industry,
+        phone: setupData.phone,
+        businessSize: 'Small', // Default for new users
+        location: setupData.serviceArea,
+        primaryGoal: setupData.revenueTarget,
+        biggestChallenge: setupData.businessChallenges.join(', '),
+        targetRevenue: setupData.revenueTarget,
+        quizResponses: setupData.chaosResponses,
+        chaosScore: calculateChaosIndex(),
+        primaryServices: [setupData.industry],
+        businessGoals: setupData.efficiencyGoal,
+        targetCustomers: 'Homeowners and businesses',
+        competitionLevel: 'medium',
+        pricingStrategy: 'competitive'
+      };
 
-      if (profileError) throw profileError;
-
-      // Update business settings (use upsert to handle existing records)
-      await supabase
-        .from('business_settings')
-        .upsert({
-          user_id: user.id,
-          company_name: setupData.businessName,
-          greeting_message: setupData.greetingTemplate,
-          ai_personality: `Professional ${setupData.industry} assistant`,
-          auto_scheduling: true,
-          follow_up_enabled: true
-        }, {
-          onConflict: 'user_id'
-        });
-
-      // Store quiz responses for business intelligence
-      const quizResponses = [
-        {
-          user_id: user.id,
-          question_id: 'monthly_revenue',
-          response: setupData.monthlyRevenue,
-          chaos_contribution: null
-        },
-        {
-          user_id: user.id,
-          question_id: 'business_challenges',
-          response: setupData.businessChallenges,
-          chaos_contribution: null
-        },
-        {
-          user_id: user.id,
-          question_id: 'current_tools',
-          response: setupData.currentTools,
-          chaos_contribution: null
-        },
-        {
-          user_id: user.id,
-          question_id: 'chaos_overwhelmed',
-          response: setupData.chaosResponses.overwhelmed,
-          chaos_contribution: setupData.chaosResponses.overwhelmed
-        },
-        {
-          user_id: user.id,
-          question_id: 'chaos_missed_messages',
-          response: setupData.chaosResponses.missedMessages,
-          chaos_contribution: setupData.chaosResponses.missedMessages
-        },
-        {
-          user_id: user.id,
-          question_id: 'chaos_forgotten_followups',
-          response: setupData.chaosResponses.forgottenFollowups,
-          chaos_contribution: setupData.chaosResponses.forgottenFollowups
-        },
-        {
-          user_id: user.id,
-          question_id: 'chaos_revenue_unpredictability',
-          response: setupData.chaosResponses.revenueUnpredictability,
-          chaos_contribution: setupData.chaosResponses.revenueUnpredictability
-        },
-        {
-          user_id: user.id,
-          question_id: 'chaos_admin_time',
-          response: setupData.chaosResponses.adminTime,
-          chaos_contribution: setupData.chaosResponses.adminTime
-        },
-        {
-          user_id: user.id,
-          question_id: 'revenue_target',
-          response: setupData.revenueTarget,
-          chaos_contribution: null
-        },
-        {
-          user_id: user.id,
-          question_id: 'efficiency_goal',
-          response: setupData.efficiencyGoal,
-          chaos_contribution: null
-        }
-      ];
-
-      await supabase
-        .from('user_quiz_responses')
-        .upsert(quizResponses, { onConflict: 'user_id,question_id' });
-
-      // Calculate and store chaos index
-      const chaosIndex = calculateChaosIndex();
-      await supabase
-        .from('business_metrics')
-        .upsert({
-          user_id: user.id,
-          metric_type: 'chaos_index',
-          value: chaosIndex,
-          context: {
-            responses: setupData.chaosResponses,
-            calculatedAt: new Date().toISOString(),
-            industry: setupData.industry
-          }
-        }, { onConflict: 'user_id,metric_type' });
+      // Use the OnboardingManager to save all data
+      const success = await onboardingManager.saveOnboardingData(user, onboardingData);
+      
+      if (!success) {
+        throw new Error('Failed to save onboarding data. Please try again.');
+      }
 
       toast({
         title: "Setup Complete! 🎉",
-        description: `Your Chaos Index: ${chaosIndex.toFixed(1)}. Your Observer OS is ready!`,
+        description: `Your Chaos Index: ${calculateChaosIndex().toFixed(1)}. Your TradeMate AI is ready!`,
       });
 
       // Track setup completion for business intelligence
-      const tracker = initializeTracking(user.id);
-      await trackSetupCompletion(setupData, chaosIndex);
+      try {
+        const tracker = initializeTracking(user.id);
+        await trackSetupCompletion(setupData, calculateChaosIndex());
+      } catch (trackingError) {
+        console.warn('Tracking failed, but setup was successful:', trackingError);
+      }
 
       onComplete();
     } catch (error) {
-      console.error('Setup error:', error);
+      console.error('❌ Setup completion failed:', error);
       toast({
         title: "Setup Error",
-        description: "Please try again or contact support.",
+        description: error.message || "Please try again or contact support.",
         variant: "destructive",
       });
     }
