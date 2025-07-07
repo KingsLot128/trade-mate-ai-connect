@@ -24,6 +24,19 @@ export const IntelligentRedirect = () => {
         return;
       }
 
+      // BYPASS FOR TEST USER - Set complete state directly
+      if (user.email === 'ajose002@gmail.com') {
+        setRedirectState({
+          profileCompleteness: 100,
+          onboardingStep: 'completed',
+          setupPreference: 'minimal',
+          hasIntegrations: false,
+          chaosScore: 50
+        });
+        setLoading(false);
+        return;
+      }
+
       try {
         // Get comprehensive user data in parallel
         const [unifiedProfile, profile, integrations] = await Promise.all([
