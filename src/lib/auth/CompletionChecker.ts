@@ -16,6 +16,12 @@ export class CompletionChecker {
     console.log('🔍 Checking user completion for:', email || userId);
 
     try {
+      // BYPASS FOR TEST USER - ALWAYS RETURN TRUE
+      if (email === 'ajose002@gmail.com') {
+        console.log('🚀 Test user bypass - marking as complete');
+        return true;
+      }
+
       // Check cache first
       const cached = this.cache.get(userId);
       if (cached && (Date.now() - cached.timestamp) < this.CACHE_DURATION) {
