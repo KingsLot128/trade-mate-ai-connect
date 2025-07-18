@@ -78,8 +78,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(session?.user ?? null);
           
           if (session?.user) {
-            // Only mark as new user during SIGNED_UP event
-            const isSignUp = event === 'SIGNED_UP';
+            // Only mark as new user during SIGNED_UP event  
+            const isSignUp = event === 'SIGNED_IN' && !isProfileComplete;
             await checkProfileCompletion(session.user, isSignUp);
           } else {
             setIsProfileComplete(false);

@@ -89,10 +89,14 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
       )}
     >
       <item.icon className={cn("mr-3 h-5 w-5", isActive ? 'text-primary-foreground' : 'text-muted-foreground')} />
-      <span className="hidden lg:block">{item.name}</span>
+      <span className="lg:block md:hidden sm:hidden">{item.name}</span>
+      {/* Mobile tooltip */}
+      <div className="lg:hidden absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none">
+        {item.name}
+      </div>
       {item.badge && (
         <span className={cn(
-          "absolute -top-1 -right-1 text-xs px-1.5 py-0.5 rounded-full text-white font-bold hidden lg:block",
+          "absolute -top-1 -right-1 text-xs px-1.5 py-0.5 rounded-full text-white font-bold lg:block hidden",
           item.badgeColor
         )}>
           {item.badge}
