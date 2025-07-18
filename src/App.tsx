@@ -34,9 +34,7 @@ import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Recommendations from "./pages/Recommendations";
-import AuthGuard from "./components/auth/AuthGuard";
-import { EnhancedAuthGuard } from "./components/auth/EnhancedAuthGuard";
-import { IntelligentRedirect } from "./components/routing/IntelligentRedirect";
+import { NewUserAuthGuard } from "./components/routing/NewUserAuthGuard";
 import EnhancedQuizInterface from "./components/quiz/EnhancedQuizInterface";
 import VisualIntegrationHub from "./components/integrations/VisualIntegrationHub";
 import BusinessHealthScore from "./components/gamification/BusinessHealthScore";
@@ -84,18 +82,18 @@ const App = () => {
               {/* Landing page */}
               <Route path="/" element={<Index />} />
               
-              {/* Intelligent redirect for authenticated users */}
-              <Route path="/redirect" element={
-                <EnhancedAuthGuard requireAuth={true}>
-                  <IntelligentRedirect />
-                </EnhancedAuthGuard>
+              {/* Onboarding (separate layout for new users) */}
+              <Route path="/onboarding" element={
+                <NewUserAuthGuard>
+                  <EnhancedOnboarding />
+                </NewUserAuthGuard>
               } />
               
               {/* Protected routes with main layout */}
               <Route path="/" element={
-                <EnhancedAuthGuard requireAuth={true} requireComplete={true}>
+                <NewUserAuthGuard>
                   <MainLayout />
-                </EnhancedAuthGuard>
+                </NewUserAuthGuard>
               }>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="feed" element={<MultiStreamFeed />} />
@@ -116,13 +114,6 @@ const App = () => {
                 <Route path="admin" element={<div>Admin Dashboard - Coming Soon</div>} />
                 <Route path="admin/users" element={<div>User Management - Coming Soon</div>} />
               </Route>
-              
-              {/* Onboarding (separate layout) */}
-              <Route path="/onboarding" element={
-                <EnhancedAuthGuard requireAuth={true} requireComplete={false}>
-                  <EnhancedOnboarding />
-                </EnhancedAuthGuard>
-              } />
 
               {/* OAuth callback */}
               <Route path="/integrations/oauth/callback" element={<OAuthCallback />} />

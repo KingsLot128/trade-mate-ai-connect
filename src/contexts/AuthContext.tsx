@@ -18,11 +18,13 @@ interface AuthContextType {
   loading: boolean;
   isConfigured: boolean;
   isProfileComplete: boolean;
+  isNewUser: boolean;
   error: string | null;
   signUp: (email: string, password: string, metadata?: UserMetadata) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfileCompletion: () => Promise<void>;
+  markOnboardingComplete: () => Promise<void>;
   clearError: () => void;
 }
 
@@ -41,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isConfigured, setIsConfigured] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -66,17 +69,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { data: { session } } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
         if (session?.user) {
-          await checkProfileCompletion(session.user);
+          await checkProfileCompletion(session.user, false);
         }
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
           console.log('🔄 Auth state change:', event, session?.user?.email);
           setUser(session?.user ?? null);
+          
           if (session?.user) {
-            await checkProfileCompletion(session.user);
+            // Only mark as new user during SIGNED_UP event
+            const isSignUp = event === 'SIGNED_UP';
+            await checkProfileCompletion(session.user, isSignUp);
           } else {
             setIsProfileComplete(false);
+            setIsNewUser(false);
           }
         });
 
@@ -130,9 +137,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (data.user) {
+        // Mark as new user for onboarding flow
+        setIsNewUser(true);
         toast({
           title: "Welcome!",
-          description: "Your account has been created successfully. You can now sign in.",
+          description: "Your account has been created successfully. Let's set up your profile.",
         });
       }
 
@@ -166,6 +175,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
+      // For sign-in, don't mark as new user
+      setIsNewUser(false);
+      
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
@@ -177,15 +189,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const checkProfileCompletion = async (user: User) => {
+  const checkProfileCompletion = async (user: User, isSignUpEvent: boolean = false) => {
     try {
-      console.log('🔍 Checking profile completion for:', user.email);
+      console.log('🔍 Checking profile completion for:', user.email, 'isSignUp:', isSignUpEvent);
+      
+      // Set new user flag based on sign-up event
+      setIsNewUser(isSignUpEvent);
       
       const isComplete = await completionChecker.checkUserCompletion(user.id, user.email);
       setIsProfileComplete(isComplete);
       setError(null);
       
-      console.log('✅ Profile completion status:', isComplete);
+      console.log('✅ Profile completion status:', isComplete, 'New user:', isSignUpEvent);
     } catch (error) {
       console.error('❌ Profile completion check failed:', error);
       setError('Failed to check profile completion');
@@ -195,7 +210,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const refreshProfileCompletion = async () => {
     if (user) {
-      await checkProfileCompletion(user);
+      await checkProfileCompletion(user, false);
+    }
+  };
+
+  const markOnboardingComplete = async () => {
+    if (user) {
+      try {
+        // Update the user's profile to mark onboarding as complete
+        await supabase
+          .from('profiles')
+          .upsert({
+            user_id: user.id,
+            onboarding_step: 'completed',
+            updated_at: new Date().toISOString()
+          });
+
+        // Clear the completion cache and refresh
+        completionChecker.clearCache(user.id);
+        await refreshProfileCompletion();
+        
+        // Clear new user flag
+        setIsNewUser(false);
+        
+        console.log('✅ Onboarding marked as complete');
+      } catch (error) {
+        console.error('❌ Failed to mark onboarding complete:', error);
+      }
     }
   };
 
@@ -223,6 +264,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Clear local state
       setUser(null);
       setIsProfileComplete(false);
+      setIsNewUser(false);
 
       toast({
         title: "Signed out successfully",
@@ -251,11 +293,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     isConfigured,
     isProfileComplete,
+    isNewUser,
     error,
     signUp,
     signIn,
     signOut,
     refreshProfileCompletion,
+    markOnboardingComplete,
     clearError,
   };
 

@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginForm from '@/components/auth/LoginForm';
 
 const Auth = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, isNewUser, isProfileComplete } = useAuth();
 
   if (loading) {
     return (
@@ -18,8 +17,13 @@ const Auth = () => {
     );
   }
 
-  // If user is already logged in, redirect to dashboard
+  // If user is already logged in, determine where to redirect them
   if (user) {
+    // New users or users with incomplete profiles go to onboarding
+    if (isNewUser || !isProfileComplete) {
+      return <Navigate to="/onboarding" replace />;
+    }
+    // Existing users with complete profiles go to dashboard
     return <Navigate to="/dashboard" replace />;
   }
 
