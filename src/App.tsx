@@ -34,6 +34,7 @@ import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Recommendations from "./pages/Recommendations";
+import Settings from "./pages/Settings";
 import { NewUserAuthGuard } from "./components/routing/NewUserAuthGuard";
 import EnhancedQuizInterface from "./components/quiz/EnhancedQuizInterface";
 import VisualIntegrationHub from "./components/integrations/VisualIntegrationHub";
@@ -109,7 +110,7 @@ const App = () => {
                 <Route path="integrations" element={<VisualIntegrationHub />} />
                 <Route path="website" element={<WebsiteAnalyzer />} />
                 <Route path="profile" element={<UserProfile />} />
-                <Route path="settings" element={<div>Settings - Coming Soon</div>} />
+                <Route path="settings" element={<Settings />} />
                 <Route path="billing" element={<div>Billing - Coming Soon</div>} />
                 <Route path="admin" element={<div>Admin Dashboard - Coming Soon</div>} />
                 <Route path="admin/users" element={<div>User Management - Coming Soon</div>} />
