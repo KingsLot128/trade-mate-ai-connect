@@ -56,28 +56,49 @@ export const AIInsightsPanel = () => {
     
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('ai-business-advisor', {
+      const { data, error } = await supabase.functions.invoke('ai-insights', {
         body: {
-          analysisType: type,
-          userId: user.id,
-          context: {}
+          userId: user.id
         }
       });
 
       if (error) throw error;
 
-      if (type === 'insights' && data.insights) {
-        setInsights(data.insights);
+      if (data.insights) {
+        // Transform the OpenAI response to match our interface
+        const transformedInsights = data.insights.map((insight: any, index: number) => ({
+          title: insight.title,
+          category: insight.category as 'Operations' | 'Revenue' | 'Growth' | 'Efficiency',
+          priority: insight.priority as 'high' | 'medium' | 'low',
+          description: insight.description,
+          impact: insight.potential_impact,
+          actions: insight.actionable_steps,
+          timeline: '1-2 weeks',
+          effort: 'medium' as 'low' | 'medium' | 'high',
+          confidence: 0.85
+        }));
+        
+        setInsights(transformedInsights);
         toast({
           title: "AI Insights Generated",
-          description: `Generated ${data.insights.length} personalized business insights.`
+          description: `Generated ${transformedInsights.length} personalized business insights.`
         });
-      } else if (type === 'recommendations' && data.recommendations) {
-        setRecommendations(data.recommendations);
-        toast({
-          title: "AI Recommendations Ready",
-          description: `Generated ${data.recommendations.length} strategic recommendations.`
-        });
+        
+        // Also set recommendations from the same data
+        const transformedRecommendations = data.insights.map((insight: any, index: number) => ({
+          id: `rec-${index}`,
+          title: insight.title,
+          type: insight.category.toLowerCase() as 'revenue' | 'efficiency' | 'growth' | 'operational',
+          priority: insight.priority as 'urgent' | 'high' | 'medium' | 'low',
+          description: insight.description,
+          expectedImpact: insight.potential_impact,
+          timeToImplement: '1-2 weeks',
+          difficulty: 'medium' as 'easy' | 'medium' | 'challenging',
+          steps: insight.actionable_steps,
+          metrics: ['ROI', 'Growth Rate', 'Efficiency']
+        }));
+        
+        setRecommendations(transformedRecommendations);
       }
     } catch (error) {
       console.error('Error generating insights:', error);
