@@ -1,455 +1,457 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { 
-  Zap, 
+  Brain, 
   TrendingUp, 
   Target, 
   Clock, 
-  CheckCircle2,
-  ArrowRight,
-  Star,
+  CheckCircle, 
+  AlertTriangle,
+  Lightbulb,
+  RefreshCw,
+  Settings,
   BarChart3,
-  Brain
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+  Users,
+  DollarSign
+} from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
-import { generateAdaptiveRecommendations, getUserBehavior, getIndustryBenchmarks } from '@/utils/adaptiveRecommendations';
-import { synthesizeBusinessData } from '@/utils/dataUnification';
-import { initializeTracking, trackRecommendationView, trackRecommendationImplemented } from '@/utils/dataTracking';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 interface SmartRecommendation {
   id: string;
-  type: 'revenue' | 'efficiency' | 'growth' | 'operational' | 'strategic';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  hook: string;
   title: string;
   description: string;
-  reasoning: string;
-  expectedImpact: string;
-  timeToImplement: string;
-  personalizedScore: number;
-  confidenceScore: number;
-  urgencyScore: number;
-  actions: string[];
-  streamType: string;
+  priority: 'high' | 'medium' | 'low';
+  category: string;
+  actionable_steps: string[];
+  potential_impact: string;
+  timeframe: string;
+  difficulty: string;
+  success_metrics: string[];
+  priority_score: number;
+  confidence_score: number;
 }
 
-export const SmartRecommendationEngine = () => {
+interface BusinessMetrics {
+  healthScore: number;
+  chaosScore: number;
+  growthTrend: number;
+  efficiency: number;
+}
+
+const SmartRecommendationEngine = () => {
   const { user } = useAuth();
   const [recommendations, setRecommendations] = useState<SmartRecommendation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'urgent' | 'revenue' | 'efficiency'>('all');
+  const [businessMetrics, setBusinessMetrics] = useState<BusinessMetrics>({
+    healthScore: 0,
+    chaosScore: 0,
+    growthTrend: 0,
+    efficiency: 0
+  });
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('recommendations');
+  const [lastGenerated, setLastGenerated] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadSmartRecommendations = async () => {
-      if (!user) return;
-
-      try {
-        // Initialize tracking for this user
-        initializeTracking(user.id);
-
-        // Get existing recommendations from database
-        const { data: existingRecs } = await supabase
-          .from('enhanced_recommendations')
-          .select('*')
-          .eq('user_id', user.id)
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
-
-        if (existingRecs && existingRecs.length > 0) {
-          // Transform database recommendations to component format
-          const transformedRecs = existingRecs.map(rec => {
-            const content = rec.content as any;
-            return {
-              id: rec.recommendation_id,
-              type: rec.recommendation_type as any,
-              priority: (rec.priority_score > 80 ? 'urgent' : rec.priority_score > 60 ? 'high' : 'medium') as 'high' | 'medium' | 'low' | 'urgent',
-              hook: rec.hook,
-              title: content?.title || 'Recommendation',
-              description: content?.description || 'AI-generated recommendation',
-              reasoning: rec.reasoning,
-              expectedImpact: content?.expectedImpact || 'Positive impact expected',
-              timeToImplement: content?.timeToImplement || '1-2 weeks',
-              personalizedScore: rec.personalized_score || 75,
-              confidenceScore: rec.confidence_score || 80,
-              urgencyScore: rec.priority_score || 70,
-              actions: content?.actions || [],
-              streamType: rec.stream_type || 'forYou'
-            };
-          });
-          setRecommendations(transformedRecs);
-        } else {
-          // Generate new recommendations using the adaptive engine
-          await generateNewRecommendations();
-        }
-      } catch (error) {
-        console.error('Error loading smart recommendations:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadSmartRecommendations();
+    if (user) {
+      loadExistingRecommendations();
+      loadBusinessMetrics();
+    }
   }, [user]);
 
-  const generateNewRecommendations = async () => {
-    if (!user) return;
-
+  const loadExistingRecommendations = async () => {
     try {
-      setLoading(true);
-      
-      // Synthesize all business data
-      const unifiedProfile = await synthesizeBusinessData(user.id);
-      
-      // Get user behavior patterns
-      const userBehavior = await getUserBehavior(user.id);
-      
-      // Get industry benchmarks
-      const industryBenchmarks = getIndustryBenchmarks(unifiedProfile.businessInfo.industry);
-      
-      // Generate adaptive recommendations
-      const newRecommendations = await generateAdaptiveRecommendations(user.id, {
-        unifiedProfile,
-        userBehavior,
-        industryBenchmarks
+      const { data } = await supabase
+        .from('enhanced_recommendations')
+        .select('*')
+        .eq('user_id', user?.id)
+        .eq('is_active', true)
+        .order('priority_score', { ascending: false })
+        .limit(10);
+
+      if (data) {
+        const formattedRecs = data.map(rec => ({
+          id: rec.id,
+          title: (rec.content as any)?.title || rec.hook,
+          description: (rec.content as any)?.description || rec.reasoning,
+          priority: rec.priority_score > 80 ? 'high' as const : 
+                   rec.priority_score > 60 ? 'medium' as const : 'low' as const,
+          category: rec.recommendation_type,
+          actionable_steps: (rec.content as any)?.actionable_steps || [],
+          potential_impact: rec.expected_impact || 'Positive business impact',
+          timeframe: (rec.content as any)?.timeframe || rec.time_to_implement,
+          difficulty: (rec.content as any)?.difficulty || 'moderate',
+          success_metrics: (rec.content as any)?.success_metrics || [],
+          priority_score: rec.priority_score,
+          confidence_score: rec.confidence_score
+        }));
+        setRecommendations(formattedRecs);
+      }
+    } catch (error) {
+      console.error('Error loading recommendations:', error);
+    }
+  };
+
+  const loadBusinessMetrics = async () => {
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('business_health_score, chaos_score')
+        .eq('user_id', user?.id)
+        .single();
+
+      if (profile) {
+        setBusinessMetrics({
+          healthScore: profile.business_health_score || 0,
+          chaosScore: profile.chaos_score || 0,
+          growthTrend: 75, // Mock data - would be calculated from metrics
+          efficiency: 68   // Mock data - would be calculated from metrics
+        });
+      }
+    } catch (error) {
+      console.error('Error loading business metrics:', error);
+    }
+  };
+
+  const generateSmartRecommendations = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-business-advisor', {
+        body: { 
+          userId: user?.id, 
+          analysisType: 'recommendations'
+        }
       });
 
-      // Transform to component format
-      const transformedRecs = newRecommendations.map(rec => ({
-        id: rec.id,
-        type: rec.type,
-        priority: rec.priority,
-        hook: rec.hook,
-        title: rec.title,
-        description: rec.description,
-        reasoning: rec.reasoning,
-        expectedImpact: rec.expectedImpact,
-        timeToImplement: rec.timeToImplement,
-        personalizedScore: rec.personalizedScore,
-        confidenceScore: rec.confidenceScore,
-        urgencyScore: rec.urgencyScore,
-        actions: rec.actions,
-        streamType: rec.streamType || 'forYou'
-      }));
+      if (error) throw error;
 
-      setRecommendations(transformedRecs);
+      // Reload recommendations after generation
+      await loadExistingRecommendations();
+      setLastGenerated(new Date().toLocaleString());
+      toast.success('Smart recommendations generated!');
     } catch (error) {
       console.error('Error generating recommendations:', error);
+      toast.error('Failed to generate recommendations. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRecommendationView = (recommendation: SmartRecommendation) => {
-    trackRecommendationView(recommendation.id, {
-      type: recommendation.type,
-      priority: recommendation.priority,
-      personalized_score: recommendation.personalizedScore
-    });
-  };
+  const generateInsights = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-business-advisor', {
+        body: { 
+          userId: user?.id, 
+          analysisType: 'insights'
+        }
+      });
 
-  const handleImplementAction = async (recommendation: SmartRecommendation) => {
-    await trackRecommendationImplemented(
-      recommendation.id, 
-      'user_marked_implemented', 
-      recommendation.personalizedScore
-    );
-    
-    // Update local state to show as implemented
-    setRecommendations(prev => 
-      prev.map(rec => 
-        rec.id === recommendation.id 
-          ? { ...rec, implemented: true } 
-          : rec
-      )
-    );
-  };
+      if (error) throw error;
 
-  const filteredRecommendations = recommendations.filter(rec => {
-    if (selectedFilter === 'all') return true;
-    if (selectedFilter === 'urgent') return rec.priority === 'urgent';
-    return rec.type === selectedFilter;
-  });
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'revenue': return TrendingUp;
-      case 'efficiency': return Target;
-      case 'growth': return BarChart3;
-      case 'operational': return Zap;
-      case 'strategic': return Star;
-      default: return Brain;
+      await loadExistingRecommendations();
+      toast.success('Business insights generated!');
+    } catch (error) {
+      console.error('Error generating insights:', error);
+      toast.error('Failed to generate insights. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'urgent': return 'destructive';
-      case 'high': return 'default';
-      case 'medium': return 'secondary';
-      case 'low': return 'outline';
-      default: return 'secondary';
+      case 'high': return 'bg-destructive/10 text-destructive border-destructive/20';
+      case 'medium': return 'bg-warning/10 text-warning border-warning/20';
+      case 'low': return 'bg-success/10 text-success border-success/20';
+      default: return 'bg-muted text-muted-foreground border-border';
     }
   };
 
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        {[...Array(3)].map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="h-32 bg-muted rounded"></div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'sales': return <TrendingUp className="h-4 w-4" />;
+      case 'marketing': return <Target className="h-4 w-4" />;
+      case 'operations': return <Settings className="h-4 w-4" />;
+      case 'financial': return <DollarSign className="h-4 w-4" />;
+      case 'customer_service': return <Users className="h-4 w-4" />;
+      default: return <Lightbulb className="h-4 w-4" />;
+    }
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'text-green-600';
+      case 'moderate': return 'text-yellow-600';
+      case 'challenging': return 'text-red-600';
+      default: return 'text-gray-600';
+    }
+  };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <Brain className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold">Smart Recommendations</h2>
-            <p className="text-muted-foreground">
-              AI-powered, personalized business recommendations
-            </p>
-          </div>
+        <div>
+          <h2 className="text-3xl font-bold flex items-center">
+            <Brain className="h-8 w-8 mr-3 text-primary" />
+            Smart Recommendation Engine
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            AI-powered insights tailored to your business success
+          </p>
+          {lastGenerated && (
+            <p className="text-sm text-muted-foreground">Last updated: {lastGenerated}</p>
+          )}
         </div>
-        <Button onClick={generateNewRecommendations} disabled={loading}>
-          <Zap className="h-4 w-4 mr-2" />
-          Refresh Recommendations
-        </Button>
-      </div>
-
-      {/* Filters */}
-      <div className="flex gap-2">
-        {[
-          { key: 'all', label: 'All Recommendations' },
-          { key: 'urgent', label: 'Urgent' },
-          { key: 'revenue', label: 'Revenue' },
-          { key: 'efficiency', label: 'Efficiency' }
-        ].map(filter => (
-          <Button
-            key={filter.key}
-            variant={selectedFilter === filter.key ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setSelectedFilter(filter.key as any)}
+        <div className="flex gap-2">
+          <Button 
+            onClick={generateInsights} 
+            disabled={loading}
+            variant="outline"
           >
-            {filter.label}
+            <BarChart3 className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Generate Insights
           </Button>
-        ))}
+          <Button 
+            onClick={generateSmartRecommendations} 
+            disabled={loading}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            {loading ? 'Analyzing...' : 'Smart Analysis'}
+          </Button>
+        </div>
       </div>
 
-      {/* Recommendations Grid */}
-      <div className="space-y-4">
-        {filteredRecommendations.map((recommendation) => (
-          <SmartRecommendationCard
-            key={recommendation.id}
-            recommendation={recommendation}
-            onView={() => handleRecommendationView(recommendation)}
-            onImplement={() => handleImplementAction(recommendation)}
-          />
-        ))}
+      {/* Business Health Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Health Score</p>
+                <p className="text-2xl font-bold">{businessMetrics.healthScore}/100</p>
+              </div>
+              <TrendingUp className="h-8 w-8 text-green-600" />
+            </div>
+            <Progress value={businessMetrics.healthScore} className="mt-2" />
+          </CardContent>
+        </Card>
         
-        {filteredRecommendations.length === 0 && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Chaos Score</p>
+                <p className="text-2xl font-bold">{businessMetrics.chaosScore}/100</p>
+              </div>
+              <AlertTriangle className="h-8 w-8 text-red-600" />
+            </div>
+            <Progress value={100 - businessMetrics.chaosScore} className="mt-2" />
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Growth Trend</p>
+                <p className="text-2xl font-bold">{businessMetrics.growthTrend}%</p>
+              </div>
+              <BarChart3 className="h-8 w-8 text-blue-600" />
+            </div>
+            <Progress value={businessMetrics.growthTrend} className="mt-2" />
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Efficiency</p>
+                <p className="text-2xl font-bold">{businessMetrics.efficiency}%</p>
+              </div>
+              <Target className="h-8 w-8 text-purple-600" />
+            </div>
+            <Progress value={businessMetrics.efficiency} className="mt-2" />
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="recommendations">Smart Recommendations</TabsTrigger>
+          <TabsTrigger value="implementation">Implementation Guide</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="recommendations" className="space-y-4">
+          {loading && (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="animate-pulse">
+                  <CardContent className="p-6">
+                    <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-muted rounded w-1/2"></div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {!loading && recommendations.length === 0 && (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12">
+                <Brain className="h-12 w-12 text-primary mb-4" />
+                <h3 className="text-lg font-medium mb-2">Generate Your Smart Recommendations</h3>
+                <p className="text-muted-foreground text-center mb-4 max-w-md">
+                  Our AI will analyze your business data to provide intelligent, actionable recommendations 
+                  tailored to your specific situation and goals.
+                </p>
+                <Button onClick={generateSmartRecommendations}>
+                  Start AI Analysis
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {!loading && recommendations.map((rec) => (
+            <Card key={rec.id} className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start space-x-3">
+                    <div className="mt-1">
+                      {getCategoryIcon(rec.category)}
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-lg leading-tight">{rec.title}</CardTitle>
+                      <CardDescription className="mt-1">{rec.description}</CardDescription>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Badge className={getPriorityColor(rec.priority)}>
+                      {rec.priority.toUpperCase()}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {rec.category}
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Quick Stats */}
+                  <div className="grid grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-1">
+                        <Clock className="h-4 w-4 mr-1" />
+                      </div>
+                      <p className="text-sm font-medium">{rec.timeframe}</p>
+                      <p className="text-xs text-muted-foreground">Timeline</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-1">
+                        <Target className={`h-4 w-4 mr-1 ${getDifficultyColor(rec.difficulty)}`} />
+                      </div>
+                      <p className="text-sm font-medium capitalize">{rec.difficulty}</p>
+                      <p className="text-xs text-muted-foreground">Difficulty</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-1">
+                        <TrendingUp className="h-4 w-4 mr-1 text-green-600" />
+                      </div>
+                      <p className="text-sm font-medium">{rec.confidence_score}%</p>
+                      <p className="text-xs text-muted-foreground">Confidence</p>
+                    </div>
+                  </div>
+
+                  {/* Action Steps */}
+                  <div>
+                    <h4 className="font-medium text-sm mb-3 flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                      Action Steps:
+                    </h4>
+                    <ul className="space-y-2">
+                      {rec.actionable_steps.map((step, stepIndex) => (
+                        <li key={stepIndex} className="flex items-start text-sm">
+                          <span className="flex-shrink-0 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-medium mr-3 mt-0.5">
+                            {stepIndex + 1}
+                          </span>
+                          <span className="flex-1">{step}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Success Metrics */}
+                  {rec.success_metrics.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-sm mb-2 flex items-center">
+                        <BarChart3 className="h-4 w-4 mr-2 text-blue-600" />
+                        Success Metrics:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {rec.success_metrics.map((metric, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {metric}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Potential Impact */}
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h4 className="font-medium text-sm text-green-800 mb-1 flex items-center">
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      Expected Impact:
+                    </h4>
+                    <p className="text-sm text-green-700">{rec.potential_impact}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
+
+        <TabsContent value="implementation" className="space-y-4">
           <Card>
-            <CardContent className="p-6 text-center">
-              <Brain className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No Recommendations Found</h3>
-              <p className="text-muted-foreground mb-4">
-                Try adjusting your filters or generate new recommendations
-              </p>
-              <Button onClick={generateNewRecommendations}>
-                <Zap className="h-4 w-4 mr-2" />
-                Generate Recommendations
-              </Button>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Target className="h-5 w-5 mr-2" />
+                Implementation Roadmap
+              </CardTitle>
+              <CardDescription>
+                Prioritized action plan based on your business needs
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recommendations
+                  .filter(rec => rec.priority === 'high')
+                  .slice(0, 3)
+                  .map((rec, index) => (
+                    <div key={rec.id} className="flex items-start space-x-4 p-4 bg-muted/50 rounded-lg">
+                      <div className="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-medium">
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium">{rec.title}</h4>
+                        <p className="text-sm text-muted-foreground">{rec.timeframe} • {rec.difficulty} difficulty</p>
+                        <p className="text-sm mt-1">{rec.potential_impact}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </CardContent>
           </Card>
-        )}
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
 
-// Individual Recommendation Card
-interface SmartRecommendationCardProps {
-  recommendation: SmartRecommendation & { implemented?: boolean };
-  onView: () => void;
-  onImplement: () => void;
-}
-
-const SmartRecommendationCard = ({ 
-  recommendation, 
-  onView, 
-  onImplement 
-}: SmartRecommendationCardProps) => {
-  const [expanded, setExpanded] = useState(false);
-  const [viewed, setViewed] = useState(false);
-  
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'revenue': return TrendingUp;
-      case 'efficiency': return Target;
-      case 'growth': return BarChart3;
-      case 'operational': return Zap;
-      case 'strategic': return Star;
-      default: return Brain;
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return 'destructive';
-      case 'high': return 'default';
-      case 'medium': return 'secondary';
-      case 'low': return 'outline';
-      default: return 'secondary';
-    }
-  };
-
-  const TypeIcon = getTypeIcon(recommendation.type);
-  
-  const handleExpand = () => {
-    if (!viewed) {
-      onView();
-      setViewed(true);
-    }
-    setExpanded(!expanded);
-  };
-
-  return (
-    <Card className={`relative overflow-hidden transition-all duration-200 ${
-      recommendation.priority === 'urgent' ? 'border-destructive' : ''
-    }`}>
-      {/* Priority indicator */}
-      {recommendation.priority === 'urgent' && (
-        <div className="absolute top-0 right-0 w-0 h-0 border-l-[40px] border-l-transparent border-t-[40px] border-t-destructive">
-          <div className="absolute -top-8 -right-1 text-destructive-foreground text-xs font-bold transform rotate-45">
-            URGENT
-          </div>
-        </div>
-      )}
-
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3 flex-1">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <TypeIcon className="h-5 w-5 text-primary" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant={getPriorityColor(recommendation.priority) as any}>
-                  {recommendation.priority}
-                </Badge>
-                <Badge variant="outline">{recommendation.type}</Badge>
-              </div>
-              <CardTitle className="text-lg mb-2">{recommendation.title}</CardTitle>
-              <div className="text-sm text-primary font-medium mb-2">
-                {recommendation.hook}
-              </div>
-              <p className="text-muted-foreground">{recommendation.description}</p>
-            </div>
-          </div>
-          <div className="text-right ml-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="text-xs text-muted-foreground">Match Score</div>
-              <div className="text-lg font-bold text-primary">
-                {recommendation.personalizedScore}%
-              </div>
-            </div>
-            <div className="text-xs text-muted-foreground">
-              <Clock className="h-3 w-3 inline mr-1" />
-              {recommendation.timeToImplement}
-            </div>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        {/* Progress Indicators */}
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <div className="flex justify-between mb-1">
-              <span>Confidence</span>
-              <span>{recommendation.confidenceScore}%</span>
-            </div>
-            <Progress value={recommendation.confidenceScore} className="h-2" />
-          </div>
-          <div>
-            <div className="flex justify-between mb-1">
-              <span>Urgency</span>
-              <span>{recommendation.urgencyScore}%</span>
-            </div>
-            <Progress value={recommendation.urgencyScore} className="h-2" />
-          </div>
-        </div>
-
-        {/* Expected Impact */}
-        <div className="p-3 bg-muted/50 rounded-lg">
-          <div className="font-medium text-sm mb-1">Expected Impact</div>
-          <div className="text-sm text-muted-foreground">{recommendation.expectedImpact}</div>
-        </div>
-
-        {/* Expanded Content */}
-        {expanded && (
-          <div className="space-y-4 pt-4 border-t">
-            <div>
-              <h4 className="font-medium mb-2">AI Reasoning</h4>
-              <p className="text-sm text-muted-foreground">{recommendation.reasoning}</p>
-            </div>
-            
-            <div>
-              <h4 className="font-medium mb-2">Action Steps</h4>
-              <ul className="space-y-2">
-                {recommendation.actions.map((action, idx) => (
-                  <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-xs font-bold flex-shrink-0">
-                      {idx + 1}
-                    </span>
-                    {action}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleExpand}
-          >
-            {expanded ? 'Show Less' : 'Show Details'}
-            <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${expanded ? 'rotate-90' : ''}`} />
-          </Button>
-          
-          <div className="flex gap-2">
-            {!recommendation.implemented && (
-              <Button size="sm" onClick={onImplement}>
-                <CheckCircle2 className="h-4 w-4 mr-2" />
-                Implement
-              </Button>
-            )}
-            {recommendation.implemented && (
-              <Badge variant="secondary">
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Implemented
-              </Badge>
-            )}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+export default SmartRecommendationEngine;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AIInsightsPanel } from '@/components/ai/AIInsightsPanel';
-import { SmartRecommendationEngine } from '@/components/ai/SmartRecommendationEngine';
+import SmartRecommendationEngine from '@/components/ai/SmartRecommendationEngine';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Target, TrendingUp, Zap } from 'lucide-react';

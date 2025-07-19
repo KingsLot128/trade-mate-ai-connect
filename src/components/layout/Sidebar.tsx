@@ -44,6 +44,7 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
     { name: 'Business Health', href: '/health', icon: TrendingUp, badge: 'NEW', badgeColor: 'bg-green-500' },
     { name: 'Clarity Lens', href: '/clarity', icon: Brain },
     { name: 'Recommendations', href: '/recommendations', icon: Lightbulb },
+    { name: 'Smart AI', href: '/ai-recommendations', icon: Brain, badge: 'AI', badgeColor: 'bg-purple-500' },
     { name: 'Call Log', href: '/calls', icon: Phone },
     { name: 'Contacts', href: '/contacts', icon: Users },
     { name: 'Deals Pipeline', href: '/deals', icon: TrendingUp },
