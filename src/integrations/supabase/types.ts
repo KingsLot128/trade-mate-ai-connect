@@ -1214,6 +1214,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_admin_roles: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       calculate_profile_completeness: {
         Args: { user_uuid: string }
         Returns: number
@@ -1227,7 +1231,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "super_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1355,7 +1359,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "super_admin"],
     },
   },
 } as const
