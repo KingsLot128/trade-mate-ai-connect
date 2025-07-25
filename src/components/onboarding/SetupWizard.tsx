@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import ChaosIndexDisplay from '@/components/dashboard/ChaosIndexDisplay';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { trackSetupCompletion, initializeTracking } from '@/utils/dataTracking';
 import { onboardingManager, OnboardingData } from '@/lib/onboarding/OnboardingManager';

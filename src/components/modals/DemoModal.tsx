@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Play, Mail, ExternalLink, CheckCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -41,24 +41,8 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onOpenChange }) => {
     setLoading(true);
 
     try {
-      if (isConfigured) {
-        // Store lead in Supabase
-        const { error } = await supabase
-          .from('demo_requests')
-          .insert({
-            email: email,
-            name: name || null,
-            company: company || null,
-            requested_at: new Date().toISOString(),
-            status: 'pending',
-            notification_email: 'info@summitspark.net'
-          });
-
-        if (error) {
-          console.error('Error storing demo request:', error);
-          // Continue anyway - don't block user experience
-        }
-      }
+      // Database integration disabled temporarily - demo functionality still works
+      // Will be re-enabled when demo_requests table is created
 
       // Track the lead capture event (only if gtag is available)
       if (typeof window !== 'undefined' && (window as any).gtag) {

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { synthesizeBusinessData } from './dataUnification';
 import { generateAdaptiveRecommendations, getUserBehavior, getIndustryBenchmarks } from './adaptiveRecommendations';
 
@@ -58,7 +58,7 @@ export class DataTracker {
         .insert({
           user_id: this.userId,
           event_type: 'user_action',
-          event_data: action,
+          event_data: action as any, // Type assertion for compatibility
           processed: false
         });
 
@@ -85,7 +85,7 @@ export class DataTracker {
         .insert({
           user_id: this.userId,
           event_type: 'integration_event',
-          event_data: enhancedEvent,
+          event_data: enhancedEvent as any, // Type assertion for compatibility
           processed: false
         });
 
@@ -182,7 +182,7 @@ export class DataTracker {
 
       if (existing) {
         const currentScore = existing.value;
-        eventCount = (existing.context?.event_count || 0) + 1;
+        eventCount = ((existing.context as any)?.event_count || 0) + 1;
         // Rolling average with more weight on recent events
         newScore = (currentScore * 0.7) + (dataQuality * 0.3);
       }
