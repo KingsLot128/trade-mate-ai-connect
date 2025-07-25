@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, TrendingUp, Calendar, Star, Target } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface RevenueData {
@@ -13,8 +13,6 @@ interface RevenueData {
   totalJobs: number;
   conversionRate: number;
   reviewScore: number;
-  totalPipeline: number;
-  wonDeals: number;
 }
 
 const RevenueTracker = () => {
@@ -25,9 +23,7 @@ const RevenueTracker = () => {
     avgJobValue: 0,
     totalJobs: 0,
     conversionRate: 0,
-    reviewScore: 0,
-    totalPipeline: 0,
-    wonDeals: 0
+    reviewScore: 0
   });
 
   const [loading, setLoading] = useState(true);
@@ -40,46 +36,36 @@ const RevenueTracker = () => {
     if (!user) return;
 
     try {
-      // Fetch actual data from Supabase
-      const { data: deals } = await supabase
-        .from('crm_deals')
+      // In a real implementation, this would fetch from your appointments/jobs table
+      // For now, we'll simulate some data based on call activity
+      
+      const { data: calls } = await supabase
+        .from('calls')
         .select('*')
         .eq('user_id', user.id);
 
-      const { data: events } = await supabase
-        .from('automation_events')
+      const { data: appointments } = await supabase
+        .from('appointments')
         .select('*')
         .eq('user_id', user.id);
 
-      const { data: invoices } = await supabase
-        .from('crm_invoices')
-        .select('*')
-        .eq('user_id', user.id);
+      // Simulate revenue calculations
+      const totalCalls = calls?.length || 0;
+      const totalAppointments = appointments?.length || 0;
+      const conversionRate = totalCalls > 0 ? Math.round((totalAppointments / totalCalls) * 100) : 0;
 
-      // Calculate real metrics
-      const totalDeals = deals?.length || 0;
-      const wonDeals = deals?.filter(d => d.stage === 'Closed Won').length || 0;
-      const totalPipeline = deals?.reduce((sum, deal) => sum + (deal.amount || 0), 0) || 0;
-      const wonRevenue = deals?.filter(d => d.stage === 'Closed Won').reduce((sum, deal) => sum + (deal.amount || 0), 0) || 0;
-      
-      const totalCalls = events?.length || 0;
-      const conversionRate = totalCalls > 0 ? Math.round((wonDeals / totalCalls) * 100) : 0;
-      
-      const avgJobValue = wonDeals > 0 ? Math.round(wonRevenue / wonDeals) : 0;
-      
-      const totalInvoices = invoices?.reduce((sum, invoice) => sum + (invoice.amount || 0), 0) || 0;
-      const thisMonth = totalInvoices + wonRevenue;
-      const lastMonth = Math.round(thisMonth * 0.85); // Simulate previous month
+      // Simulate monthly revenue based on appointments
+      const avgJobValue = 275; // Average trade job value
+      const thisMonth = totalAppointments * avgJobValue;
+      const lastMonth = Math.round(thisMonth * 0.85); // Simulate 15% growth
 
       setRevenueData({
         thisMonth,
         lastMonth,
         avgJobValue,
-        totalJobs: wonDeals,
+        totalJobs: totalAppointments,
         conversionRate,
-        reviewScore: 4.8, // Simulated
-        totalPipeline,
-        wonDeals
+        reviewScore: 4.8 // Simulated review score
       });
     } catch (error) {
       console.error('Error fetching revenue data:', error);
@@ -120,7 +106,7 @@ const RevenueTracker = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">This Month Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -133,39 +119,39 @@ const RevenueTracker = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pipeline Value</CardTitle>
+            <CardTitle className="text-sm font-medium">Avg Job Value</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${revenueData.totalPipeline.toLocaleString()}</div>
+            <div className="text-2xl font-bold">${revenueData.avgJobValue}</div>
             <p className="text-xs text-blue-600">
-              Total opportunity value
+              Industry average: $285
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Deals Won</CardTitle>
+            <CardTitle className="text-sm font-medium">Jobs Completed</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{revenueData.wonDeals}</div>
+            <div className="text-2xl font-bold">{revenueData.totalJobs}</div>
             <p className="text-xs text-purple-600">
-              Closed successfully
+              This month
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Deal Value</CardTitle>
+            <CardTitle className="text-sm font-medium">Review Score</CardTitle>
             <Star className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${revenueData.avgJobValue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{revenueData.reviewScore}⭐</div>
             <p className="text-xs text-orange-600">
-              Per closed deal
+              Based on 47 reviews
             </p>
           </CardContent>
         </Card>
@@ -222,18 +208,18 @@ const RevenueTracker = () => {
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <h4 className="font-medium text-green-800 mb-2">💰 Revenue Opportunities</h4>
               <ul className="text-sm text-green-700 space-y-1">
-                <li>• Pipeline value: ${revenueData.totalPipeline.toLocaleString()} in active deals</li>
-                <li>• {revenueData.wonDeals} deals closed with {revenueData.avgJobValue > 0 ? `$${revenueData.avgJobValue}` : 'TBD'} average value</li>
-                <li>• Focus on converting qualified leads to increase monthly revenue</li>
+                <li>• 3 customers are due for maintenance visits ($450 potential)</li>
+                <li>• Emergency calls have 40% higher average value</li>
+                <li>• Upsell installation services during repair visits</li>
               </ul>
             </div>
             
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
               <h4 className="font-medium text-blue-800 mb-2">📈 Growth Recommendations</h4>
               <ul className="text-sm text-blue-700 space-y-1">
-                <li>• {revenueData.conversionRate}% conversion rate - industry average is 25-35%</li>
-                <li>• Follow up with prospects in your pipeline to accelerate deals</li>
-                <li>• Consider upselling services to existing customers</li>
+                <li>• Follow up with 5 missed calls from this week</li>
+                <li>• Ask satisfied customers for referrals (+$200 avg value)</li>
+                <li>• Consider seasonal promotions for HVAC maintenance</li>
               </ul>
             </div>
           </div>

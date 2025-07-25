@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, MapPin, Clock, MessageSquare, CheckCircle } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -42,8 +42,22 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      // Database integration disabled temporarily - contact form still works
-      // Will be re-enabled when contact_submissions table is created
+      if (isConfigured) {
+        const { error } = await supabase
+          .from('contact_submissions')
+          .insert({
+            name: formData.name,
+            email: formData.email,
+            company: formData.company || null,
+            message: `${formData.inquiryType ? `Inquiry Type: ${formData.inquiryType}\n` : ''}Phone: ${formData.phone}\n\n${formData.message}`,
+            submitted_at: new Date().toISOString(),
+            status: 'new'
+          });
+
+        if (error) {
+          console.error('Error submitting contact form:', error);
+        }
+      }
 
       console.log('Contact form submitted:', { ...formData, notificationEmail: 'info@summitspark.net' });
       setSubmitted(true);

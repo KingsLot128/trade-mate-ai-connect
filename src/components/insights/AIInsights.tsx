@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, TrendingUp, AlertCircle, CheckCircle, Lightbulb, RefreshCw, Settings } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
@@ -58,8 +58,8 @@ const AIInsights = () => {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('ai-business-advisor', {
-        body: { userId: user.id, analysisType: 'recommendations' }
+      const { data, error } = await supabase.functions.invoke('ai-insights', {
+        body: { userId: user.id }
       });
 
       if (error) throw error;

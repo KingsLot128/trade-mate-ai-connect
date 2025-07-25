@@ -7,223 +7,8 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
-  }
   public: {
     Tables: {
-      admin_activity_log: {
-        Row: {
-          action_details: Json | null
-          action_type: string
-          admin_user_id: string
-          created_at: string | null
-          id: string
-          target_user_id: string | null
-        }
-        Insert: {
-          action_details?: Json | null
-          action_type: string
-          admin_user_id: string
-          created_at?: string | null
-          id?: string
-          target_user_id?: string | null
-        }
-        Update: {
-          action_details?: Json | null
-          action_type?: string
-          admin_user_id?: string
-          created_at?: string | null
-          id?: string
-          target_user_id?: string | null
-        }
-        Relationships: []
-      }
-      ai_decisions: {
-        Row: {
-          completed_at: string | null
-          created_at: string | null
-          decision_type: string
-          description: string
-          estimated_value: string | null
-          id: string
-          impact: string
-          priority: number | null
-          reasoning: string | null
-          scheduled_for: string | null
-          status: string | null
-          time_to_implement: string | null
-          title: string
-          user_id: string
-        }
-        Insert: {
-          completed_at?: string | null
-          created_at?: string | null
-          decision_type: string
-          description: string
-          estimated_value?: string | null
-          id?: string
-          impact: string
-          priority?: number | null
-          reasoning?: string | null
-          scheduled_for?: string | null
-          status?: string | null
-          time_to_implement?: string | null
-          title: string
-          user_id: string
-        }
-        Update: {
-          completed_at?: string | null
-          created_at?: string | null
-          decision_type?: string
-          description?: string
-          estimated_value?: string | null
-          id?: string
-          impact?: string
-          priority?: number | null
-          reasoning?: string | null
-          scheduled_for?: string | null
-          status?: string | null
-          time_to_implement?: string | null
-          title?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      ai_preferences: {
-        Row: {
-          benchmarking: boolean | null
-          competitive: boolean | null
-          complexity: string | null
-          created_at: string | null
-          focus_areas: string[] | null
-          frequency: string | null
-          id: string
-          predictive: boolean | null
-          preferences_data: Json | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          benchmarking?: boolean | null
-          competitive?: boolean | null
-          complexity?: string | null
-          created_at?: string | null
-          focus_areas?: string[] | null
-          frequency?: string | null
-          id?: string
-          predictive?: boolean | null
-          preferences_data?: Json | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          benchmarking?: boolean | null
-          competitive?: boolean | null
-          complexity?: string | null
-          created_at?: string | null
-          focus_areas?: string[] | null
-          frequency?: string | null
-          id?: string
-          predictive?: boolean | null
-          preferences_data?: Json | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      ai_recommendations: {
-        Row: {
-          actions: Json | null
-          business_sizes: string[] | null
-          complexity: string | null
-          created_at: string | null
-          description: string | null
-          engagement_data: Json | null
-          expected_impact: string | null
-          expires_at: string | null
-          hook: string | null
-          id: string
-          industries: string[] | null
-          priority: string | null
-          reasoning: string | null
-          recommendation_type: string
-          source: string | null
-          status: string | null
-          time_to_implement: string | null
-          title: string
-          user_id: string
-        }
-        Insert: {
-          actions?: Json | null
-          business_sizes?: string[] | null
-          complexity?: string | null
-          created_at?: string | null
-          description?: string | null
-          engagement_data?: Json | null
-          expected_impact?: string | null
-          expires_at?: string | null
-          hook?: string | null
-          id?: string
-          industries?: string[] | null
-          priority?: string | null
-          reasoning?: string | null
-          recommendation_type: string
-          source?: string | null
-          status?: string | null
-          time_to_implement?: string | null
-          title: string
-          user_id: string
-        }
-        Update: {
-          actions?: Json | null
-          business_sizes?: string[] | null
-          complexity?: string | null
-          created_at?: string | null
-          description?: string | null
-          engagement_data?: Json | null
-          expected_impact?: string | null
-          expires_at?: string | null
-          hook?: string | null
-          id?: string
-          industries?: string[] | null
-          priority?: string | null
-          reasoning?: string | null
-          recommendation_type?: string
-          source?: string | null
-          status?: string | null
-          time_to_implement?: string | null
-          title?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      appointments: {
-        Row: {
-          created_at: string | null
-          id: string
-          scheduled_at: string | null
-          status: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          scheduled_at?: string | null
-          status?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          scheduled_at?: string | null
-          status?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       automation_events: {
         Row: {
           created_at: string
@@ -253,137 +38,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-      business_insights: {
-        Row: {
-          confidence_score: number | null
-          created_at: string | null
-          data_source: Json | null
-          description: string
-          expires_at: string | null
-          id: string
-          impact_estimation: string | null
-          insight_type: string
-          title: string
-          user_id: string
-        }
-        Insert: {
-          confidence_score?: number | null
-          created_at?: string | null
-          data_source?: Json | null
-          description: string
-          expires_at?: string | null
-          id?: string
-          impact_estimation?: string | null
-          insight_type: string
-          title: string
-          user_id: string
-        }
-        Update: {
-          confidence_score?: number | null
-          created_at?: string | null
-          data_source?: Json | null
-          description?: string
-          expires_at?: string | null
-          id?: string
-          impact_estimation?: string | null
-          insight_type?: string
-          title?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      business_metrics: {
-        Row: {
-          context: Json | null
-          id: string
-          metric_type: string
-          recorded_at: string | null
-          user_id: string
-          value: number
-        }
-        Insert: {
-          context?: Json | null
-          id?: string
-          metric_type: string
-          recorded_at?: string | null
-          user_id: string
-          value: number
-        }
-        Update: {
-          context?: Json | null
-          id?: string
-          metric_type?: string
-          recorded_at?: string | null
-          user_id?: string
-          value?: number
-        }
-        Relationships: []
-      }
-      business_settings: {
-        Row: {
-          address: string | null
-          company_name: string | null
-          created_at: string | null
-          email: string | null
-          id: string
-          phone: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          address?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email?: string | null
-          id?: string
-          phone?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          address?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email?: string | null
-          id?: string
-          phone?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      calls: {
-        Row: {
-          customer_id: string | null
-          id: string
-          notes: string | null
-          timestamp: string | null
-          user_id: string
-        }
-        Insert: {
-          customer_id?: string | null
-          id?: string
-          notes?: string | null
-          timestamp?: string | null
-          user_id: string
-        }
-        Update: {
-          customer_id?: string | null
-          id?: string
-          notes?: string | null
-          timestamp?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "calls_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "customers"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       crm_contacts: {
         Row: {
@@ -588,168 +242,6 @@ export type Database = {
           },
         ]
       }
-      customers: {
-        Row: {
-          best_contact_time: string | null
-          communication_preference: string | null
-          competition_level: string | null
-          created_at: string | null
-          decision_maker_type: string | null
-          email: string | null
-          geographic_distance: string | null
-          id: string
-          lead_source: string | null
-          name: string | null
-          notes: string | null
-          pain_point_severity: string | null
-          phone: string | null
-          project_scope: string | null
-          project_value_max: number | null
-          project_value_min: number | null
-          property_type: string | null
-          relationship_stage: string | null
-          service_type: string | null
-          tags: string[] | null
-          timeline_urgency: string | null
-          user_id: string
-        }
-        Insert: {
-          best_contact_time?: string | null
-          communication_preference?: string | null
-          competition_level?: string | null
-          created_at?: string | null
-          decision_maker_type?: string | null
-          email?: string | null
-          geographic_distance?: string | null
-          id?: string
-          lead_source?: string | null
-          name?: string | null
-          notes?: string | null
-          pain_point_severity?: string | null
-          phone?: string | null
-          project_scope?: string | null
-          project_value_max?: number | null
-          project_value_min?: number | null
-          property_type?: string | null
-          relationship_stage?: string | null
-          service_type?: string | null
-          tags?: string[] | null
-          timeline_urgency?: string | null
-          user_id: string
-        }
-        Update: {
-          best_contact_time?: string | null
-          communication_preference?: string | null
-          competition_level?: string | null
-          created_at?: string | null
-          decision_maker_type?: string | null
-          email?: string | null
-          geographic_distance?: string | null
-          id?: string
-          lead_source?: string | null
-          name?: string | null
-          notes?: string | null
-          pain_point_severity?: string | null
-          phone?: string | null
-          project_scope?: string | null
-          project_value_max?: number | null
-          project_value_min?: number | null
-          property_type?: string | null
-          relationship_stage?: string | null
-          service_type?: string | null
-          tags?: string[] | null
-          timeline_urgency?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      decision_interactions: {
-        Row: {
-          action: string
-          created_at: string | null
-          decision_id: string
-          id: string
-          notes: string | null
-          user_id: string
-        }
-        Insert: {
-          action: string
-          created_at?: string | null
-          decision_id: string
-          id?: string
-          notes?: string | null
-          user_id: string
-        }
-        Update: {
-          action?: string
-          created_at?: string | null
-          decision_id?: string
-          id?: string
-          notes?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      enhanced_recommendations: {
-        Row: {
-          confidence_score: number | null
-          content: Json
-          created_at: string | null
-          estimated_read_time: number | null
-          expected_impact: string | null
-          hook: string
-          id: string
-          is_active: boolean | null
-          personalized_score: number | null
-          priority_score: number | null
-          reasoning: string
-          recommendation_id: string
-          recommendation_type: string
-          stream_type: string | null
-          time_to_implement: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          confidence_score?: number | null
-          content: Json
-          created_at?: string | null
-          estimated_read_time?: number | null
-          expected_impact?: string | null
-          hook: string
-          id?: string
-          is_active?: boolean | null
-          personalized_score?: number | null
-          priority_score?: number | null
-          reasoning: string
-          recommendation_id: string
-          recommendation_type: string
-          stream_type?: string | null
-          time_to_implement?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          confidence_score?: number | null
-          content?: Json
-          created_at?: string | null
-          estimated_read_time?: number | null
-          expected_impact?: string | null
-          hook?: string
-          id?: string
-          is_active?: boolean | null
-          personalized_score?: number | null
-          priority_score?: number | null
-          reasoning?: string
-          recommendation_id?: string
-          recommendation_type?: string
-          stream_type?: string | null
-          time_to_implement?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       integrations: {
         Row: {
           access_token: string | null
@@ -786,549 +278,6 @@ export type Database = {
           settings?: Json | null
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      magic_link_tokens: {
-        Row: {
-          claimed_at: string | null
-          created_at: string | null
-          email: string
-          expires_at: string
-          id: string
-          quiz_data: Json
-          token: string
-          user_id: string | null
-        }
-        Insert: {
-          claimed_at?: string | null
-          created_at?: string | null
-          email: string
-          expires_at: string
-          id?: string
-          quiz_data: Json
-          token: string
-          user_id?: string | null
-        }
-        Update: {
-          claimed_at?: string | null
-          created_at?: string | null
-          email?: string
-          expires_at?: string
-          id?: string
-          quiz_data?: Json
-          token?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          account_status: string | null
-          biggest_challenge: string | null
-          business_goals: string | null
-          business_health_score: number | null
-          business_level: number | null
-          business_name: string | null
-          business_size: string | null
-          chaos_score: number | null
-          clarity_zone: string | null
-          competition_level: string | null
-          created_at: string | null
-          customer_acquisition_method: string | null
-          daily_overwhelm_score: number | null
-          email: string | null
-          full_name: string | null
-          id: string
-          industry: string | null
-          industry_percentile: number | null
-          last_login_at: string | null
-          location: string | null
-          next_billing_date: string | null
-          onboarding_step: string | null
-          phone: string | null
-          photo_url: string | null
-          pricing_strategy: string | null
-          primary_goal: string | null
-          primary_service_types: string[] | null
-          quiz_completed_at: string | null
-          revenue_predictability_score: number | null
-          seasonal_patterns: string | null
-          service_area_radius: number | null
-          setup_preference: string | null
-          stripe_customer_id: string | null
-          subscription_ends_at: string | null
-          subscription_status: string | null
-          subscription_tier: string | null
-          suspended_at: string | null
-          suspended_by: string | null
-          suspension_reason: string | null
-          target_customer_type: string | null
-          target_revenue: string | null
-          trial_ends_at: string | null
-          typical_project_range_max: number | null
-          typical_project_range_min: number | null
-          updated_at: string | null
-          user_id: string
-          website_url: string | null
-          years_in_business: number | null
-        }
-        Insert: {
-          account_status?: string | null
-          biggest_challenge?: string | null
-          business_goals?: string | null
-          business_health_score?: number | null
-          business_level?: number | null
-          business_name?: string | null
-          business_size?: string | null
-          chaos_score?: number | null
-          clarity_zone?: string | null
-          competition_level?: string | null
-          created_at?: string | null
-          customer_acquisition_method?: string | null
-          daily_overwhelm_score?: number | null
-          email?: string | null
-          full_name?: string | null
-          id?: string
-          industry?: string | null
-          industry_percentile?: number | null
-          last_login_at?: string | null
-          location?: string | null
-          next_billing_date?: string | null
-          onboarding_step?: string | null
-          phone?: string | null
-          photo_url?: string | null
-          pricing_strategy?: string | null
-          primary_goal?: string | null
-          primary_service_types?: string[] | null
-          quiz_completed_at?: string | null
-          revenue_predictability_score?: number | null
-          seasonal_patterns?: string | null
-          service_area_radius?: number | null
-          setup_preference?: string | null
-          stripe_customer_id?: string | null
-          subscription_ends_at?: string | null
-          subscription_status?: string | null
-          subscription_tier?: string | null
-          suspended_at?: string | null
-          suspended_by?: string | null
-          suspension_reason?: string | null
-          target_customer_type?: string | null
-          target_revenue?: string | null
-          trial_ends_at?: string | null
-          typical_project_range_max?: number | null
-          typical_project_range_min?: number | null
-          updated_at?: string | null
-          user_id: string
-          website_url?: string | null
-          years_in_business?: number | null
-        }
-        Update: {
-          account_status?: string | null
-          biggest_challenge?: string | null
-          business_goals?: string | null
-          business_health_score?: number | null
-          business_level?: number | null
-          business_name?: string | null
-          business_size?: string | null
-          chaos_score?: number | null
-          clarity_zone?: string | null
-          competition_level?: string | null
-          created_at?: string | null
-          customer_acquisition_method?: string | null
-          daily_overwhelm_score?: number | null
-          email?: string | null
-          full_name?: string | null
-          id?: string
-          industry?: string | null
-          industry_percentile?: number | null
-          last_login_at?: string | null
-          location?: string | null
-          next_billing_date?: string | null
-          onboarding_step?: string | null
-          phone?: string | null
-          photo_url?: string | null
-          pricing_strategy?: string | null
-          primary_goal?: string | null
-          primary_service_types?: string[] | null
-          quiz_completed_at?: string | null
-          revenue_predictability_score?: number | null
-          seasonal_patterns?: string | null
-          service_area_radius?: number | null
-          setup_preference?: string | null
-          stripe_customer_id?: string | null
-          subscription_ends_at?: string | null
-          subscription_status?: string | null
-          subscription_tier?: string | null
-          suspended_at?: string | null
-          suspended_by?: string | null
-          suspension_reason?: string | null
-          target_customer_type?: string | null
-          target_revenue?: string | null
-          trial_ends_at?: string | null
-          typical_project_range_max?: number | null
-          typical_project_range_min?: number | null
-          updated_at?: string | null
-          user_id?: string
-          website_url?: string | null
-          years_in_business?: number | null
-        }
-        Relationships: []
-      }
-      recommendation_interactions: {
-        Row: {
-          business_impact: Json | null
-          created_at: string | null
-          feedback_rating: number | null
-          id: string
-          interaction_type: string
-          metadata: Json | null
-          outcome_reported: string | null
-          recommendation_id: string
-          scroll_depth: number | null
-          time_spent: number | null
-          user_id: string
-        }
-        Insert: {
-          business_impact?: Json | null
-          created_at?: string | null
-          feedback_rating?: number | null
-          id?: string
-          interaction_type: string
-          metadata?: Json | null
-          outcome_reported?: string | null
-          recommendation_id: string
-          scroll_depth?: number | null
-          time_spent?: number | null
-          user_id: string
-        }
-        Update: {
-          business_impact?: Json | null
-          created_at?: string | null
-          feedback_rating?: number | null
-          id?: string
-          interaction_type?: string
-          metadata?: Json | null
-          outcome_reported?: string | null
-          recommendation_id?: string
-          scroll_depth?: number | null
-          time_spent?: number | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      subscribers: {
-        Row: {
-          amount_cents: number | null
-          billing_interval: string | null
-          created_at: string
-          currency: string | null
-          email: string
-          id: string
-          next_billing_date: string | null
-          stripe_customer_id: string | null
-          stripe_subscription_id: string | null
-          subscription_ends_at: string | null
-          subscription_starts_at: string | null
-          subscription_status: string | null
-          subscription_tier: string | null
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          amount_cents?: number | null
-          billing_interval?: string | null
-          created_at?: string
-          currency?: string | null
-          email: string
-          id?: string
-          next_billing_date?: string | null
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
-          subscription_ends_at?: string | null
-          subscription_starts_at?: string | null
-          subscription_status?: string | null
-          subscription_tier?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          amount_cents?: number | null
-          billing_interval?: string | null
-          created_at?: string
-          currency?: string | null
-          email?: string
-          id?: string
-          next_billing_date?: string | null
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
-          subscription_ends_at?: string | null
-          subscription_starts_at?: string | null
-          subscription_status?: string | null
-          subscription_tier?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      subscription_plans: {
-        Row: {
-          created_at: string
-          description: string | null
-          features: Json | null
-          id: string
-          is_active: boolean | null
-          is_popular: boolean | null
-          name: string
-          plan_id: string
-          price_monthly_cents: number
-          price_yearly_cents: number | null
-          stripe_monthly_price_id: string | null
-          stripe_yearly_price_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          features?: Json | null
-          id?: string
-          is_active?: boolean | null
-          is_popular?: boolean | null
-          name: string
-          plan_id: string
-          price_monthly_cents: number
-          price_yearly_cents?: number | null
-          stripe_monthly_price_id?: string | null
-          stripe_yearly_price_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          features?: Json | null
-          id?: string
-          is_active?: boolean | null
-          is_popular?: boolean | null
-          name?: string
-          plan_id?: string
-          price_monthly_cents?: number
-          price_yearly_cents?: number | null
-          stripe_monthly_price_id?: string | null
-          stripe_yearly_price_id?: string | null
-        }
-        Relationships: []
-      }
-      unified_business_profiles: {
-        Row: {
-          ai_preferences: Json | null
-          created_at: string | null
-          id: string
-          integration_data: Json | null
-          intelligence_score: number | null
-          last_updated: string | null
-          profile_completeness: number | null
-          profile_data: Json | null
-          user_id: string
-          website_data: Json | null
-        }
-        Insert: {
-          ai_preferences?: Json | null
-          created_at?: string | null
-          id?: string
-          integration_data?: Json | null
-          intelligence_score?: number | null
-          last_updated?: string | null
-          profile_completeness?: number | null
-          profile_data?: Json | null
-          user_id: string
-          website_data?: Json | null
-        }
-        Update: {
-          ai_preferences?: Json | null
-          created_at?: string | null
-          id?: string
-          integration_data?: Json | null
-          intelligence_score?: number | null
-          last_updated?: string | null
-          profile_completeness?: number | null
-          profile_data?: Json | null
-          user_id?: string
-          website_data?: Json | null
-        }
-        Relationships: []
-      }
-      user_engagement: {
-        Row: {
-          created_at: string | null
-          event_data: Json | null
-          event_type: string
-          id: string
-          page_path: string | null
-          session_id: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          event_data?: Json | null
-          event_type: string
-          id?: string
-          page_path?: string | null
-          session_id?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          event_data?: Json | null
-          event_type?: string
-          id?: string
-          page_path?: string | null
-          session_id?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_photos: {
-        Row: {
-          created_at: string | null
-          file_size: number | null
-          file_type: string | null
-          id: string
-          photo_type: string | null
-          photo_url: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          file_size?: number | null
-          file_type?: string | null
-          id?: string
-          photo_type?: string | null
-          photo_url: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          file_size?: number | null
-          file_type?: string | null
-          id?: string
-          photo_type?: string | null
-          photo_url?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_quiz_responses: {
-        Row: {
-          chaos_contribution: number | null
-          created_at: string | null
-          id: string
-          question_id: string
-          response: Json
-          user_id: string
-        }
-        Insert: {
-          chaos_contribution?: number | null
-          created_at?: string | null
-          id?: string
-          question_id: string
-          response: Json
-          user_id: string
-        }
-        Update: {
-          chaos_contribution?: number | null
-          created_at?: string | null
-          id?: string
-          question_id?: string
-          response?: Json
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_setup_preferences: {
-        Row: {
-          created_at: string | null
-          id: string
-          onboarding_completed: boolean | null
-          preferences_data: Json | null
-          setup_preference: string
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          onboarding_completed?: boolean | null
-          preferences_data?: Json | null
-          setup_preference: string
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          onboarding_completed?: boolean | null
-          preferences_data?: Json | null
-          setup_preference?: string
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      website_analysis: {
-        Row: {
-          analysis_data: Json | null
-          conversion_score: number | null
-          created_at: string | null
-          design_score: number | null
-          id: string
-          last_analyzed: string | null
-          recommendations: Json | null
-          seo_score: number | null
-          user_id: string
-          website_url: string
-        }
-        Insert: {
-          analysis_data?: Json | null
-          conversion_score?: number | null
-          created_at?: string | null
-          design_score?: number | null
-          id?: string
-          last_analyzed?: string | null
-          recommendations?: Json | null
-          seo_score?: number | null
-          user_id: string
-          website_url: string
-        }
-        Update: {
-          analysis_data?: Json | null
-          conversion_score?: number | null
-          created_at?: string | null
-          design_score?: number | null
-          id?: string
-          last_analyzed?: string | null
-          recommendations?: Json | null
-          seo_score?: number | null
-          user_id?: string
-          website_url?: string
         }
         Relationships: []
       }
@@ -1373,20 +322,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      assign_admin_roles: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      has_role: {
-        Args: {
-          _user_id: string
-          _role: Database["public"]["Enums"]["app_role"]
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "user" | "super_admin"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1394,25 +333,21 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -1430,16 +365,14 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -1455,16 +388,14 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -1480,16 +411,14 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -1497,24 +426,20 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "user", "super_admin"],
-    },
+    Enums: {},
   },
 } as const

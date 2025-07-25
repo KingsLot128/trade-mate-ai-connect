@@ -31,16 +31,6 @@ serve(async (req) => {
         baseUrl: 'https://appcenter.intuit.com/connect/oauth2',
         clientId: Deno.env.get('QUICKBOOKS_CLIENT_ID'),
         scopes: 'com.intuit.quickbooks.accounting'
-      },
-      google_calendar: {
-        baseUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-        clientId: Deno.env.get('GOOGLE_CLIENT_ID'),
-        scopes: 'https://www.googleapis.com/auth/calendar.readonly'
-      },
-      stripe: {
-        baseUrl: 'https://connect.stripe.com/oauth/authorize',
-        clientId: Deno.env.get('STRIPE_CLIENT_ID'),
-        scopes: 'read_write'
       }
     }
 

@@ -5,15 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, ArrowRight, ArrowLeft, Phone, Wrench, Zap, Droplets, TrendingUp, Target } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import ChaosIndexDisplay from '@/components/dashboard/ChaosIndexDisplay';
+import { CheckCircle, ArrowRight, ArrowLeft, Phone, Wrench, Zap, Droplets } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
-import { trackSetupCompletion, initializeTracking } from '@/utils/dataTracking';
-import { onboardingManager, OnboardingData } from '@/lib/onboarding/OnboardingManager';
 
 interface SetupWizardProps {
   onComplete: () => void;
@@ -29,23 +24,7 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
     phone: '',
     serviceArea: '',
     emergencyKeywords: ['emergency', 'urgent', 'leak', 'no power', 'flooding'],
-    greetingTemplate: '',
-    // Enhanced business intelligence fields
-    monthlyRevenue: '',
-    businessChallenges: [] as string[],
-    currentTools: [] as string[],
-    // Chaos index assessment
-    chaosResponses: {
-      overwhelmed: 5,
-      missedMessages: 5,
-      forgottenFollowups: 5,
-      revenueUnpredictability: 5,
-      adminTime: 5
-    },
-    // Success goals
-    revenueTarget: '',
-    efficiencyGoal: '',
-    clientSatisfactionGoal: ''
+    greetingTemplate: ''
   });
 
   const industries = [
@@ -58,47 +37,9 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
   const steps = [
     { title: 'Business Info', description: 'Tell us about your business' },
     { title: 'Industry Setup', description: 'Choose your trade specialization' },
-    { title: 'Business Assessment', description: 'Help us understand your operations' },
-    { title: 'Success Goals', description: 'Set your objectives and launch' }
+    { title: 'Phone Integration', description: 'Connect your business phone' },
+    { title: 'AI Customization', description: 'Personalize your AI assistant' }
   ];
-
-  // Business challenge options
-  const challengeOptions = [
-    'Time management and scheduling',
-    'Client communication and follow-up',
-    'Revenue consistency',
-    'Lead generation and conversion',
-    'Administrative tasks and paperwork',
-    'Equipment and inventory management'
-  ];
-
-  // Current tools options
-  const toolOptions = [
-    'CRM software',
-    'Scheduling apps',
-    'Communication tools',
-    'Accounting software',
-    'Project management tools',
-    'None/Manual processes'
-  ];
-
-  // Revenue ranges
-  const revenueRanges = [
-    { value: '<5k', label: 'Less than $5,000' },
-    { value: '5k-15k', label: '$5,000 - $15,000' },
-    { value: '15k-30k', label: '$15,000 - $30,000' },
-    { value: '30k-50k', label: '$30,000 - $50,000' },
-    { value: '50k+', label: '$50,000+' }
-  ];
-
-  // Calculate chaos index
-  const calculateChaosIndex = () => {
-    const responses = setupData.chaosResponses;
-    const average = (responses.overwhelmed + responses.missedMessages + 
-                    responses.forgottenFollowups + responses.revenueUnpredictability + 
-                    responses.adminTime) / 5;
-    return average;
-  };
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -118,53 +59,39 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
     if (!user) return;
 
     try {
-      console.log('🚀 Starting setup completion...');
-      
-      // Prepare onboarding data
-      const onboardingData: OnboardingData = {
-        businessName: setupData.businessName,
-        industry: setupData.industry,
-        phone: setupData.phone,
-        businessSize: 'Small', // Default for new users
-        location: setupData.serviceArea,
-        primaryGoal: setupData.revenueTarget,
-        biggestChallenge: setupData.businessChallenges.join(', '),
-        targetRevenue: setupData.revenueTarget,
-        quizResponses: setupData.chaosResponses,
-        chaosScore: calculateChaosIndex(),
-        primaryServices: [setupData.industry],
-        businessGoals: setupData.efficiencyGoal,
-        targetCustomers: 'Homeowners and businesses',
-        competitionLevel: 'medium',
-        pricingStrategy: 'competitive'
-      };
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          business_name: setupData.businessName,
+          industry: setupData.industry,
+          phone: setupData.phone
+        })
+        .eq('id', user.id);
 
-      // Use the OnboardingManager to save all data
-      const success = await onboardingManager.saveOnboardingData(user, onboardingData);
-      
-      if (!success) {
-        throw new Error('Failed to save onboarding data. Please try again.');
-      }
+      if (error) throw error;
+
+      // Create business settings
+      await supabase
+        .from('business_settings')
+        .insert({
+          user_id: user.id,
+          greeting_message: setupData.greetingTemplate,
+          ai_personality: `Professional ${setupData.industry} assistant`,
+          auto_scheduling: true,
+          follow_up_enabled: true
+        });
 
       toast({
-        title: "Setup Complete! 🎉",
-        description: `Your Chaos Index: ${calculateChaosIndex().toFixed(1)}. Your TradeMate AI is ready!`,
+        title: "Setup Complete!",
+        description: "Your TradeMate AI is ready to handle calls.",
       });
-
-      // Track setup completion for business intelligence
-      try {
-        const tracker = initializeTracking(user.id);
-        await trackSetupCompletion(setupData, calculateChaosIndex());
-      } catch (trackingError) {
-        console.warn('Tracking failed, but setup was successful:', trackingError);
-      }
 
       onComplete();
     } catch (error) {
-      console.error('❌ Setup completion failed:', error);
+      console.error('Setup error:', error);
       toast({
         title: "Setup Error",
-        description: error.message || "Please try again or contact support.",
+        description: "Please try again or contact support.",
         variant: "destructive",
       });
     }
@@ -184,100 +111,22 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Business Name</label>
-                <Input
-                  value={setupData.businessName}
-                  onChange={(e) => setSetupData({...setupData, businessName: e.target.value})}
-                  placeholder="e.g., Smith Plumbing LLC"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Service Area</label>
-                <Input
-                  value={setupData.serviceArea}
-                  onChange={(e) => setSetupData({...setupData, serviceArea: e.target.value})}
-                  placeholder="e.g., Dallas Metro Area"
-                />
-              </div>
-            </div>
-            
+          <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">Monthly Revenue Range</label>
-              <Select value={setupData.monthlyRevenue} onValueChange={(value) => setSetupData({...setupData, monthlyRevenue: value})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your monthly revenue range" />
-                </SelectTrigger>
-                <SelectContent>
-                  {revenueRanges.map((range) => (
-                    <SelectItem key={range.value} value={range.value}>
-                      {range.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <label className="text-sm font-medium mb-2 block">Business Name</label>
+              <Input
+                value={setupData.businessName}
+                onChange={(e) => setSetupData({...setupData, businessName: e.target.value})}
+                placeholder="e.g., Smith Plumbing LLC"
+              />
             </div>
-
             <div>
-              <label className="text-sm font-medium mb-3 block">Primary Business Challenges (Select all that apply)</label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {challengeOptions.map((challenge) => (
-                  <div key={challenge} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={challenge}
-                      checked={setupData.businessChallenges.includes(challenge)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSetupData({
-                            ...setupData,
-                            businessChallenges: [...setupData.businessChallenges, challenge]
-                          });
-                        } else {
-                          setSetupData({
-                            ...setupData,
-                            businessChallenges: setupData.businessChallenges.filter(c => c !== challenge)
-                          });
-                        }
-                      }}
-                    />
-                    <label htmlFor={challenge} className="text-sm cursor-pointer">
-                      {challenge}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-3 block">Current Tools Used (Select all that apply)</label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {toolOptions.map((tool) => (
-                  <div key={tool} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={tool}
-                      checked={setupData.currentTools.includes(tool)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSetupData({
-                            ...setupData,
-                            currentTools: [...setupData.currentTools, tool]
-                          });
-                        } else {
-                          setSetupData({
-                            ...setupData,
-                            currentTools: setupData.currentTools.filter(t => t !== tool)
-                          });
-                        }
-                      }}
-                    />
-                    <label htmlFor={tool} className="text-sm cursor-pointer">
-                      {tool}
-                    </label>
-                  </div>
-                ))}
-              </div>
+              <label className="text-sm font-medium mb-2 block">Service Area</label>
+              <Input
+                value={setupData.serviceArea}
+                onChange={(e) => setSetupData({...setupData, serviceArea: e.target.value})}
+                placeholder="e.g., Dallas Metro Area"
+              />
             </div>
           </div>
         );
@@ -323,123 +172,7 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
 
       case 2:
         return (
-          <div className="space-y-6">
-            <div className="mb-6">
-              <h4 className="text-lg font-semibold mb-4 flex items-center">
-                <TrendingUp className="h-5 w-5 mr-2" />
-                Chaos Index Assessment
-              </h4>
-              <p className="text-sm text-muted-foreground mb-6">
-                Help us understand your current operational challenges. Rate each area from 1-10:
-              </p>
-              
-              <div className="space-y-6">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    How often do you feel overwhelmed by your daily schedule? (1=never, 10=constantly)
-                  </label>
-                  <Slider
-                    value={[setupData.chaosResponses.overwhelmed]}
-                    onValueChange={([value]) => setSetupData({
-                      ...setupData,
-                      chaosResponses: { ...setupData.chaosResponses, overwhelmed: value }
-                    })}
-                    max={10}
-                    min={1}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Current: {setupData.chaosResponses.overwhelmed}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    How frequently do important messages get missed or delayed? (1=rarely, 10=daily)
-                  </label>
-                  <Slider
-                    value={[setupData.chaosResponses.missedMessages]}
-                    onValueChange={([value]) => setSetupData({
-                      ...setupData,
-                      chaosResponses: { ...setupData.chaosResponses, missedMessages: value }
-                    })}
-                    max={10}
-                    min={1}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Current: {setupData.chaosResponses.missedMessages}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    How often do you forget to follow up with clients or leads? (1=never, 10=very often)
-                  </label>
-                  <Slider
-                    value={[setupData.chaosResponses.forgottenFollowups]}
-                    onValueChange={([value]) => setSetupData({
-                      ...setupData,
-                      chaosResponses: { ...setupData.chaosResponses, forgottenFollowups: value }
-                    })}
-                    max={10}
-                    min={1}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Current: {setupData.chaosResponses.forgottenFollowups}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    How unpredictable is your monthly revenue? (1=very consistent, 10=highly unpredictable)
-                  </label>
-                  <Slider
-                    value={[setupData.chaosResponses.revenueUnpredictability]}
-                    onValueChange={([value]) => setSetupData({
-                      ...setupData,
-                      chaosResponses: { ...setupData.chaosResponses, revenueUnpredictability: value }
-                    })}
-                    max={10}
-                    min={1}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Current: {setupData.chaosResponses.revenueUnpredictability}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    How much time do you spend on administrative tasks daily? (1=&lt;30min, 10=&gt;4hours)
-                  </label>
-                  <Slider
-                    value={[setupData.chaosResponses.adminTime]}
-                    onValueChange={([value]) => setSetupData({
-                      ...setupData,
-                      chaosResponses: { ...setupData.chaosResponses, adminTime: value }
-                    })}
-                    max={10}
-                    min={1}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Current: {setupData.chaosResponses.adminTime}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                <ChaosIndexDisplay score={calculateChaosIndex()} size="small" />
-              </div>
-            </div>
-
+          <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Business Phone Number</label>
               <Input
@@ -447,45 +180,22 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
                 onChange={(e) => setSetupData({...setupData, phone: e.target.value})}
                 placeholder="(555) 123-4567"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                We'll help you integrate AI call handling later in settings.
-              </p>
+            </div>
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <h4 className="font-medium text-yellow-800">📞 Phone Integration Steps:</h4>
+              <ol className="text-sm text-yellow-700 mt-2 space-y-1">
+                <li>1. Sign up for Twilio (free trial available)</li>
+                <li>2. Purchase a phone number (~$1/month)</li>
+                <li>3. Add your Twilio credentials in Settings</li>
+                <li>4. Forward your business calls to the Twilio number</li>
+              </ol>
             </div>
           </div>
         );
 
       case 3:
         return (
-          <div className="space-y-6">
-            <div>
-              <h4 className="text-lg font-semibold mb-4 flex items-center">
-                <Target className="h-5 w-5 mr-2" />
-                Success Goals & Review
-              </h4>
-              <p className="text-sm text-muted-foreground mb-6">
-                Set your objectives and review your business profile before launching.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Monthly Revenue Target</label>
-                <Input
-                  value={setupData.revenueTarget}
-                  onChange={(e) => setSetupData({...setupData, revenueTarget: e.target.value})}
-                  placeholder="e.g., $25,000"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Main Efficiency Goal</label>
-                <Input
-                  value={setupData.efficiencyGoal}
-                  onChange={(e) => setSetupData({...setupData, efficiencyGoal: e.target.value})}
-                  placeholder="e.g., Save 2 hours daily"
-                />
-              </div>
-            </div>
-
+          <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-2 block">AI Greeting Message</label>
               <textarea
@@ -495,33 +205,15 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete }) => {
                 placeholder="Your AI assistant's greeting..."
               />
             </div>
-
-            <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg">
-              <h4 className="font-semibold mb-4">🎯 Your Business Profile Summary</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <strong>Business:</strong> {setupData.businessName} ({setupData.industry})
-                </div>
-                <div>
-                  <strong>Revenue Range:</strong> {setupData.monthlyRevenue}
-                </div>
-                <div>
-                  <strong>Chaos Index:</strong> <ChaosIndexDisplay score={calculateChaosIndex()} size="small" showDetails={false} />
-                </div>
-                <div>
-                  <strong>Top Challenges:</strong> {setupData.businessChallenges.slice(0, 2).join(', ')}
-                </div>
-              </div>
-              
-              <div className="mt-4 p-4 bg-white rounded-lg">
-                <h5 className="font-medium text-blue-800 mb-2">🚀 Ready to Launch!</h5>
-                <ul className="text-sm text-blue-700 space-y-1">
-                  <li>• AI insights tailored to your {setupData.industry} business</li>
-                  <li>• Chaos reduction recommendations ready</li>
-                  <li>• Business intelligence dashboard configured</li>
-                  <li>• Decision feed personalized to your goals</li>
-                </ul>
-              </div>
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-medium text-blue-800">🤖 Your AI Will:</h4>
+              <ul className="text-sm text-blue-700 mt-2 space-y-1">
+                <li>• Detect emergencies and prioritize urgent calls</li>
+                <li>• Provide service estimates based on your industry</li>
+                <li>• Schedule appointments automatically</li>
+                <li>• Follow up on missed calls</li>
+                <li>• Send review requests after completed jobs</li>
+              </ul>
             </div>
           </div>
         );

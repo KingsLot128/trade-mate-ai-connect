@@ -2,12 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Users, Calendar, TrendingUp, PhoneMissed, PhoneCall } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import PWAInstall from '@/components/PWAInstall';
 import DashboardChart from './DashboardChart';
-import BusinessHealthWidget from './BusinessHealthWidget';
-import AIInsightsPreview from '@/components/insights/AIInsightsPreview';
 
 interface DashboardStats {
   totalCalls: number;
@@ -73,8 +71,8 @@ const DashboardOverview = () => {
           .lt('scheduled_at', today + 'T23:59:59');
 
         const totalCalls = calls?.length || 0;
-        const missedCalls = calls?.filter((call: any) => call.notes?.includes('missed')).length || 0;
-        const answeredCalls = calls?.filter((call: any) => call.notes?.includes('answered')).length || 0;
+        const missedCalls = calls?.filter(call => call.status === 'missed').length || 0;
+        const answeredCalls = calls?.filter(call => call.status === 'answered').length || 0;
         const conversionRate = totalCalls > 0 ? Math.round((answeredCalls / totalCalls) * 100) : 0;
 
         setStats({
@@ -168,12 +166,6 @@ const DashboardOverview = () => {
         <p className="text-muted-foreground">
           Overview of your business performance and AI assistant activity.
         </p>
-      </div>
-
-      {/* Business Health and AI Insights */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <BusinessHealthWidget />
-        <AIInsightsPreview />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

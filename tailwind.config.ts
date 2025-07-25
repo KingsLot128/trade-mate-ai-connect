@@ -1,25 +1,12 @@
-const config = {
+import type { Config } from "tailwindcss";
+
+export default {
 	darkMode: ["class"],
 	content: [
-		"./index.html",
-		"./src/**/*.{js,ts,jsx,tsx,html}",
-		"./src/**/*.{js,ts,jsx,tsx}"
-	],
-	safelist: [
-		"tm-btn-primary",
-		"tm-btn-secondary",
-		"tm-heading",
-		"tm-heading-xl",
-		"tm-heading-lg",
-		"tm-heading-md",
-		"scroll-fade-in",
-		"hover-scale",
-		"glass-effect",
-		"gradient-text",
-		"feature-card",
-		"scrollbar-hide",
-		"mobile-optimized",
-		"mobile-text-sm"
+		"./pages/**/*.{ts,tsx}",
+		"./components/**/*.{ts,tsx}",
+		"./app/**/*.{ts,tsx}",
+		"./src/**/*.{ts,tsx}",
 	],
 	prefix: "",
 	theme: {
@@ -106,6 +93,4 @@ const config = {
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
-};
-
-module.exports = config;
+} satisfies Config;

@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PhoneMissed, MessageSquare, Mail, Calendar, Clock } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -34,12 +34,12 @@ const MissedCallRecovery = () => {
         .from('calls')
         .select('*')
         .eq('user_id', user.id)
-        .ilike('notes', '%missed%') // Filter by notes containing 'missed' since status column doesn't exist
+        .eq('status', 'missed')
         .order('created_at', { ascending: false })
         .limit(20);
 
       if (error) throw error;
-      setMissedCalls((data || []) as any); // Type assertion for compatibility
+      setMissedCalls(data || []);
     } catch (error) {
       console.error('Error fetching missed calls:', error);
     } finally {
@@ -64,8 +64,9 @@ const MissedCallRecovery = () => {
       await supabase
         .from('calls')
         .update({ 
-          notes: `Follow-up ${method} sent: ${followUpMessages[method]}`
-        } as any) // Type assertion for compatibility
+          follow_up_sent: true,
+          ai_response: `Follow-up ${method} sent: ${followUpMessages[method]}`
+        })
         .eq('id', callId);
 
       toast({
@@ -88,7 +89,7 @@ const MissedCallRecovery = () => {
     try {
       await supabase
         .from('calls')
-        .update({ notes: `Status updated to: ${status}` } as any) // Type assertion for compatibility
+        .update({ recovery_status: status })
         .eq('id', callId);
 
       fetchMissedCalls();

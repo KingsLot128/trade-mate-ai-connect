@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Phone, PhoneMissed, PhoneCall, Clock, User, Search, Filter } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -46,8 +46,8 @@ const CallsManager = () => {
           .limit(50);
 
         if (error) throw error;
-        setCalls((data || []) as any); // Type assertion for compatibility
-        setFilteredCalls((data || []) as any);
+        setCalls(data || []);
+        setFilteredCalls(data || []);
       } catch (error) {
         console.error('Error fetching calls:', error);
         toast({
