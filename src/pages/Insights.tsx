@@ -5,11 +5,7 @@ import AIInsights from '@/components/insights/AIInsights';
 import { AdvancedAIGate } from '@/components/subscription/FeatureGate';
 
 const Insights: React.FC = () => {
-  return (
-    <MainLayout>
-      <AIInsights />
-    </MainLayout>
-  );
+  return <AIInsights />;
 };
 
 export default Insights;

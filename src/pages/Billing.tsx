@@ -3,11 +3,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { SubscriptionManager } from '@/components/subscription/SubscriptionManager';
 
 const Billing = () => {
-  return (
-    <MainLayout>
-      <SubscriptionManager />
-    </MainLayout>
-  );
+  return <SubscriptionManager />;
 };
 
 export default Billing;
