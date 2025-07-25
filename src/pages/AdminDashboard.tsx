@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/select';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Users, 
@@ -41,7 +42,9 @@ import {
   Calendar,
   Activity,
   Ban,
-  UserCheck
+  UserCheck,
+  Eye,
+  ExternalLink
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -74,6 +77,7 @@ interface AdminActivity {
 const AdminDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [activities, setActivities] = useState<AdminActivity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -211,6 +215,29 @@ const AdminDashboard = () => {
         variant: "destructive",
       });
     }
+  };
+
+  // Impersonation functionality
+  const handleViewAsUser = (userProfile: UserProfile) => {
+    // Store the original admin user info in sessionStorage
+    const adminInfo = {
+      originalUserId: user?.id,
+      originalEmail: user?.email,
+      impersonatedUserId: userProfile.user_id,
+      impersonatedEmail: userProfile.email,
+      impersonatedName: userProfile.full_name || userProfile.email
+    };
+    
+    sessionStorage.setItem('admin_impersonation', JSON.stringify(adminInfo));
+    
+    toast({
+      title: "Admin Mode: Viewing as User",
+      description: `Now viewing dashboard as ${userProfile.email}`,
+      variant: "default",
+    });
+    
+    // Navigate to the user's dashboard
+    navigate('/dashboard');
   };
 
   const getStatusBadge = (status: string) => {
@@ -421,18 +448,28 @@ const AdminDashboard = () => {
                           {format(new Date(userProfile.created_at), 'MMM dd, yyyy')}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => setSelectedUser(userProfile)}
-                            >
-                              Manage
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-2xl">
+                       <TableCell>
+                         <div className="flex space-x-2">
+                           <Button
+                             variant="outline"
+                             size="sm"
+                             onClick={() => handleViewAsUser(userProfile)}
+                             className="text-blue-600 hover:text-blue-800"
+                           >
+                             <Eye className="h-4 w-4 mr-1" />
+                             View as User
+                           </Button>
+                           <Dialog>
+                             <DialogTrigger asChild>
+                               <Button 
+                                 variant="outline" 
+                                 size="sm"
+                                 onClick={() => setSelectedUser(userProfile)}
+                               >
+                                 Manage
+                               </Button>
+                             </DialogTrigger>
+                             <DialogContent className="max-w-2xl">
                             <DialogHeader>
                               <DialogTitle>Manage User: {userProfile.email}</DialogTitle>
                             </DialogHeader>
@@ -516,9 +553,10 @@ const AdminDashboard = () => {
                                 </Button>
                               )}
                             </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
-                      </TableCell>
+                           </DialogContent>
+                         </Dialog>
+                         </div>
+                       </TableCell>
                     </TableRow>
                   ))
                 )}

@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useEffectiveUser } from '@/hooks/useEffectiveUser';
 import { toast } from 'sonner';
 
 interface AddDealModalProps {
@@ -16,7 +16,7 @@ interface AddDealModalProps {
 }
 
 const AddDealModal: React.FC<AddDealModalProps> = ({ isOpen, onClose, onDealAdded }) => {
-  const { user } = useAuth();
+  const { effectiveUserId } = useEffectiveUser();
   const [formData, setFormData] = useState({
     name: '',
     amount: '',
@@ -31,14 +31,14 @@ const AddDealModal: React.FC<AddDealModalProps> = ({ isOpen, onClose, onDealAdde
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!effectiveUserId) return;
 
     setLoading(true);
     try {
       const { error } = await supabase
         .from('crm_deals')
         .insert({
-          user_id: user.id,
+          user_id: effectiveUserId,
           name: formData.name,
           amount: formData.amount ? parseFloat(formData.amount) : null,
           stage: formData.stage,

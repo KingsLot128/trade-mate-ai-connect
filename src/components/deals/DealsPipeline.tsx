@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Plus, Calendar, TrendingUp } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useEffectiveUser } from '@/hooks/useEffectiveUser';
 import { useToast } from '@/hooks/use-toast';
 import AddDealModal from './AddDealModal';
 
@@ -22,7 +22,7 @@ interface Deal {
 }
 
 const DealsPipeline = () => {
-  const { user } = useAuth();
+  const { effectiveUserId } = useEffectiveUser();
   const { toast } = useToast();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,16 +38,16 @@ const DealsPipeline = () => {
   ];
 
   useEffect(() => {
-    if (!user) return;
+    if (!effectiveUserId) return;
     fetchDeals();
-  }, [user]);
+  }, [effectiveUserId]);
 
   const fetchDeals = async () => {
     try {
       const { data, error } = await supabase
         .from('crm_deals')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', effectiveUserId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -77,7 +77,7 @@ const DealsPipeline = () => {
     return stage?.color || 'bg-gray-100 text-gray-800';
   };
 
-  if (!user) {
+  if (!effectiveUserId) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center py-12">
