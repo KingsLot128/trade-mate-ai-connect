@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -10,8 +10,9 @@ import {
   DropdownMenuSeparator
  } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { User, Settings, LogOut, Bell, Search, Plus, Menu, X } from 'lucide-react';
+import { User, Settings, LogOut, Bell, Search, Plus, Menu, X, Crown, Shield } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 interface HeaderProps {
   user: any;
@@ -22,6 +23,32 @@ interface HeaderProps {
 export const Header = ({ user, sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check admin status
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+
+      try {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .single();
+        
+        setIsAdmin(!!roles);
+      } catch (error) {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
 
   const handleSignOut = async () => {
     try {
@@ -90,25 +117,38 @@ export const Header = ({ user, sidebarOpen, setSidebarOpen }: HeaderProps) => {
               <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email} />
-                  <AvatarFallback className="bg-gradient-to-r from-primary to-accent text-primary-foreground">
+                  <AvatarFallback className={`${isAdmin ? 'bg-gradient-to-r from-red-500 to-purple-600' : 'bg-gradient-to-r from-primary to-accent'} text-primary-foreground`}>
                     {user?.email?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
+                {isAdmin && (
+                  <Crown className="absolute -top-1 -right-1 h-4 w-4 text-yellow-500" />
+                )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 bg-background border shadow-lg z-50" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{user?.email}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {user?.email === 'ajose002@gmail.com' ? 'Administrator' : 'Business Owner'}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">{user?.email}</p>
+                    {isAdmin && <Crown className="h-3 w-3 text-yellow-500" />}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-muted-foreground">
+                      {isAdmin ? 'SUPERADMIN' : 'Business Owner'}
+                    </p>
+                    {isAdmin && (
+                      <Badge variant="destructive" className="text-xs px-1 py-0">
+                        ALL ACCESS
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
               <DropdownMenuSeparator />
               
               {/* Regular users get profile link */}
-              {user?.email !== 'ajose002@gmail.com' && (
+              {!isAdmin && (
                 <DropdownMenuItem asChild>
                   <Link to="/profile" className="flex items-center">
                     <User className="mr-2 h-4 w-4" />
@@ -118,10 +158,10 @@ export const Header = ({ user, sidebarOpen, setSidebarOpen }: HeaderProps) => {
               )}
 
               {/* Admin users get admin dashboard link */}
-              {user?.email === 'ajose002@gmail.com' && (
+              {isAdmin && (
                 <DropdownMenuItem asChild>
                   <Link to="/admin" className="flex items-center">
-                    <Settings className="mr-2 h-4 w-4" />
+                    <Shield className="mr-2 h-4 w-4" />
                     Admin Dashboard
                   </Link>
                 </DropdownMenuItem>

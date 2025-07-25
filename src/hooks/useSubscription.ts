@@ -27,9 +27,42 @@ export const useSubscription = () => {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check admin status
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+
+      try {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .single();
+        
+        setIsAdmin(!!roles);
+        console.log('🔰 Admin subscription bypass for', user.email, ':', !!roles);
+      } catch (error) {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
 
   // Check if user has access to premium features
   const hasPremiumAccess = () => {
+    // ADMIN USERS GET UNLIMITED ACCESS
+    if (isAdmin) {
+      console.log('🔰 Admin premium access granted for', user?.email);
+      return true;
+    }
+    
     if (!subscription) return false;
     
     // Allow access if user has active subscription
@@ -46,6 +79,12 @@ export const useSubscription = () => {
 
   // Check if user has specific feature access
   const hasFeatureAccess = (feature: string) => {
+    // ADMIN USERS GET ALL FEATURES
+    if (isAdmin) {
+      console.log('🔰 Admin feature access granted for', feature, 'to', user?.email);
+      return true;
+    }
+    
     if (!subscription || !subscription.subscription_tier) return false;
     
     // Map features to tiers

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import {
   LayoutDashboard,
   User,
@@ -35,9 +36,33 @@ interface SidebarProps {
 export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Determine user role (simplified - you can enhance this)
-  const isAdmin = user?.email === 'ajose002@gmail.com';
+  // Check admin role properly from database
+  useEffect(() => {
+    const checkAdminRole = async () => {
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+
+      try {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .single();
+        
+        setIsAdmin(!!roles);
+        console.log('🔰 Admin check for', user.email, ':', !!roles);
+      } catch (error) {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminRole();
+  }, [user]);
 
   const mainNavigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
