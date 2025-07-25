@@ -46,8 +46,8 @@ const CallsManager = () => {
           .limit(50);
 
         if (error) throw error;
-        setCalls(data || []);
-        setFilteredCalls(data || []);
+        setCalls((data || []) as any); // Type assertion for compatibility
+        setFilteredCalls((data || []) as any);
       } catch (error) {
         console.error('Error fetching calls:', error);
         toast({

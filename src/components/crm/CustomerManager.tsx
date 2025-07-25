@@ -44,8 +44,8 @@ const CustomerManager = () => {
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        setCustomers(data || []);
-        setFilteredCustomers(data || []);
+        setCustomers((data || []) as any); // Type assertion for compatibility
+        setFilteredCustomers((data || []) as any);
       } catch (error) {
         console.error('Error fetching customers:', error);
         toast({

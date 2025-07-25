@@ -53,7 +53,7 @@ const BusinessHealthWidget: React.FC = () => {
         
         setHealthData({
           chaosIndex,
-          topChallenges: Array.isArray(challenges) ? challenges.slice(0, 3) : [],
+          topChallenges: Array.isArray(challenges) ? (challenges as string[]).slice(0, 3) : [],
           setupDate: profile?.created_at || '',
           industry: profile?.industry || 'Not specified',
           revenueRange: 'Not specified' // Will be populated from quiz responses

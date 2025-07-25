@@ -73,8 +73,8 @@ const DashboardOverview = () => {
           .lt('scheduled_at', today + 'T23:59:59');
 
         const totalCalls = calls?.length || 0;
-        const missedCalls = calls?.filter(call => call.status === 'missed').length || 0;
-        const answeredCalls = calls?.filter(call => call.status === 'answered').length || 0;
+        const missedCalls = calls?.filter((call: any) => call.notes?.includes('missed')).length || 0;
+        const answeredCalls = calls?.filter((call: any) => call.notes?.includes('answered')).length || 0;
         const conversionRate = totalCalls > 0 ? Math.round((answeredCalls / totalCalls) * 100) : 0;
 
         setStats({

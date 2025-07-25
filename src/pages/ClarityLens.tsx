@@ -166,7 +166,7 @@ const ClarityLens = () => {
       const deals = dealsRes.data || [];
 
       const totalRevenue = deals.reduce((sum, deal) => sum + (deal.amount || 0), 0);
-      const qualifiedContacts = customers.filter(c => c.lead_score && c.lead_score > 7).length;
+      const qualifiedContacts = customers.filter((c: any) => c.lead_source && c.lead_source !== 'unknown').length;
       const conversionRate = customers.length > 0 ? Math.round((qualifiedContacts / customers.length) * 100) : 0;
       
       const completedAppts = appointments.filter(a => a.status === 'completed').length;

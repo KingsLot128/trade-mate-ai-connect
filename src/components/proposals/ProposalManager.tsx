@@ -41,13 +41,9 @@ const ProposalManager = () => {
 
   const fetchProposals = async () => {
     try {
-      const { data, error } = await supabase
-        .from('proposal_versions')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setProposals(data || []);
+      // Proposals feature disabled temporarily - proposal_versions table not yet created
+      // Will be re-enabled when proposal_versions table is added to schema
+      setProposals([]);
     } catch (error) {
       console.error('Error fetching proposals:', error);
       toast({
@@ -107,11 +103,8 @@ TradeMate AI Team`,
           status: 'draft'
         };
 
-        const { error: insertError } = await supabase
-          .from('proposal_versions')
-          .insert([mockProposal]);
-
-        if (insertError) throw insertError;
+        // Mock proposal creation disabled - table doesn't exist yet
+        // This will be enabled when proposal_versions table is created
       }
 
       toast({

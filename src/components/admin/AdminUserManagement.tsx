@@ -43,7 +43,7 @@ const AdminUserManagement = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setUsers(data || []);
+      setUsers((data || []) as any); // Type assertion for compatibility with current schema
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({

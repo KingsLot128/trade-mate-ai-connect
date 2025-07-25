@@ -57,7 +57,7 @@ const DecisionFeed: React.FC = () => {
 
       if (error) throw error;
 
-      setDecisions(data || []);
+      setDecisions((data || []) as any); // Type assertion for compatibility
 
       // Calculate stats
       const total = data?.length || 0;

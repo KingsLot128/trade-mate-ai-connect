@@ -52,7 +52,7 @@ const AIInsightsPreview = () => {
         .limit(6);
 
       if (error) throw error;
-      setInsights(data || []);
+      setInsights((data || []) as any); // Type assertion for compatibility
     } catch (error) {
       console.error('Error loading insights:', error);
     } finally {
