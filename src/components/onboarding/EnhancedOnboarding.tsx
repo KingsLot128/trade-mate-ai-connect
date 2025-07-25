@@ -208,6 +208,7 @@ const EnhancedOnboarding = () => {
           });
       }
 
+      // Force refresh of auth context profile completion status
       await refreshProfileCompletion();
       
       // Clear completion cache to force fresh check
@@ -215,6 +216,9 @@ const EnhancedOnboarding = () => {
         completionChecker.clearCache(user.id);
         await completionChecker.refreshUserCompletion(user.id);
       }
+      
+      // Force another refresh to ensure auth context is updated
+      await refreshProfileCompletion();
       
       toast({
         title: "Profile Complete!",
