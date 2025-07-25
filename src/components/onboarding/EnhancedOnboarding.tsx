@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, CheckCircle, Brain, Target, Zap } from 'lucide-react';
 import { ChaosQuizResponse, processQuizResults, ChaosResults } from '@/utils/chaosScoring';
+import { completionChecker } from '@/lib/auth/CompletionChecker';
 import DataVault from '@/components/privacy/DataVault';
 import SetupPreferenceSelector from './SetupPreferenceSelector';
 
@@ -209,12 +210,21 @@ const EnhancedOnboarding = () => {
 
       await refreshProfileCompletion();
       
+      // Clear completion cache to force fresh check
+      if (user?.id) {
+        completionChecker.clearCache(user.id);
+        await completionChecker.refreshUserCompletion(user.id);
+      }
+      
       toast({
         title: "Profile Complete!",
         description: "Welcome to TradeMate AI. Your clarity dashboard is ready.",
       });
 
-      navigate('/dashboard');
+      // Small delay to ensure state updates before navigation
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 500);
 
     } catch (error) {
       console.error('Profile update failed:', error);
