@@ -7,6 +7,7 @@ import { DollarSign, Plus, Calendar, TrendingUp } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import AddDealModal from './AddDealModal';
 
 interface Deal {
   id: string;
@@ -25,6 +26,7 @@ const DealsPipeline = () => {
   const { toast } = useToast();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddDeal, setShowAddDeal] = useState(false);
 
   const stages = [
     { name: 'Lead', color: 'bg-gray-100 text-gray-800' },
@@ -109,7 +111,10 @@ const DealsPipeline = () => {
             Track your sales opportunities and revenue pipeline.
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-blue-600 to-green-600">
+        <Button 
+          className="bg-gradient-to-r from-blue-600 to-green-600"
+          onClick={() => setShowAddDeal(true)}
+        >
           <Plus className="h-4 w-4 mr-2" />
           Add Deal
         </Button>
@@ -229,6 +234,13 @@ const DealsPipeline = () => {
           );
         })}
       </div>
+
+      {/* Add Deal Modal */}
+      <AddDealModal 
+        isOpen={showAddDeal}
+        onClose={() => setShowAddDeal(false)}
+        onDealAdded={fetchDeals}
+      />
     </div>
   );
 };
