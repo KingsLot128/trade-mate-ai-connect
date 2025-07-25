@@ -218,6 +218,12 @@ const EnhancedOnboarding = () => {
 
     } catch (error) {
       console.error('Profile update failed:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint
+      });
       toast({
         title: "Error",
         description: "Failed to update profile. Please try again.",
