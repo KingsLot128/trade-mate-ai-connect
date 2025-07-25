@@ -660,18 +660,22 @@ export class DataManager {
   }
 
   private async calculateProfileCompleteness(profileData: any): Promise<number> {
-    // Use the database function for consistency
-    try {
-      const { data, error } = await supabase
-        .rpc('calculate_profile_completeness', { user_uuid: this.userId });
-
-      if (error) throw error;
-
-      return data || 0;
-    } catch (error) {
-      console.error('Calculate profile completeness failed:', error);
-      return 0;
-    }
+    // Calculate completeness based on available data
+    if (!profileData) return 0;
+    
+    const fields = [
+      'business_name',
+      'industry', 
+      'phone',
+      'setup_preference',
+      'quiz_completed_at'
+    ];
+    
+    const completedFields = fields.filter(field => 
+      profileData[field] && profileData[field].toString().trim() !== ''
+    ).length;
+    
+    return Math.round((completedFields / fields.length) * 100);
   }
 
   private async updateUniversalIntelligence(data: any) {
