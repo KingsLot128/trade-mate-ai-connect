@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_activity_log: {
+        Row: {
+          action_details: Json | null
+          action_type: string
+          admin_user_id: string
+          created_at: string | null
+          id: string
+          target_user_id: string | null
+        }
+        Insert: {
+          action_details?: Json | null
+          action_type: string
+          admin_user_id: string
+          created_at?: string | null
+          id?: string
+          target_user_id?: string | null
+        }
+        Update: {
+          action_details?: Json | null
+          action_type?: string
+          admin_user_id?: string
+          created_at?: string | null
+          id?: string
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
       ai_decisions: {
         Row: {
           completed_at: string | null
@@ -797,6 +824,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_status: string | null
           biggest_challenge: string | null
           business_goals: string | null
           business_health_score: number | null
@@ -814,6 +842,7 @@ export type Database = {
           id: string
           industry: string | null
           industry_percentile: number | null
+          last_login_at: string | null
           location: string | null
           onboarding_step: string | null
           phone: string | null
@@ -826,8 +855,12 @@ export type Database = {
           seasonal_patterns: string | null
           service_area_radius: number | null
           setup_preference: string | null
+          suspended_at: string | null
+          suspended_by: string | null
+          suspension_reason: string | null
           target_customer_type: string | null
           target_revenue: string | null
+          trial_ends_at: string | null
           typical_project_range_max: number | null
           typical_project_range_min: number | null
           updated_at: string | null
@@ -836,6 +869,7 @@ export type Database = {
           years_in_business: number | null
         }
         Insert: {
+          account_status?: string | null
           biggest_challenge?: string | null
           business_goals?: string | null
           business_health_score?: number | null
@@ -853,6 +887,7 @@ export type Database = {
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          last_login_at?: string | null
           location?: string | null
           onboarding_step?: string | null
           phone?: string | null
@@ -865,8 +900,12 @@ export type Database = {
           seasonal_patterns?: string | null
           service_area_radius?: number | null
           setup_preference?: string | null
+          suspended_at?: string | null
+          suspended_by?: string | null
+          suspension_reason?: string | null
           target_customer_type?: string | null
           target_revenue?: string | null
+          trial_ends_at?: string | null
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
           updated_at?: string | null
@@ -875,6 +914,7 @@ export type Database = {
           years_in_business?: number | null
         }
         Update: {
+          account_status?: string | null
           biggest_challenge?: string | null
           business_goals?: string | null
           business_health_score?: number | null
@@ -892,6 +932,7 @@ export type Database = {
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          last_login_at?: string | null
           location?: string | null
           onboarding_step?: string | null
           phone?: string | null
@@ -904,8 +945,12 @@ export type Database = {
           seasonal_patterns?: string | null
           service_area_radius?: number | null
           setup_preference?: string | null
+          suspended_at?: string | null
+          suspended_by?: string | null
+          suspension_reason?: string | null
           target_customer_type?: string | null
           target_revenue?: string | null
+          trial_ends_at?: string | null
           typical_project_range_max?: number | null
           typical_project_range_min?: number | null
           updated_at?: string | null
