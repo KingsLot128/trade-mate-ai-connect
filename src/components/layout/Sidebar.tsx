@@ -28,12 +28,13 @@ import {
 
 interface SidebarProps {
   currentPath: string;
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
 }
 
-export const Sidebar = ({ currentPath }: SidebarProps) => {
+export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Determine user role (simplified - you can enhance this)
   const isAdmin = user?.email === 'ajose002@gmail.com';
@@ -104,18 +105,6 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="bg-background/90 backdrop-blur-sm"
-        >
-          {sidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-        </Button>
-      </div>
-
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div 

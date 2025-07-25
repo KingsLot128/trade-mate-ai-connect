@@ -8,16 +8,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
+ } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { User, Settings, LogOut, Bell, Search, Plus } from 'lucide-react';
+import { User, Settings, LogOut, Bell, Search, Plus, Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   user: any;
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
 }
 
-export const Header = ({ user }: HeaderProps) => {
+export const Header = ({ user, sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -31,16 +33,29 @@ export const Header = ({ user }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-card border-b px-3 lg:px-6 py-3 lg:py-4 relative z-30">{/* Removed fixed positioning */}
+    <header className="bg-card border-b px-3 lg:px-6 py-3 lg:py-4 relative z-30">
       <div className="flex items-center justify-between">
-        {/* Left side - Welcome message */}
-        <div className="flex-1 min-w-0 pr-2">
-          <h1 className="text-lg lg:text-2xl font-bold text-foreground truncate">
-            Welcome back!
-          </h1>
-          <p className="text-xs lg:text-base text-muted-foreground truncate">
-            Here's what's happening with your business today.
-          </p>
+        {/* Mobile Menu Button and Welcome Message */}
+        <div className="flex items-center space-x-3 flex-1 min-w-0">
+          {/* Mobile Menu Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="lg:hidden bg-background/90 backdrop-blur-sm flex-shrink-0"
+          >
+            {sidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </Button>
+          
+          {/* Welcome message */}
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg lg:text-2xl font-bold text-foreground truncate">
+              Welcome back!
+            </h1>
+            <p className="text-xs lg:text-base text-muted-foreground truncate">
+              Here's what's happening with your business today.
+            </p>
+          </div>
         </div>
 
         {/* Right side - Actions */}
