@@ -41,9 +41,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const checkSupabaseConfiguration = async () => {
+    console.log('Checking Supabase configuration...');
     try {
       // Check if Supabase is properly configured by testing a simple query
       const { data, error } = await supabase.from('profiles').select('count').limit(1);
+      console.log('Supabase test query result:', { data, error });
       
       if (error && error.code === 'PGRST301') {
         // Table doesn't exist - likely not configured
