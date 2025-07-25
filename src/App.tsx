@@ -64,12 +64,12 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <AdminImpersonationProvider>
-            <AppWithIntegration />
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-            <Routes>
+          <AppWithIntegration />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AdminImpersonationProvider>
+              <Routes>
               {/* Public routes */}
               <Route path="/auth" element={<Auth />} />
               <Route path="/features" element={<Features />} />
@@ -138,11 +138,11 @@ const App = () => {
               
               {/* Catch all */}
               <Route path="*" element={<NotFound />} />
-            </Routes>
+              </Routes>
+            </AdminImpersonationProvider>
           </BrowserRouter>
-        </AdminImpersonationProvider>
-      </AuthProvider>
-    </TooltipProvider>
+        </AuthProvider>
+      </TooltipProvider>
   </QueryClientProvider>
   );
 };

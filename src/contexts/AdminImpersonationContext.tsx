@@ -20,14 +20,15 @@ interface AdminImpersonationContextType {
   getEffectiveUserId: () => string | undefined;
 }
 
-const AdminImpersonationContext = createContext<AdminImpersonationContextType | undefined>(undefined);
+const AdminImpersonationContext = createContext<AdminImpersonationContextType>({
+  isImpersonating: false,
+  impersonationData: null,
+  exitImpersonation: () => {},
+  getEffectiveUserId: () => undefined,
+});
 
 export const useAdminImpersonation = () => {
-  const context = useContext(AdminImpersonationContext);
-  if (context === undefined) {
-    throw new Error('useAdminImpersonation must be used within an AdminImpersonationProvider');
-  }
-  return context;
+  return useContext(AdminImpersonationContext);
 };
 
 export const AdminImpersonationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
