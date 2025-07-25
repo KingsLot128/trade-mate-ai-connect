@@ -660,14 +660,23 @@ export class DataManager {
   }
 
   private async calculateProfileCompleteness(profileData: any): Promise<number> {
-    // Use the database function for consistency
     try {
-      const { data, error } = await supabase
-        .rpc('calculate_profile_completeness', { user_uuid: this.userId });
+      // Calculate profile completeness manually since RPC doesn't exist
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', this.userId)
+        .single();
 
       if (error) throw error;
-
-      return data || 0;
+      
+      // Calculate completeness based on filled fields
+      let completeness = 0;
+      const fields = ['full_name', 'email', 'phone', 'business_name', 'industry'];
+      const filledFields = fields.filter(field => profile?.[field]);
+      completeness = Math.round((filledFields.length / fields.length) * 100);
+      
+      return completeness;
     } catch (error) {
       console.error('Calculate profile completeness failed:', error);
       return 0;

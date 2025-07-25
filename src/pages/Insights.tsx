@@ -1,20 +1,18 @@
 
 import React from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import InsightsPreview from '@/components/insights/InsightsPreview';
+import { MainLayout } from '@/components/layout/MainLayout';
+import AIInsights from '@/components/insights/AIInsights';
+import { AdvancedAIGate } from '@/components/subscription/FeatureGate';
 
-const Insights = () => {
+const Insights: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <InsightsPreview />
+    <MainLayout>
+      <AdvancedAIGate>
+        <div>
+          <AIInsights />
         </div>
-      </main>
-      <Footer />
-    </div>
+      </AdvancedAIGate>
+    </MainLayout>
   );
 };
 

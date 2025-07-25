@@ -8,6 +8,9 @@ import PWAInstall from '@/components/PWAInstall';
 import DashboardChart from './DashboardChart';
 import BusinessHealthWidget from './BusinessHealthWidget';
 import AIInsightsPreview from '@/components/insights/AIInsightsPreview';
+import { SubscriptionWidget } from './SubscriptionWidget';
+import ProfileCompletionGuide from '@/components/profile/ProfileCompletionGuide';
+import RecommendationBootstrap from '@/components/ai/RecommendationBootstrap';
 
 interface DashboardStats {
   totalCalls: number;
@@ -171,9 +174,16 @@ const DashboardOverview = () => {
       </div>
 
       {/* Business Health and AI Insights */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-3">
         <BusinessHealthWidget />
         <AIInsightsPreview />
+        <SubscriptionWidget />
+      </div>
+      
+      {/* Profile Completion and AI Bootstrap */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <ProfileCompletionGuide />
+        <RecommendationBootstrap />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
