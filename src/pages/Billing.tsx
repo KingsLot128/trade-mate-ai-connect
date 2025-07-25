@@ -9,6 +9,7 @@ import { PricingCard } from '@/components/subscription/PricingCard';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { StripeSetupPrompt } from '@/components/subscription/StripeSetupPrompt';
 
 const Billing = () => {
   const { 
@@ -129,6 +130,9 @@ const Billing = () => {
           Manage your subscription, view billing details, and upgrade your plan
         </p>
       </div>
+
+      {/* Show Stripe setup prompt first if not configured */}
+      <StripeSetupPrompt />
 
       {/* Current Subscription Status */}
       {subscription && (

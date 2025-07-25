@@ -8,12 +8,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, Target, TrendingUp, Brain } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { TrialExpirationBanner } from '@/components/subscription/TrialManager';
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   return (
     <div className="space-y-6">
+      {/* Trial/Subscription Banner */}
+      <TrialExpirationBanner />
+      
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

@@ -85,6 +85,15 @@ const AdminDashboard = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [suspensionReason, setSuspensionReason] = useState('');
+  const [showCreateUser, setShowCreateUser] = useState(false);
+  const [newUserData, setNewUserData] = useState({
+    email: '',
+    password: '',
+    fullName: '',
+    businessName: '',
+    industry: '',
+    subscriptionTier: 'trial' as 'trial' | 'professional' | 'enterprise'
+  });
   
   // Stats
   const [stats, setStats] = useState({
@@ -240,6 +249,82 @@ const AdminDashboard = () => {
     navigate('/dashboard');
   };
 
+  // Admin user creation functionality
+  const handleCreateUser = async () => {
+    try {
+      // Validate inputs
+      if (!newUserData.email || !newUserData.password || !newUserData.fullName) {
+        toast({
+          title: "Validation Error",
+          description: "Email, password, and full name are required",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Create user in Supabase Auth (this would typically be done via edge function)
+      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+        email: newUserData.email,
+        password: newUserData.password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: newUserData.fullName
+        }
+      });
+
+      if (authError) throw authError;
+
+      // Create profile entry
+      const trialEndDate = new Date();
+      trialEndDate.setDate(trialEndDate.getDate() + 14); // 14 day trial
+
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: authData.user.id,
+          email: newUserData.email,
+          full_name: newUserData.fullName,
+          business_name: newUserData.businessName || '',
+          industry: newUserData.industry || '',
+          subscription_status: newUserData.subscriptionTier,
+          subscription_tier: newUserData.subscriptionTier === 'trial' ? null : newUserData.subscriptionTier,
+          trial_ends_at: newUserData.subscriptionTier === 'trial' ? trialEndDate.toISOString() : null,
+          account_status: 'active',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+
+      if (profileError) throw profileError;
+
+      toast({
+        title: "User Created Successfully",
+        description: `${newUserData.email} has been created with ${newUserData.subscriptionTier} access`,
+      });
+
+      // Reset form and close modal
+      setNewUserData({
+        email: '',
+        password: '',
+        fullName: '',
+        businessName: '',
+        industry: '',
+        subscriptionTier: 'trial'
+      });
+      setShowCreateUser(false);
+      
+      // Reload admin data
+      loadAdminData();
+
+    } catch (error) {
+      console.error('Error creating user:', error);
+      toast({
+        title: "Error Creating User",
+        description: "Failed to create user. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -289,10 +374,16 @@ const AdminDashboard = () => {
             Manage users and monitor platform activity
           </p>
         </div>
-        <Button onClick={loadAdminData} variant="outline">
-          <Activity className="h-4 w-4 mr-2" />
-          Refresh Data
-        </Button>
+        <div className="flex space-x-2">
+          <Button onClick={loadAdminData} variant="outline">
+            <Activity className="h-4 w-4 mr-2" />
+            Refresh Data
+          </Button>
+          <Button onClick={() => setShowCreateUser(true)} className="bg-blue-600 hover:bg-blue-700">
+            <Users className="h-4 w-4 mr-2" />
+            Create User
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -603,6 +694,90 @@ const AdminDashboard = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Create User Modal */}
+      <Dialog open={showCreateUser} onOpenChange={setShowCreateUser}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Create New User</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="newEmail">Email Address *</Label>
+              <Input
+                id="newEmail"
+                type="email"
+                value={newUserData.email}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="user@example.com"
+              />
+            </div>
+            <div>
+              <Label htmlFor="newPassword">Password *</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newUserData.password}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, password: e.target.value }))}
+                placeholder="Secure password"
+              />
+            </div>
+            <div>
+              <Label htmlFor="newFullName">Full Name *</Label>
+              <Input
+                id="newFullName"
+                value={newUserData.fullName}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, fullName: e.target.value }))}
+                placeholder="John Doe"
+              />
+            </div>
+            <div>
+              <Label htmlFor="newBusinessName">Business Name</Label>
+              <Input
+                id="newBusinessName"
+                value={newUserData.businessName}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, businessName: e.target.value }))}
+                placeholder="ACME Corp"
+              />
+            </div>
+            <div>
+              <Label htmlFor="newIndustry">Industry</Label>
+              <Input
+                id="newIndustry"
+                value={newUserData.industry}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, industry: e.target.value }))}
+                placeholder="Technology"
+              />
+            </div>
+            <div>
+              <Label htmlFor="subscriptionTier">Subscription Tier</Label>
+              <Select 
+                value={newUserData.subscriptionTier} 
+                onValueChange={(value: 'trial' | 'professional' | 'enterprise') => 
+                  setNewUserData(prev => ({ ...prev, subscriptionTier: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select tier" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="trial">Trial (14 days)</SelectItem>
+                  <SelectItem value="professional">Professional (Unlimited)</SelectItem>
+                  <SelectItem value="enterprise">Enterprise (Unlimited)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowCreateUser(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateUser}>
+              Create User
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
