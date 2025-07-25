@@ -4,7 +4,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { useAuth } from '@/contexts/AuthContext';
 
-export const MainLayout = () => {
+export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,7 +22,7 @@ export const MainLayout = () => {
           
           {/* Page Content */}
           <main className="flex-1 p-3 lg:p-6">
-            <Outlet />
+            {children}
           </main>
         </div>
       </div>

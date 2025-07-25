@@ -7,11 +7,7 @@ import { AdvancedAIGate } from '@/components/subscription/FeatureGate';
 const Insights: React.FC = () => {
   return (
     <MainLayout>
-      <AdvancedAIGate>
-        <div>
-          <AIInsights />
-        </div>
-      </AdvancedAIGate>
+      <AIInsights />
     </MainLayout>
   );
 };
