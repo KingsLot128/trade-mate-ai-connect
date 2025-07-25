@@ -218,23 +218,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       try {
         // Update the user's profile to mark onboarding as complete
-        const { error } = await supabase
+        await supabase
           .from('profiles')
-          .update({
+          .upsert({
+            user_id: user.id,
             onboarding_step: 'completed',
             updated_at: new Date().toISOString()
-          })
-          .eq('user_id', user.id);
-
-        if (error) {
-          console.error('❌ Profile update error:', error);
-          toast({
-            title: "Profile Update Error",
-            description: error.message,
-            variant: "destructive",
           });
-          return;
-        }
 
         // Clear the completion cache and refresh
         completionChecker.clearCache(user.id);
@@ -244,18 +234,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsNewUser(false);
         
         console.log('✅ Onboarding marked as complete');
-        
-        toast({
-          title: "Profile Updated",
-          description: "Your onboarding has been completed successfully.",
-        });
       } catch (error) {
         console.error('❌ Failed to mark onboarding complete:', error);
-        toast({
-          title: "Update Failed",
-          description: "Failed to update your profile. Please try again.",
-          variant: "destructive",
-        });
       }
     }
   };

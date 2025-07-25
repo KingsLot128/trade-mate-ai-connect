@@ -1377,6 +1377,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      calculate_profile_completeness: {
+        Args: { user_uuid: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _user_id: string
