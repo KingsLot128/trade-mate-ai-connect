@@ -2,9 +2,11 @@ import React from 'react';
 import { BusinessHealthDashboard } from '@/components/dashboard/BusinessHealthDashboard';
 import { ChaosIndexWidget } from '@/components/dashboard/ChaosIndexWidget';
 import { QuickMetricsGrid } from '@/components/dashboard/QuickMetricsGrid';
+import ProfileCompletionGuide from '@/components/profile/ProfileCompletionGuide';
+import RecommendationBootstrap from '@/components/ai/RecommendationBootstrap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Target, TrendingUp } from 'lucide-react';
+import { ArrowRight, Sparkles, Target, TrendingUp, Brain } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -32,6 +34,9 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Profile Completion Guide */}
+      <ProfileCompletionGuide />
+
       {/* Quick Metrics Grid */}
       <QuickMetricsGrid />
 
@@ -44,6 +49,9 @@ const Dashboard = () => {
 
         {/* Sidebar Widgets */}
         <div className="space-y-6">
+          {/* AI Setup & Recommendations */}
+          <RecommendationBootstrap />
+
           {/* Chaos Index Widget */}
           <ChaosIndexWidget />
 
