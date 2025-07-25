@@ -250,35 +250,36 @@ const MultiStreamFeed = () => {
   };
 
   return (
-    <div className="multi-stream-feed space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-2">Your Business Intelligence Feed</h2>
-        <p className="text-muted-foreground text-lg">
+    <div className="multi-stream-feed space-y-4 md:space-y-6">
+      <div className="text-center mb-6 md:mb-8 px-2">
+        <h2 className="text-xl md:text-3xl font-bold mb-2">Business Intelligence Feed</h2>
+        <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
           Discover insights, trends, and strategies tailored to your success
         </p>
       </div>
 
       <Tabs value={activeStream} onValueChange={setActiveStream} className="w-full">
         {/* Enhanced Tab Navigation */}
-        <TabsList className="grid w-full grid-cols-5 bg-muted/50 p-1 h-auto">
+        <TabsList className="flex w-full bg-muted/50 p-1 h-auto overflow-x-auto scrollbar-hide">
           {streamTabs.map(tab => {
             const stats = getStreamStats(tab.id);
             return (
               <TabsTrigger 
                 key={tab.id} 
                 value={tab.id} 
-                className="flex flex-col p-3 h-auto data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                className="flex flex-col min-w-fit px-2 md:px-3 py-2 h-auto data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap"
               >
-                <div className="flex items-center space-x-2 mb-1">
-                  <span className="text-lg">{tab.icon}</span>
-                  <span className="font-medium">{tab.label}</span>
+                <div className="flex items-center space-x-1 mb-1">
+                  <span className="text-base md:text-lg">{tab.icon}</span>
+                  <span className="font-medium text-xs md:text-sm hidden sm:inline">{tab.label}</span>
+                  <span className="font-medium text-xs md:text-sm sm:hidden">{tab.label.split(' ')[0]}</span>
                   {stats.highPriorityCount > 0 && (
-                    <Badge variant="destructive" className="text-xs">
+                    <Badge variant="destructive" className="text-xs h-4 px-1">
                       {stats.highPriorityCount}
                     </Badge>
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground text-center">
+                <span className="text-xs text-muted-foreground text-center hidden md:block max-w-24 truncate">
                   {tab.description}
                 </span>
               </TabsTrigger>

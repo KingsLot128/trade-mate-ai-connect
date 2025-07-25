@@ -31,14 +31,14 @@ export const Header = ({ user }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-card border-b px-3 lg:px-6 py-4 lg:fixed lg:top-0 lg:right-0 lg:left-64 z-30">
+    <header className="bg-card border-b px-3 lg:px-6 py-3 lg:py-4 lg:fixed lg:top-0 lg:right-0 lg:left-64 z-30">
       <div className="flex items-center justify-between">
         {/* Left side - Welcome message */}
-        <div className="flex-1">
-          <h1 className="text-xl lg:text-2xl font-bold text-foreground">
+        <div className="flex-1 min-w-0 pr-2">
+          <h1 className="text-lg lg:text-2xl font-bold text-foreground truncate">
             Welcome back!
           </h1>
-          <p className="text-sm lg:text-base text-muted-foreground">
+          <p className="text-xs lg:text-base text-muted-foreground truncate">
             Here's what's happening with your business today.
           </p>
         </div>
