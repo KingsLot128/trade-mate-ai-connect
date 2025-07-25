@@ -32,9 +32,6 @@ export const useSubscription = () => {
   const hasPremiumAccess = () => {
     if (!subscription) return false;
     
-    // Admin user always has access
-    if (user?.email === 'kingslotenterprises@gmail.com') return true;
-    
     // Allow access if user has active subscription
     if (subscription.subscription_status === 'active') return true;
     
@@ -49,11 +46,7 @@ export const useSubscription = () => {
 
   // Check if user has specific feature access
   const hasFeatureAccess = (feature: string) => {
-    if (!subscription || !subscription.subscription_tier) {
-      // Admin user always has access
-      if (user?.email === 'kingslotenterprises@gmail.com') return true;
-      return false;
-    }
+    if (!subscription || !subscription.subscription_tier) return false;
     
     // Map features to tiers
     const featureMap: Record<string, string[]> = {

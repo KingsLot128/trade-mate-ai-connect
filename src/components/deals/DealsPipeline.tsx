@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Plus, Calendar, TrendingUp } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
-import { useEffectiveUser } from '@/hooks/useEffectiveUser';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import AddDealModal from './AddDealModal';
 
 interface Deal {
   id: string;
@@ -22,11 +21,10 @@ interface Deal {
 }
 
 const DealsPipeline = () => {
-  const { effectiveUserId } = useEffectiveUser();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAddDeal, setShowAddDeal] = useState(false);
 
   const stages = [
     { name: 'Lead', color: 'bg-gray-100 text-gray-800' },
@@ -38,16 +36,16 @@ const DealsPipeline = () => {
   ];
 
   useEffect(() => {
-    if (!effectiveUserId) return;
+    if (!user) return;
     fetchDeals();
-  }, [effectiveUserId]);
+  }, [user]);
 
   const fetchDeals = async () => {
     try {
       const { data, error } = await supabase
         .from('crm_deals')
         .select('*')
-        .eq('user_id', effectiveUserId)
+        .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -77,7 +75,7 @@ const DealsPipeline = () => {
     return stage?.color || 'bg-gray-100 text-gray-800';
   };
 
-  if (!effectiveUserId) {
+  if (!user) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center py-12">
@@ -111,10 +109,7 @@ const DealsPipeline = () => {
             Track your sales opportunities and revenue pipeline.
           </p>
         </div>
-        <Button 
-          className="bg-gradient-to-r from-blue-600 to-green-600"
-          onClick={() => setShowAddDeal(true)}
-        >
+        <Button className="bg-gradient-to-r from-blue-600 to-green-600">
           <Plus className="h-4 w-4 mr-2" />
           Add Deal
         </Button>
@@ -234,13 +229,6 @@ const DealsPipeline = () => {
           );
         })}
       </div>
-
-      {/* Add Deal Modal */}
-      <AddDealModal 
-        isOpen={showAddDeal}
-        onClose={() => setShowAddDeal(false)}
-        onDealAdded={fetchDeals}
-      />
     </div>
   );
 };

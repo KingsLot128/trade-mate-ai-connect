@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
-import { useEffectiveUser } from '@/hooks/useEffectiveUser';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import LeadCard from './crm/LeadCard';
 import AddLeadModal from './crm/AddLeadModal';
@@ -40,17 +40,17 @@ interface AIInsight {
 }
 
 const SmartCRM = () => {
-  const { effectiveUserId, isImpersonating } = useEffectiveUser();
+  const { user } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [aiInsights, setAiInsights] = useState<AIInsight[]>([]);
   const [showAddLead, setShowAddLead] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (effectiveUserId) {
+    if (user) {
       fetchLeads();
     }
-  }, [effectiveUserId]);
+  }, [user]);
 
   useEffect(() => {
     if (leads.length > 0) {
@@ -63,7 +63,7 @@ const SmartCRM = () => {
       const { data, error } = await supabase
         .from('crm_contacts')
         .select('*')
-        .eq('user_id', effectiveUserId)
+        .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -147,7 +147,7 @@ const SmartCRM = () => {
       const { data, error } = await supabase
         .from('crm_contacts')
         .insert({
-          user_id: effectiveUserId,
+          user_id: user?.id,
           name: leadData.name,
           email: leadData.email,
           phone: leadData.phone,
