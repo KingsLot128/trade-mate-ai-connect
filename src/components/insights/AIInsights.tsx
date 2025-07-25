@@ -35,21 +35,29 @@ const AIInsights = () => {
     if (!user) return;
 
     try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('business_name, industry, phone')
-        .eq('id', user.id)
-        .single();
+      // Use parallel queries and maybeSingle to avoid blocking
+      const [profileResult, settingsResult] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('business_name, industry, phone')
+          .eq('id', user.id)
+          .maybeSingle(),
+        supabase
+          .from('business_settings')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle()
+      ]);
 
-      const { data: settings } = await supabase
-        .from('business_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+      const profile = profileResult.data;
+      const settings = settingsResult.data;
 
-      setHasBusinessData(!!(profile?.business_name && profile?.industry && settings));
+      // Allow AI insights even with minimal data - just need user profile
+      setHasBusinessData(!!(profile && user.email));
     } catch (error) {
       console.error('Error checking business setup:', error);
+      // Allow AI insights even if check fails
+      setHasBusinessData(true);
     }
   };
 
@@ -100,38 +108,8 @@ const AIInsights = () => {
     }
   }, [user]);
 
-  // Show setup required message if business not configured
-  if (!hasBusinessData) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold flex items-center">
-              <Brain className="h-6 w-6 mr-2 text-purple-600" />
-              AI-Powered Insights
-            </h2>
-            <p className="text-gray-600">Smart recommendations to grow your business</p>
-          </div>
-        </div>
-
-        <Card className="border-yellow-200 bg-yellow-50">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <Settings className="h-12 w-12 text-yellow-600 mb-4" />
-            <h3 className="text-lg font-medium mb-2">Complete Your Business Setup</h3>
-            <p className="text-gray-600 text-center mb-4 max-w-md">
-              To generate personalized AI insights, please complete your business profile first. 
-              This helps our AI understand your industry and provide relevant recommendations.
-            </p>
-            <Link to="/dashboard?tab=setup">
-              <Button className="bg-yellow-600 hover:bg-yellow-700">
-                Complete Setup
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Show enhanced message for incomplete profiles but still allow AI insights
+  const showSetupPrompt = !hasBusinessData;
 
   return (
     <div className="space-y-6">
@@ -155,6 +133,26 @@ const AIInsights = () => {
           {loading ? 'Analyzing...' : 'Refresh Insights'}
         </Button>
       </div>
+
+      {/* Show setup prompt as a card but don't block insights */}
+      {showSetupPrompt && (
+        <Card className="border-yellow-200 bg-yellow-50">
+          <CardContent className="flex items-center p-4">
+            <Settings className="h-8 w-8 text-yellow-600 mr-4" />
+            <div className="flex-1">
+              <h3 className="font-medium mb-1">Enhance Your AI Experience</h3>
+              <p className="text-sm text-gray-600">
+                Complete your business profile for more personalized insights
+              </p>
+            </div>
+            <Link to="/dashboard?tab=setup">
+              <Button size="sm" variant="outline" className="border-yellow-300 text-yellow-700 hover:bg-yellow-100">
+                Complete Setup
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
 
       {!insights && !loading && (
         <Card>

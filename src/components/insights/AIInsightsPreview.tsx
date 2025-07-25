@@ -44,17 +44,19 @@ const AIInsightsPreview = () => {
     if (!user) return;
     
     try {
+      // Use faster query with specific columns only
       const { data, error } = await supabase
         .from('business_insights')
-        .select('*')
+        .select('id, insight_type, title, description, confidence_score, impact_estimation, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(6);
+        .limit(3); // Load fewer initially for speed
 
       if (error) throw error;
-      setInsights((data || []) as any); // Type assertion for compatibility
+      setInsights((data || []) as BusinessInsight[]);
     } catch (error) {
       console.error('Error loading insights:', error);
+      // Don't block UI on insights failure
     } finally {
       setLoading(false);
     }

@@ -56,40 +56,51 @@ const DashboardOverview = () => {
       if (!user) return;
 
       try {
-        // Fetch calls data
-        const { data: calls } = await supabase
-          .from('calls')
-          .select('status')
-          .eq('user_id', user.id);
-
-        const { data: customers } = await supabase
-          .from('customers')
-          .select('id')
-          .eq('user_id', user.id);
-
         const today = new Date().toISOString().split('T')[0];
-        const { data: appointments } = await supabase
-          .from('appointments')
-          .select('id')
-          .eq('user_id', user.id)
-          .gte('scheduled_at', today + 'T00:00:00')
-          .lt('scheduled_at', today + 'T23:59:59');
+        
+        // Use parallel queries with count for better performance
+        const [callsResult, customersResult, appointmentsResult] = await Promise.all([
+          supabase
+            .from('calls')
+            .select('notes', { count: 'exact' })
+            .eq('user_id', user.id),
+          supabase
+            .from('customers')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id),
+          supabase
+            .from('appointments')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .gte('scheduled_at', today + 'T00:00:00')
+            .lt('scheduled_at', today + 'T23:59:59')
+        ]);
 
-        const totalCalls = calls?.length || 0;
-        const missedCalls = calls?.filter((call: any) => call.notes?.includes('missed')).length || 0;
-        const answeredCalls = calls?.filter((call: any) => call.notes?.includes('answered')).length || 0;
+        const calls = callsResult.data || [];
+        const totalCalls = callsResult.count || 0;
+        const missedCalls = calls.filter((call: any) => call.notes?.includes('missed')).length || 0;
+        const answeredCalls = calls.filter((call: any) => call.notes?.includes('answered')).length || 0;
         const conversionRate = totalCalls > 0 ? Math.round((answeredCalls / totalCalls) * 100) : 0;
 
         setStats({
           totalCalls,
           missedCalls,
           answeredCalls,
-          totalCustomers: customers?.length || 0,
-          todayAppointments: appointments?.length || 0,
+          totalCustomers: customersResult.count || 0,
+          todayAppointments: appointmentsResult.count || 0,
           conversionRate,
         });
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
+        // Set default values on error to prevent broken UI
+        setStats({
+          totalCalls: 0,
+          missedCalls: 0,
+          answeredCalls: 0,
+          totalCustomers: 0,
+          todayAppointments: 0,
+          conversionRate: 0,
+        });
       } finally {
         setLoading(false);
       }
