@@ -91,6 +91,8 @@ export class OnboardingManager {
         business_health_score: Math.max(100 - data.chaosScore, 0),
         business_level: this.calculateBusinessLevel(data.chaosScore),
         updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'user_id'
       });
 
     if (error) {
@@ -114,6 +116,8 @@ export class OnboardingManager {
         address: data.location || '',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'user_id'
       });
 
     if (error) {
@@ -140,6 +144,8 @@ export class OnboardingManager {
         },
         chaos_contribution: data.chaosScore,
         created_at: new Date().toISOString()
+      }, {
+        onConflict: 'user_id,question_id'
       });
 
     if (error) {
@@ -168,6 +174,8 @@ export class OnboardingManager {
         profile_completeness: 85, // High completeness after onboarding
         intelligence_score: Math.max(100 - data.chaosScore, 0),
         last_updated: new Date().toISOString()
+      }, {
+        onConflict: 'user_id'
       });
 
     if (error) {

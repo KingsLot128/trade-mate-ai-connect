@@ -75,6 +75,8 @@ export const useUserProfile = () => {
           user_id: user.id,
           ...updates,
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
         });
 
       if (error) throw error;

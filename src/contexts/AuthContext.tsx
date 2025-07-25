@@ -224,6 +224,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             user_id: user.id,
             onboarding_step: 'completed',
             updated_at: new Date().toISOString()
+          }, {
+            onConflict: 'user_id'
           });
 
         // Clear the completion cache and refresh
