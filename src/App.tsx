@@ -48,6 +48,7 @@ import ContactsManager from "./components/contacts/ContactsManager";
 import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Billing from "./pages/Billing";
+import SmartCRM from "./components/builtin-tools/SmartCRM";
 
 const queryClient = new QueryClient();
 
@@ -108,7 +109,8 @@ const App = () => {
                 <Route path="calls" element={<CallsManager />} />
                 <Route path="contacts" element={<ContactsManager />} />
                 <Route path="deals" element={<div>Deals Pipeline - Coming Soon</div>} />
-                <Route path="tools" element={<div>Smart Tools - Coming Soon</div>} />
+                <Route path="tools" element={<SmartCRM />} />
+                <Route path="crm" element={<SmartCRM />} />
                 <Route path="calendar" element={<Calendar />} />
                 <Route path="analytics" element={<AnalyticsDashboard />} />
                 <Route path="integrations" element={<VisualIntegrationHub />} />
