@@ -1,10 +1,5 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useIntelligenceIntegration } from "@/hooks/useIntelligenceIntegration";
 
@@ -51,8 +46,6 @@ import Billing from "./pages/Billing";
 import SmartCRM from "./components/builtin-tools/SmartCRM";
 import DealsPipeline from "./components/deals/DealsPipeline";
 
-const queryClient = new QueryClient();
-
 const AppWithIntegration = () => {
   useIntelligenceIntegration();
   return null;
@@ -60,13 +53,8 @@ const AppWithIntegration = () => {
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <AppWithIntegration />
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+    <BrowserRouter>
+      <AppWithIntegration />
             <Routes>
               {/* Public routes */}
               <Route path="/auth" element={<Auth />} />
@@ -137,10 +125,7 @@ const App = () => {
               {/* Catch all */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
