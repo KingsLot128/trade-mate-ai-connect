@@ -31,7 +31,7 @@ export const Header = ({ user }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-card border-b px-3 lg:px-6 py-3 lg:py-4 lg:fixed lg:top-0 lg:right-0 lg:left-64 z-30">
+    <header className="bg-card border-b px-3 lg:px-6 py-3 lg:py-4 relative z-30">{/* Removed fixed positioning */}
       <div className="flex items-center justify-between">
         {/* Left side - Welcome message */}
         <div className="flex-1 min-w-0 pr-2">
@@ -81,7 +81,7 @@ export const Header = ({ user }: HeaderProps) => {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuContent className="w-56 bg-background border shadow-lg z-50" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
                   <p className="font-medium">{user?.email}</p>

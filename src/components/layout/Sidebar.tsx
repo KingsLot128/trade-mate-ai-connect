@@ -90,11 +90,7 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
       )}
     >
       <item.icon className={cn("mr-3 h-5 w-5", isActive ? 'text-primary-foreground' : 'text-muted-foreground')} />
-      <span className="lg:block md:hidden sm:hidden">{item.name}</span>
-      {/* Mobile tooltip */}
-      <div className="lg:hidden absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none">
-        {item.name}
-      </div>
+      <span className="truncate">{item.name}</span>
       {item.badge && (
         <span className={cn(
           "absolute -top-1 -right-1 text-xs px-1.5 py-0.5 rounded-full text-white font-bold lg:block hidden",
@@ -141,11 +137,11 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
             <div className="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">TM</span>
             </div>
-            <div className="ml-2 hidden lg:block">
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <div className="ml-2">
+              <span className="text-lg lg:text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 TradeMateAI
               </span>
-              <p className="text-xs text-muted-foreground">AI Business Assistant</p>
+              <p className="text-xs text-muted-foreground hidden lg:block">AI Business Assistant</p>
             </div>
           </div>
         </div>
@@ -156,7 +152,7 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
             <div>
               <div className="flex items-center px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                 <Building className="mr-2 h-3 w-3" />
-                <span className="hidden lg:block">Business</span>
+                <span>Business</span>
               </div>
               <div className="space-y-1">
                 {mainNavigation.map((item) => (
@@ -174,7 +170,7 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
               <div>
                 <div className="flex items-center px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                   <Shield className="mr-2 h-3 w-3" />
-                  <span className="hidden lg:block">Admin</span>
+                  <span>Admin</span>
                 </div>
                 <div className="space-y-1">
                   {adminNavigation.map((item) => (
@@ -189,7 +185,7 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
               <div>
                 <div className="flex items-center px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                   <User className="mr-2 h-3 w-3" />
-                  <span className="hidden lg:block">Profile</span>
+                  <span>Profile</span>
                 </div>
                 <div className="space-y-1">
                   {userNavigation.map((item) => (
@@ -203,7 +199,7 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
             <div>
               <div className="flex items-center px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                 <Settings className="mr-2 h-3 w-3" />
-                <span className="hidden lg:block">Settings</span>
+                <span>Settings</span>
               </div>
               <div className="space-y-1">
                 {settingsNavigation.map((item) => (
@@ -222,7 +218,7 @@ export const Sidebar = ({ currentPath }: SidebarProps) => {
             onClick={handleSignOut}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            <span className="hidden lg:block">Sign Out</span>
+            <span>Sign Out</span>
           </Button>
         </div>
       </div>
