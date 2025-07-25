@@ -4,10 +4,19 @@ export default {
 	darkMode: ["class"],
 	content: [
 		"./index.html",
-		"./src/**/*.{js,ts,jsx,tsx}",
-		"./components/**/*.{js,ts,jsx,tsx}",
-		"./pages/**/*.{js,ts,jsx,tsx}",
-		"./app/**/*.{js,ts,jsx,tsx}",
+		"./**/*.{js,ts,jsx,tsx,html}"
+	],
+	safelist: [
+		"tm-btn-primary",
+		"tm-btn-secondary",
+		"tm-heading-xl",
+		"tm-heading-lg",
+		"tm-heading-md",
+		"feature-card",
+		"scroll-fade-in",
+		"hover-scale",
+		"glass-effect",
+		"gradient-text"
 	],
 	prefix: "",
 	theme: {
