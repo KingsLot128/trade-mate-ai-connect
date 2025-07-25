@@ -176,6 +176,8 @@ const EnhancedOnboarding = () => {
           quiz_completed_at: new Date().toISOString(),
           onboarding_step: 'completed',
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
         });
 
       if (error) throw error;
