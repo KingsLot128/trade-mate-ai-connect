@@ -9,14 +9,18 @@ export default {
 	safelist: [
 		"tm-btn-primary",
 		"tm-btn-secondary",
+		"tm-heading",
 		"tm-heading-xl",
 		"tm-heading-lg",
 		"tm-heading-md",
-		"feature-card",
 		"scroll-fade-in",
 		"hover-scale",
 		"glass-effect",
-		"gradient-text"
+		"gradient-text",
+		"feature-card",
+		"scrollbar-hide",
+		"mobile-optimized",
+		"mobile-text-sm"
 	],
 	prefix: "",
 	theme: {
