@@ -84,7 +84,8 @@ const Onboarding = () => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          user_id: user.id,
           business_name: formData.businessName,
           industry: formData.industry,
           phone: formData.phone,
@@ -97,9 +98,11 @@ const Onboarding = () => {
           typical_project_range_min: formData.projectRangeMin ? parseFloat(formData.projectRangeMin) : null,
           typical_project_range_max: formData.projectRangeMax ? parseFloat(formData.projectRangeMax) : null,
           seasonal_patterns: formData.seasonalPatterns,
+          onboarding_step: 'completed',
           updated_at: new Date().toISOString()
-        })
-        .eq('user_id', user.id);
+        }, {
+          onConflict: 'user_id'
+        });
 
       if (error) throw error;
 

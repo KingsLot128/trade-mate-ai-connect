@@ -195,11 +195,13 @@ const EnhancedOnboarding = () => {
       for (const response of quizResponses) {
         await supabase
           .from('user_quiz_responses')
-          .insert({
+          .upsert({
             user_id: user.id,
             question_id: response.question_id,
             response: response.response,
             chaos_contribution: response.chaos_contribution
+          }, {
+            onConflict: 'user_id,question_id'
           });
       }
 
