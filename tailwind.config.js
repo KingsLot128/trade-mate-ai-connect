@@ -2,7 +2,8 @@ const config = {
 	darkMode: ["class"],
 	content: [
 		"./index.html",
-		"./**/*.{js,ts,jsx,tsx,html}"
+		"./src/**/*.{js,ts,jsx,tsx,html}",
+		"./src/**/*.{js,ts,jsx,tsx}"
 	],
 	safelist: [
 		"tm-btn-primary",
