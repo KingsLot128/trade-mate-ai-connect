@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Phone, Menu, X, Brain } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Phone, Menu, X, Brain, LogOut, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '@/contexts/AuthContext';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,23 +12,43 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import DemoModal from './modals/DemoModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showDemoModal, setShowDemoModal] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  console.log('Header rendering, user:', user?.email, 'isMenuOpen:', isMenuOpen);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
 
   return (
     <>
       <header className="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 sm:py-4">
+        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">
           <nav className="flex items-center justify-between">
             {/* Logo - Mobile Optimized */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
-                <Phone className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+            <Link to="/" className="flex items-center space-x-1 sm:space-x-2 min-w-0 flex-shrink">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Phone className="h-3.5 w-3.5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <span className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              <span className="text-base sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent whitespace-nowrap">
                 TradeMate AI
               </span>
             </Link>
@@ -148,7 +169,7 @@ const Header = () => {
               </NavigationMenu>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Desktop */}
             <div className="hidden lg:flex items-center space-x-4">
               <Button 
                 variant="ghost" 
@@ -156,17 +177,65 @@ const Header = () => {
               >
                 Watch Demo
               </Button>
-              <Link to="/dashboard">
-                <Button className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
-                  Get Started
-                </Button>
-              </Link>
+              
+              {user ? (
+                <div className="flex items-center space-x-2">
+                  <Link to="/dashboard">
+                    <Button variant="outline">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
+                        <User className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end">
+                      <DropdownMenuItem disabled>
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">{user.email}</p>
+                          <p className="text-xs leading-none text-muted-foreground">
+                            Signed in
+                          </p>
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard">Dashboard</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleSignOut}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Sign out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="ghost">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 flex-shrink-0 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+              onClick={() => {
+                console.log('Mobile menu button clicked, current state:', isMenuOpen);
+                setIsMenuOpen(!isMenuOpen);
+              }}
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -174,37 +243,94 @@ const Header = () => {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="lg:hidden mt-4 pb-4 border-t pt-4">
+            <div className="lg:hidden mt-4 pb-4 border-t pt-4 bg-white rounded-lg shadow-lg">
               <div className="flex flex-col space-y-3">
-                <Link to="/features" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link 
+                  to="/features" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Features
                 </Link>
-                <Link to="/insights" className="text-gray-600 hover:text-blue-600 font-medium flex items-center">
+                <Link 
+                  to="/insights" 
+                  className="text-gray-600 hover:text-blue-600 font-medium flex items-center py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   <Brain className="h-4 w-4 mr-2" />
                   AI Insights
                 </Link>
-                <Link to="/pricing" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link 
+                  to="/pricing" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Pricing
                 </Link>
-                <Link to="/company" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link 
+                  to="/company" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   About
                 </Link>
-                <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link 
+                  to="/contact" 
+                  className="text-gray-600 hover:text-blue-600 font-medium py-2 px-4 rounded hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Contact
                 </Link>
-                <div className="pt-3 border-t flex flex-col space-y-2">
+                
+                {/* Mobile Auth Section */}
+                <div className="pt-3 border-t flex flex-col space-y-3">
                   <Button 
                     variant="ghost" 
-                    onClick={() => setShowDemoModal(true)}
-                    className="justify-start"
+                    onClick={() => {
+                      setShowDemoModal(true);
+                      setIsMenuOpen(false);
+                    }}
+                    className="justify-start w-full"
                   >
                     Watch Demo
                   </Button>
-                  <Link to="/dashboard">
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
-                      Get Started
-                    </Button>
-                  </Link>
+                  
+                  {user ? (
+                    <>
+                      <div className="px-4 py-2 text-sm text-gray-600">
+                        Signed in as {user.email}
+                      </div>
+                      <Link to="/dashboard" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="outline" className="w-full">
+                          Dashboard
+                        </Button>
+                      </Link>
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => {
+                          handleSignOut();
+                          setIsMenuOpen(false);
+                        }}
+                        className="w-full justify-start text-red-600"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/auth" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start">
+                          Sign In
+                        </Button>
+                      </Link>
+                      <Link to="/auth" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
+                          Get Started
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

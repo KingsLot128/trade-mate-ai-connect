@@ -1,1 +1,21 @@
+# supabase/config.toml
+
 project_id = "yahcbigzuknluctdoaba"
+
+[admin]
+  # leave as-is
+
+[api]
+  # leave as-is
+
+[auth]
+  enabled = true
+  # your production site where users actually land
+  site_url = "https://trade-mate-ai-connect.lovable.app"
+  # allow these domains to redirect after login
+  additional_redirect_urls = [
+    "https://trade-mate-ai-connect.lovable.app/*",
+    "https://trademateai.summitspark.net/*"
+  ]
+
+# you can leave the rest of the file untouched

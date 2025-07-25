@@ -55,6 +55,45 @@ serve(async (req) => {
         })
       })
       tokenData = await tokenResponse.json()
+    } else if (provider === 'quickbooks') {
+      const tokenResponse = await fetch('https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer', {
+        method: 'POST',
+        headers: { 
+          'Authorization': `Basic ${btoa(`${Deno.env.get('QUICKBOOKS_CLIENT_ID')}:${Deno.env.get('QUICKBOOKS_CLIENT_SECRET')}`)}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          grant_type: 'authorization_code',
+          code,
+          redirect_uri: req.headers.get('referer') || ''
+        })
+      })
+      tokenData = await tokenResponse.json()
+    } else if (provider === 'google_calendar') {
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          grant_type: 'authorization_code',
+          client_id: Deno.env.get('GOOGLE_CLIENT_ID')!,
+          client_secret: Deno.env.get('GOOGLE_CLIENT_SECRET')!,
+          redirect_uri: req.headers.get('referer') || '',
+          code
+        })
+      })
+      tokenData = await tokenResponse.json()
+    } else if (provider === 'stripe') {
+      const tokenResponse = await fetch('https://connect.stripe.com/oauth/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          grant_type: 'authorization_code',
+          client_id: Deno.env.get('STRIPE_CLIENT_ID')!,
+          client_secret: Deno.env.get('STRIPE_CLIENT_SECRET')!,
+          code
+        })
+      })
+      tokenData = await tokenResponse.json()
     }
 
     if (tokenData?.error) {

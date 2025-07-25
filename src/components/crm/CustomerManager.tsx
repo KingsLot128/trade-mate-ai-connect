@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Users, Plus, Search, Phone, Mail, MapPin } from "lucide-react";
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,6 +17,9 @@ interface Customer {
   address: string | null;
   notes: string | null;
   status: 'active' | 'inactive' | 'prospect';
+  company: string | null;
+  job_title: string | null;
+  lead_score: number | null;
   created_at: string;
 }
 
@@ -33,15 +36,16 @@ const CustomerManager = () => {
       if (!user) return;
 
       try {
+        // Fetch from crm_contacts table instead of customers
         const { data, error } = await supabase
-          .from('customers')
+          .from('crm_contacts')
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        setCustomers(data || []);
-        setFilteredCustomers(data || []);
+        setCustomers((data || []) as any); // Type assertion for compatibility
+        setFilteredCustomers((data || []) as any);
       } catch (error) {
         console.error('Error fetching customers:', error);
         toast({
@@ -63,7 +67,8 @@ const CustomerManager = () => {
         customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.phone?.includes(searchTerm) ||
         customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customer.address?.toLowerCase().includes(searchTerm.toLowerCase())
+        customer.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.company?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredCustomers(filtered);
     } else {
@@ -126,7 +131,7 @@ const CustomerManager = () => {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
         <Input
-          placeholder="Search customers by name, phone, email, or address..."
+          placeholder="Search customers by name, phone, email, or company..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10"
@@ -167,7 +172,12 @@ const CustomerManager = () => {
                   <div>
                     <CardTitle className="text-lg">{customer.name}</CardTitle>
                     <CardDescription>
-                      Customer since {new Date(customer.created_at).toLocaleDateString()}
+                      {customer.company && <span>{customer.company}</span>}
+                      {customer.company && customer.job_title && <span> • </span>}
+                      {customer.job_title && <span>{customer.job_title}</span>}
+                      {!customer.company && !customer.job_title && (
+                        <span>Customer since {new Date(customer.created_at).toLocaleDateString()}</span>
+                      )}
                     </CardDescription>
                   </div>
                   {getStatusBadge(customer.status)}
@@ -191,6 +201,12 @@ const CustomerManager = () => {
                     <div className="flex items-center space-x-2 text-sm">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
                       <span className="text-xs text-muted-foreground line-clamp-2">{customer.address}</span>
+                    </div>
+                  )}
+                  {customer.lead_score && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Lead Score:</span>
+                      <Badge variant="outline">{customer.lead_score}/100</Badge>
                     </div>
                   )}
                   {customer.notes && (

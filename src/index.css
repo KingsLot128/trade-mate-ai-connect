@@ -185,4 +185,26 @@
   .feature-card:hover {
     transform: translateY(-8px) scale(1.02);
   }
+
+  /* Scrollbar Hide Utility */
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Mobile Optimizations */
+  @media (max-width: 640px) {
+    .mobile-optimized {
+      padding: 0.5rem;
+    }
+    
+    .mobile-text-sm {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
 }
