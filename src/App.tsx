@@ -47,6 +47,7 @@ import CallsManager from "./components/calls/CallsManager";
 import ContactsManager from "./components/contacts/ContactsManager";
 import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Billing from "./pages/Billing";
 
 const queryClient = new QueryClient();
 
@@ -114,7 +115,8 @@ const App = () => {
                 <Route path="website" element={<WebsiteAnalyzer />} />
                 <Route path="profile" element={<UserProfile />} />
                 <Route path="settings" element={<Settings />} />
-                <Route path="billing" element={<div>Billing - Coming Soon</div>} />
+                <Route path="settings/billing" element={<Billing />} />
+                <Route path="billing" element={<Navigate to="/settings/billing" replace />} />
                 <Route path="admin" element={<AdminDashboard />} />
                 <Route path="admin/users" element={<div>User Management - Coming Soon</div>} />
               </Route>

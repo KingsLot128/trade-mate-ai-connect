@@ -844,6 +844,7 @@ export type Database = {
           industry_percentile: number | null
           last_login_at: string | null
           location: string | null
+          next_billing_date: string | null
           onboarding_step: string | null
           phone: string | null
           photo_url: string | null
@@ -855,6 +856,10 @@ export type Database = {
           seasonal_patterns: string | null
           service_area_radius: number | null
           setup_preference: string | null
+          stripe_customer_id: string | null
+          subscription_ends_at: string | null
+          subscription_status: string | null
+          subscription_tier: string | null
           suspended_at: string | null
           suspended_by: string | null
           suspension_reason: string | null
@@ -889,6 +894,7 @@ export type Database = {
           industry_percentile?: number | null
           last_login_at?: string | null
           location?: string | null
+          next_billing_date?: string | null
           onboarding_step?: string | null
           phone?: string | null
           photo_url?: string | null
@@ -900,6 +906,10 @@ export type Database = {
           seasonal_patterns?: string | null
           service_area_radius?: number | null
           setup_preference?: string | null
+          stripe_customer_id?: string | null
+          subscription_ends_at?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
           suspended_at?: string | null
           suspended_by?: string | null
           suspension_reason?: string | null
@@ -934,6 +944,7 @@ export type Database = {
           industry_percentile?: number | null
           last_login_at?: string | null
           location?: string | null
+          next_billing_date?: string | null
           onboarding_step?: string | null
           phone?: string | null
           photo_url?: string | null
@@ -945,6 +956,10 @@ export type Database = {
           seasonal_patterns?: string | null
           service_area_radius?: number | null
           setup_preference?: string | null
+          stripe_customer_id?: string | null
+          subscription_ends_at?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
           suspended_at?: string | null
           suspended_by?: string | null
           suspension_reason?: string | null
@@ -999,6 +1014,105 @@ export type Database = {
           scroll_depth?: number | null
           time_spent?: number | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          amount_cents: number | null
+          billing_interval: string | null
+          created_at: string
+          currency: string | null
+          email: string
+          id: string
+          next_billing_date: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_ends_at: string | null
+          subscription_starts_at: string | null
+          subscription_status: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount_cents?: number | null
+          billing_interval?: string | null
+          created_at?: string
+          currency?: string | null
+          email: string
+          id?: string
+          next_billing_date?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_ends_at?: string | null
+          subscription_starts_at?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount_cents?: number | null
+          billing_interval?: string | null
+          created_at?: string
+          currency?: string | null
+          email?: string
+          id?: string
+          next_billing_date?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_ends_at?: string | null
+          subscription_starts_at?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscription_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          is_popular: boolean | null
+          name: string
+          plan_id: string
+          price_monthly_cents: number
+          price_yearly_cents: number | null
+          stripe_monthly_price_id: string | null
+          stripe_yearly_price_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          is_popular?: boolean | null
+          name: string
+          plan_id: string
+          price_monthly_cents: number
+          price_yearly_cents?: number | null
+          stripe_monthly_price_id?: string | null
+          stripe_yearly_price_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          is_popular?: boolean | null
+          name?: string
+          plan_id?: string
+          price_monthly_cents?: number
+          price_yearly_cents?: number | null
+          stripe_monthly_price_id?: string | null
+          stripe_yearly_price_id?: string | null
         }
         Relationships: []
       }

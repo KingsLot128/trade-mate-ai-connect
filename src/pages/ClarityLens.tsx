@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { ClarityLensGate } from '@/components/subscription/FeatureGate';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -287,7 +288,8 @@ const ClarityLens = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
+    <ClarityLensGate>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
       {/* Header */}
       <div className="border-b border-blue-800/50 bg-slate-900/50 backdrop-blur-sm">
         <div className="px-6 py-4">
@@ -595,6 +597,7 @@ const ClarityLens = () => {
         </div>
       </div>
     </div>
+    </ClarityLensGate>
   );
 };
 
