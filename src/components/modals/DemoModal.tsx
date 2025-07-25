@@ -53,7 +53,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onOpenChange }) => {
         });
       }
 
-      console.log('Demo request captured:', { email, name, company, notificationEmail: 'info@summitspark.net' });
+      // Demo request captured
       setShowVideo(true);
       
       toast({

@@ -9,7 +9,7 @@ import LeadCard from './crm/LeadCard';
 import AddLeadModal from './crm/AddLeadModal';
 
 // Debug logging
-console.log('SmartCRM component loaded');
+
 
 interface Lead {
   id: string;

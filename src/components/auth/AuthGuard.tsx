@@ -34,7 +34,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
 
   // BYPASS FOR TEST USER - ALWAYS ALLOW ACCESS
   if (user?.email === 'ajose002@gmail.com') {
-    console.log('AuthGuard: Bypassing all checks for test user');
+    
     return <>{children}</>;
   }
 

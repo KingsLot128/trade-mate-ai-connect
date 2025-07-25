@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
-  console.log('Footer rendering');
+  
   
   return (
     <footer className="bg-gray-900 text-white py-16">
@@ -35,7 +35,7 @@ const Footer = () => {
                 <Link 
                   to="/dashboard" 
                   className="hover:text-white transition-colors"
-                  onClick={() => console.log('Dashboard link clicked from footer')}
+                  onClick={() => {}}
                 >
                   Dashboard
                 </Link>
@@ -43,7 +43,7 @@ const Footer = () => {
               <li>
                 <button 
                   onClick={() => {
-                    console.log('Demo button clicked from footer');
+                    {};
                     // This would trigger the demo modal
                   }}
                   className="hover:text-white transition-colors text-left"

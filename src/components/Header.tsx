@@ -27,7 +27,7 @@ const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
-  console.log('Header rendering, user:', user?.email, 'isMenuOpen:', isMenuOpen);
+  
 
   const handleSignOut = async () => {
     try {
@@ -232,7 +232,7 @@ const Header = () => {
             <button
               className="lg:hidden p-2 flex-shrink-0 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               onClick={() => {
-                console.log('Mobile menu button clicked, current state:', isMenuOpen);
+                {};
                 setIsMenuOpen(!isMenuOpen);
               }}
               aria-label="Toggle menu"
