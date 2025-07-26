@@ -30,6 +30,7 @@ import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 import Settings from "./pages/Settings";
+import RevenueRecoveryDashboard from "./components/revenue/RevenueRecoveryDashboard";
 import SmartRecommendationEngine from "./components/ai/SmartRecommendationEngine";
 import { NewUserAuthGuard } from "./components/routing/NewUserAuthGuard";
 import EnhancedQuizInterface from "./components/quiz/EnhancedQuizInterface";
@@ -94,8 +95,8 @@ const App = () => {
                 <Route path="health" element={<BusinessHealthScore />} />
                 <Route path="clarity" element={<ClarityLens />} />
                 
+                <Route path="revenue-recovery" element={<RevenueRecoveryDashboard />} />
                 <Route path="ai-recommendations" element={<SmartRecommendationEngine />} />
-                <Route path="calls" element={<CallsManager />} />
                 <Route path="contacts" element={<ContactsManager />} />
                 <Route path="deals" element={<DealsPipeline />} />
                 <Route path="tools" element={<SmartCRM />} />

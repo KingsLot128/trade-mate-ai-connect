@@ -12,7 +12,8 @@ import {
   Globe,
   CreditCard,
   Brain,
-  TrendingUp,
+  TrendingUp, 
+  DollarSign,
   Calendar,
   Users,
   Phone,
@@ -70,6 +71,7 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
     { name: 'Business Health', href: '/health', icon: TrendingUp, badge: 'NEW', badgeColor: 'bg-green-500' },
     { name: 'Clarity Lens', href: '/clarity', icon: Brain, badge: 'PRO', badgeColor: 'bg-purple-500' },
     
+    { name: 'Revenue Recovery', href: '/revenue-recovery', icon: DollarSign, badge: 'AI', badgeColor: 'bg-green-500' },
     { name: 'Smart AI', href: '/ai-recommendations', icon: Brain, badge: 'PRO', badgeColor: 'bg-purple-500' },
     { name: 'Call Log', href: '/calls', icon: Phone },
     { name: 'Contacts', href: '/contacts', icon: Users },

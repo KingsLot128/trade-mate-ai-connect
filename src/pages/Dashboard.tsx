@@ -6,7 +6,7 @@ import ProfileCompletionGuide from '@/components/profile/ProfileCompletionGuide'
 import RecommendationBootstrap from '@/components/ai/RecommendationBootstrap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Target, TrendingUp, Brain } from 'lucide-react';
+import { ArrowRight, Sparkles, Target, TrendingUp, Brain, DollarSign } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -23,6 +23,10 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => navigate('/revenue-recovery')}>
+            <DollarSign className="h-4 w-4 mr-2" />
+            Revenue Recovery
+          </Button>
           <Button variant="outline" onClick={() => navigate('/feed')}>
             <Sparkles className="h-4 w-4 mr-2" />
             View Insights

@@ -750,6 +750,53 @@ export type Database = {
         }
         Relationships: []
       }
+      follow_up_actions: {
+        Row: {
+          action_type: string
+          content: string | null
+          created_at: string | null
+          executed_at: string | null
+          id: string
+          opportunity_id: string | null
+          result: string | null
+          scheduled_for: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          action_type: string
+          content?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          id?: string
+          opportunity_id?: string | null
+          result?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          content?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          id?: string
+          opportunity_id?: string | null
+          result?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follow_up_actions_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "revenue_opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       integrations: {
         Row: {
           access_token: string | null
@@ -1016,6 +1063,71 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      revenue_opportunities: {
+        Row: {
+          ai_analysis: Json | null
+          confidence_score: number | null
+          conversion_date: string | null
+          created_at: string | null
+          customer_id: string | null
+          description: string | null
+          estimated_value: number | null
+          follow_up_date: string | null
+          id: string
+          last_contacted_at: string | null
+          opportunity_type: string
+          priority: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_analysis?: Json | null
+          confidence_score?: number | null
+          conversion_date?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          estimated_value?: number | null
+          follow_up_date?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          opportunity_type: string
+          priority?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_analysis?: Json | null
+          confidence_score?: number | null
+          conversion_date?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          estimated_value?: number | null
+          follow_up_date?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          opportunity_type?: string
+          priority?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revenue_opportunities_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscribers: {
         Row: {
