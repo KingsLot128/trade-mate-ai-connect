@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Target, TrendingUp, Zap } from 'lucide-react';
 
-const Recommendations = () => {
+const Recommendations: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
