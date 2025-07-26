@@ -123,7 +123,7 @@ const determineOptimalRoute = (state: RedirectState): string => {
 
   // Priority 4: Growth-focused users
   if (setupPreference === 'grow' && profileCompleteness >= 60) {
-    return '/recommendations'; // AI insights and recommendations
+    return '/feed'; // Multi-stream intelligence feed
   }
 
   // Priority 5: Users ready for business health monitoring

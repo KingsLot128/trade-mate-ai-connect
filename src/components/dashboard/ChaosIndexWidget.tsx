@@ -165,7 +165,7 @@ export const ChaosIndexWidget = () => {
             Use ClarityLens
           </Button>
           <Button 
-            onClick={() => navigate('/recommendations')}
+            onClick={() => navigate('/feed')}
             variant="outline"
             size="icon"
           >

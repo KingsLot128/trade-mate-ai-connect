@@ -69,7 +69,7 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
     { name: 'Intelligence Feed', href: '/feed', icon: Brain, badge: 'AI', badgeColor: 'bg-purple-500' },
     { name: 'Business Health', href: '/health', icon: TrendingUp, badge: 'NEW', badgeColor: 'bg-green-500' },
     { name: 'Clarity Lens', href: '/clarity', icon: Brain, badge: 'PRO', badgeColor: 'bg-purple-500' },
-    { name: 'Recommendations', href: '/recommendations', icon: Lightbulb },
+    
     { name: 'Smart AI', href: '/ai-recommendations', icon: Brain, badge: 'PRO', badgeColor: 'bg-purple-500' },
     { name: 'Call Log', href: '/calls', icon: Phone },
     { name: 'Contacts', href: '/contacts', icon: Users },

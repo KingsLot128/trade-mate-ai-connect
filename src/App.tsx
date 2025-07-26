@@ -28,7 +28,7 @@ import OAuthCallback from "./pages/OAuthCallback";
 import ClarityLens from "./pages/ClarityLens";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
-import Recommendations from "./pages/Recommendations";
+
 import Settings from "./pages/Settings";
 import SmartRecommendationEngine from "./components/ai/SmartRecommendationEngine";
 import { NewUserAuthGuard } from "./components/routing/NewUserAuthGuard";
@@ -93,7 +93,7 @@ const App = () => {
                 <Route path="feed" element={<MultiStreamFeed />} />
                 <Route path="health" element={<BusinessHealthScore />} />
                 <Route path="clarity" element={<ClarityLens />} />
-                <Route path="recommendations" element={<Recommendations />} />
+                
                 <Route path="ai-recommendations" element={<SmartRecommendationEngine />} />
                 <Route path="calls" element={<CallsManager />} />
                 <Route path="contacts" element={<ContactsManager />} />
@@ -116,7 +116,7 @@ const App = () => {
               <Route path="/integrations/oauth/callback" element={<OAuthCallback />} />
               
               {/* Legacy routes - redirect to new structure */}
-              <Route path="/insights" element={<Navigate to="/recommendations" replace />} />
+              <Route path="/insights" element={<Navigate to="/feed" replace />} />
               <Route path="/decisions" element={<Navigate to="/clarity" replace />} />
               <Route path="/intelligence-feed" element={<Navigate to="/feed" replace />} />
               <Route path="/business-health" element={<Navigate to="/health" replace />} />
