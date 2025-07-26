@@ -84,9 +84,9 @@ const SmartRecommendationEngine = () => {
         return;
       }
 
-      if (data && Array.isArray(data)) {
+      if (data && Array.isArray(data) && data.length > 0) {
         const formattedRecs = data.map(rec => ({
-          id: rec.id,
+          id: rec.id || 'unknown',
           title: (rec.content as any)?.title || rec.hook || 'Untitled Recommendation',
           description: (rec.content as any)?.description || rec.reasoning || 'No description available',
           priority: rec.priority_score > 80 ? 'high' as const : 
@@ -99,8 +99,10 @@ const SmartRecommendationEngine = () => {
           success_metrics: (rec.content as any)?.success_metrics || ['ROI improvement'],
           priority_score: rec.priority_score || 50,
           confidence_score: rec.confidence_score || 50
-        }));
+        })).filter(rec => rec.id !== 'unknown'); // Filter out malformed records
         setRecommendations(formattedRecs);
+      } else {
+        setRecommendations([]);
       }
     } catch (error) {
       console.error('Error loading recommendations:', error);
@@ -339,7 +341,7 @@ const SmartRecommendationEngine = () => {
             </Card>
           )}
 
-          {!loading && recommendations.length > 0 && recommendations.map((rec) => (
+          {!loading && Array.isArray(recommendations) && recommendations.length > 0 && recommendations.map((rec) => (
             <Card key={rec.id} className="hover:shadow-md transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -396,7 +398,7 @@ const SmartRecommendationEngine = () => {
                       Action Steps:
                     </h4>
                     <ul className="space-y-2">
-                      {(rec.actionable_steps || []).map((step, stepIndex) => (
+                      {Array.isArray(rec.actionable_steps) && rec.actionable_steps.map((step, stepIndex) => (
                         <li key={stepIndex} className="flex items-start text-sm">
                           <span className="flex-shrink-0 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-medium mr-3 mt-0.5">
                             {stepIndex + 1}
@@ -408,14 +410,14 @@ const SmartRecommendationEngine = () => {
                   </div>
 
                   {/* Success Metrics */}
-                  {(rec.success_metrics || []).length > 0 && (
+                  {Array.isArray(rec.success_metrics) && rec.success_metrics.length > 0 && (
                     <div>
                       <h4 className="font-medium text-sm mb-2 flex items-center">
                         <BarChart3 className="h-4 w-4 mr-2 text-blue-600" />
                         Success Metrics:
                       </h4>
                       <div className="flex flex-wrap gap-2">
-                        {(rec.success_metrics || []).map((metric, index) => (
+                        {Array.isArray(rec.success_metrics) && rec.success_metrics.map((metric, index) => (
                           <Badge key={index} variant="secondary" className="text-xs">
                             {metric}
                           </Badge>
