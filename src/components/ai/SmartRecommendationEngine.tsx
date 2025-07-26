@@ -66,44 +66,65 @@ const SmartRecommendationEngine = () => {
 
   const loadExistingRecommendations = async () => {
     try {
-      const { data } = await supabase
+      if (!user?.id) {
+        console.log('No user ID available');
+        return;
+      }
+      
+      const { data, error } = await supabase
         .from('enhanced_recommendations')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .eq('is_active', true)
         .order('priority_score', { ascending: false })
         .limit(10);
 
-      if (data) {
+      if (error) {
+        console.error('Error loading recommendations:', error);
+        return;
+      }
+
+      if (data && Array.isArray(data)) {
         const formattedRecs = data.map(rec => ({
           id: rec.id,
-          title: (rec.content as any)?.title || rec.hook,
-          description: (rec.content as any)?.description || rec.reasoning,
+          title: (rec.content as any)?.title || rec.hook || 'Untitled Recommendation',
+          description: (rec.content as any)?.description || rec.reasoning || 'No description available',
           priority: rec.priority_score > 80 ? 'high' as const : 
                    rec.priority_score > 60 ? 'medium' as const : 'low' as const,
-          category: rec.recommendation_type,
-          actionable_steps: (rec.content as any)?.actionable_steps || [],
+          category: rec.recommendation_type || 'general',
+          actionable_steps: (rec.content as any)?.actionable_steps || ['Review this recommendation'],
           potential_impact: rec.expected_impact || 'Positive business impact',
-          timeframe: (rec.content as any)?.timeframe || rec.time_to_implement,
+          timeframe: (rec.content as any)?.timeframe || rec.time_to_implement || '1-2 weeks',
           difficulty: (rec.content as any)?.difficulty || 'moderate',
-          success_metrics: (rec.content as any)?.success_metrics || [],
-          priority_score: rec.priority_score,
-          confidence_score: rec.confidence_score
+          success_metrics: (rec.content as any)?.success_metrics || ['ROI improvement'],
+          priority_score: rec.priority_score || 50,
+          confidence_score: rec.confidence_score || 50
         }));
         setRecommendations(formattedRecs);
       }
     } catch (error) {
       console.error('Error loading recommendations:', error);
+      toast.error('Failed to load recommendations');
     }
   };
 
   const loadBusinessMetrics = async () => {
     try {
-      const { data: profile } = await supabase
+      if (!user?.id) {
+        console.log('No user ID available for metrics');
+        return;
+      }
+      
+      const { data: profile, error } = await supabase
         .from('profiles')
         .select('business_health_score, chaos_score')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .single();
+
+      if (error) {
+        console.error('Error loading business metrics:', error);
+        return;
+      }
 
       if (profile) {
         setBusinessMetrics({
@@ -318,25 +339,25 @@ const SmartRecommendationEngine = () => {
             </Card>
           )}
 
-          {!loading && recommendations.map((rec) => (
+          {!loading && recommendations.length > 0 && recommendations.map((rec) => (
             <Card key={rec.id} className="hover:shadow-md transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3">
                     <div className="mt-1">
-                      {getCategoryIcon(rec.category)}
+                      {getCategoryIcon(rec.category || 'general')}
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-lg leading-tight">{rec.title}</CardTitle>
-                      <CardDescription className="mt-1">{rec.description}</CardDescription>
+                      <CardTitle className="text-lg leading-tight">{rec.title || 'Untitled'}</CardTitle>
+                      <CardDescription className="mt-1">{rec.description || 'No description'}</CardDescription>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Badge className={getPriorityColor(rec.priority)}>
-                      {rec.priority.toUpperCase()}
+                    <Badge className={getPriorityColor(rec.priority || 'low')}>
+                      {(rec.priority || 'low').toUpperCase()}
                     </Badge>
                     <Badge variant="outline" className="text-xs">
-                      {rec.category}
+                      {rec.category || 'general'}
                     </Badge>
                   </div>
                 </div>
@@ -349,21 +370,21 @@ const SmartRecommendationEngine = () => {
                       <div className="flex items-center justify-center mb-1">
                         <Clock className="h-4 w-4 mr-1" />
                       </div>
-                      <p className="text-sm font-medium">{rec.timeframe}</p>
+                      <p className="text-sm font-medium">{rec.timeframe || '1-2 weeks'}</p>
                       <p className="text-xs text-muted-foreground">Timeline</p>
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center mb-1">
-                        <Target className={`h-4 w-4 mr-1 ${getDifficultyColor(rec.difficulty)}`} />
+                        <Target className={`h-4 w-4 mr-1 ${getDifficultyColor(rec.difficulty || 'moderate')}`} />
                       </div>
-                      <p className="text-sm font-medium capitalize">{rec.difficulty}</p>
+                      <p className="text-sm font-medium capitalize">{rec.difficulty || 'moderate'}</p>
                       <p className="text-xs text-muted-foreground">Difficulty</p>
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center mb-1">
                         <TrendingUp className="h-4 w-4 mr-1 text-green-600" />
                       </div>
-                      <p className="text-sm font-medium">{rec.confidence_score}%</p>
+                      <p className="text-sm font-medium">{rec.confidence_score || 50}%</p>
                       <p className="text-xs text-muted-foreground">Confidence</p>
                     </div>
                   </div>
@@ -375,7 +396,7 @@ const SmartRecommendationEngine = () => {
                       Action Steps:
                     </h4>
                     <ul className="space-y-2">
-                      {rec.actionable_steps.map((step, stepIndex) => (
+                      {(rec.actionable_steps || []).map((step, stepIndex) => (
                         <li key={stepIndex} className="flex items-start text-sm">
                           <span className="flex-shrink-0 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-medium mr-3 mt-0.5">
                             {stepIndex + 1}
@@ -387,14 +408,14 @@ const SmartRecommendationEngine = () => {
                   </div>
 
                   {/* Success Metrics */}
-                  {rec.success_metrics.length > 0 && (
+                  {(rec.success_metrics || []).length > 0 && (
                     <div>
                       <h4 className="font-medium text-sm mb-2 flex items-center">
                         <BarChart3 className="h-4 w-4 mr-2 text-blue-600" />
                         Success Metrics:
                       </h4>
                       <div className="flex flex-wrap gap-2">
-                        {rec.success_metrics.map((metric, index) => (
+                        {(rec.success_metrics || []).map((metric, index) => (
                           <Badge key={index} variant="secondary" className="text-xs">
                             {metric}
                           </Badge>
@@ -409,7 +430,7 @@ const SmartRecommendationEngine = () => {
                       <TrendingUp className="h-4 w-4 mr-2" />
                       Expected Impact:
                     </h4>
-                    <p className="text-sm text-green-700">{rec.potential_impact}</p>
+                    <p className="text-sm text-green-700">{rec.potential_impact || 'Positive impact expected'}</p>
                   </div>
                 </div>
               </CardContent>
