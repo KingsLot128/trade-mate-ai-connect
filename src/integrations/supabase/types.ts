@@ -588,6 +588,57 @@ export type Database = {
           },
         ]
       }
+      custom_widgets: {
+        Row: {
+          created_at: string | null
+          data_source: string | null
+          height: number | null
+          id: string
+          is_active: boolean | null
+          position_x: number | null
+          position_y: number | null
+          refresh_interval: number | null
+          updated_at: string | null
+          user_id: string
+          widget_config: Json
+          widget_name: string
+          widget_type: string
+          width: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          data_source?: string | null
+          height?: number | null
+          id?: string
+          is_active?: boolean | null
+          position_x?: number | null
+          position_y?: number | null
+          refresh_interval?: number | null
+          updated_at?: string | null
+          user_id: string
+          widget_config?: Json
+          widget_name: string
+          widget_type: string
+          width?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          data_source?: string | null
+          height?: number | null
+          id?: string
+          is_active?: boolean | null
+          position_x?: number | null
+          position_y?: number | null
+          refresh_interval?: number | null
+          updated_at?: string | null
+          user_id?: string
+          widget_config?: Json
+          widget_name?: string
+          widget_type?: string
+          width?: number | null
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           best_contact_time: string | null
@@ -660,6 +711,48 @@ export type Database = {
           tags?: string[] | null
           timeline_urgency?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      dashboard_preferences: {
+        Row: {
+          active_widgets: Json | null
+          color_theme: string | null
+          created_at: string | null
+          custom_metrics: Json | null
+          dashboard_role: string | null
+          id: string
+          layout_config: Json | null
+          quick_actions: Json | null
+          updated_at: string | null
+          user_id: string
+          widget_settings: Json | null
+        }
+        Insert: {
+          active_widgets?: Json | null
+          color_theme?: string | null
+          created_at?: string | null
+          custom_metrics?: Json | null
+          dashboard_role?: string | null
+          id?: string
+          layout_config?: Json | null
+          quick_actions?: Json | null
+          updated_at?: string | null
+          user_id: string
+          widget_settings?: Json | null
+        }
+        Update: {
+          active_widgets?: Json | null
+          color_theme?: string | null
+          created_at?: string | null
+          custom_metrics?: Json | null
+          dashboard_role?: string | null
+          id?: string
+          layout_config?: Json | null
+          quick_actions?: Json | null
+          updated_at?: string | null
+          user_id?: string
+          widget_settings?: Json | null
         }
         Relationships: []
       }

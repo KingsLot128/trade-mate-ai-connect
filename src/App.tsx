@@ -32,6 +32,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import RevenueRecoveryDashboard from "./components/revenue/RevenueRecoveryDashboard";
 import SmartRecommendationEngine from "./components/ai/SmartRecommendationEngine";
+import { DashboardProvider } from "./contexts/DashboardContext";
 import { NewUserAuthGuard } from "./components/routing/NewUserAuthGuard";
 import EnhancedQuizInterface from "./components/quiz/EnhancedQuizInterface";
 import VisualIntegrationHub from "./components/integrations/VisualIntegrationHub";
@@ -55,8 +56,9 @@ const AppWithIntegration = () => {
 const App = () => {
   return (
     <BrowserRouter>
-      <AppWithIntegration />
-            <Routes>
+      <DashboardProvider>
+        <AppWithIntegration />
+        <Routes>
               {/* Public routes */}
               <Route path="/auth" element={<Auth />} />
               <Route path="/features" element={<Features />} />
@@ -126,6 +128,7 @@ const App = () => {
               {/* Catch all */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+      </DashboardProvider>
     </BrowserRouter>
   );
 };
