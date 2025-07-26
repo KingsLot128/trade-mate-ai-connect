@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import { User, AuthChangeEvent } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { completionChecker } from '@/lib/auth/CompletionChecker';
@@ -15,16 +15,20 @@ interface UserMetadata {
 
 interface AuthContextType {
   user: User | null;
+  session: any;
+  profile: any;
   loading: boolean;
   isConfigured: boolean;
   isProfileComplete: boolean;
   isNewUser: boolean;
   error: string | null;
-  signUp: (email: string, password: string, metadata?: UserMetadata) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, metadata?: UserMetadata) => Promise<{ success: boolean; error?: string; message?: string }>;
+  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   refreshProfileCompletion: () => Promise<void>;
   markOnboardingComplete: () => Promise<void>;
+  createProfile: (profileData: any) => Promise<{ success: boolean; error?: string }>;
+  updateProfile: (updates: any) => Promise<{ success: boolean; error?: string }>;
   clearError: () => void;
 }
 
@@ -40,6 +44,8 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isConfigured, setIsConfigured] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
@@ -67,21 +73,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         // Get initial session
         const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
+          await fetchProfile(session.user.id);
           await checkProfileCompletion(session.user, false);
         }
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
           console.log('🔄 Auth state change:', event, session?.user?.email);
+          setSession(session);
           setUser(session?.user ?? null);
           
           if (session?.user) {
+            await fetchProfile(session.user.id);
             // Only mark as new user during SIGNED_UP event  
-            const isSignUp = event === 'SIGNED_IN' && !isProfileComplete;
+            const isSignUp = event === 'SIGNED_UP' as AuthChangeEvent;
             await checkProfileCompletion(session.user, isSignUp);
           } else {
+            setProfile(null);
             setIsProfileComplete(false);
             setIsNewUser(false);
           }
@@ -97,6 +108,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (!error && data) {
+        setProfile(data);
+      } else if (error && error.code === 'PGRST116') {
+        // Profile doesn't exist, this is expected for new users
+        console.log('Profile not found for user:', userId);
+        setProfile(null);
+      } else {
+        console.error('Error fetching profile:', error);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
   const signUp = async (email: string, password: string, metadata?: UserMetadata) => {
     if (!isConfigured) {
       toast({
@@ -104,10 +137,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: `Registration simulated for ${email}. Full functionality available when backend is configured.`,
       });
       await new Promise(resolve => setTimeout(resolve, 1500));
-      return;
+      return { success: false, error: "Demo mode active" };
     }
 
     try {
+      setLoading(true);
       console.log('Attempting signup with:', { email, metadata });
       
       const signUpData = {
@@ -133,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           description: error.message,
           variant: "destructive",
         });
-        throw error;
+        return { success: false, error: error.message };
       }
 
       if (data.user) {
@@ -143,11 +177,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           title: "Welcome!",
           description: "Your account has been created successfully. Let's set up your profile.",
         });
+        
+        // If user is created and confirmed, try to create profile manually as fallback
+        if (data.user.email_confirmed_at) {
+          try {
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .insert({
+                user_id: data.user.id,
+                full_name: metadata?.fullName,
+                business_name: metadata?.businessName,
+                phone: metadata?.phone,
+                industry: metadata?.industry,
+                email
+              });
+            
+            if (profileError && profileError.code !== '23505') { // Ignore duplicate key error
+              console.error('Profile creation error:', profileError);
+            }
+          } catch (profileError) {
+            console.error('Profile creation error:', profileError);
+          }
+        }
+        
+        return { 
+          success: true, 
+          message: data.user?.email_confirmed_at 
+            ? 'Account created successfully!' 
+            : 'Please check your email to verify your account.'
+        };
       }
+
+      return { success: false, error: "Unknown error occurred" };
 
     } catch (error) {
       console.error('Registration process failed:', error);
-      throw error;
+      return { success: false, error: 'An unexpected error occurred' };
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -157,10 +224,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         title: "Demo Mode Active",
         description: "Login functionality requires full backend configuration.",
       });
-      return;
+      return { success: false, error: "Demo mode active" };
     }
 
     try {
+      setLoading(true);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -172,7 +240,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           description: error.message,
           variant: "destructive",
         });
-        throw error;
+        return { success: false, error: error.message };
       }
 
       // For sign-in, don't mark as new user
@@ -183,9 +251,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: "You have successfully signed in.",
       });
 
+      return { success: true };
+
     } catch (error) {
       console.error('Sign in failed:', error);
-      throw error;
+      return { success: false, error: 'An unexpected error occurred' };
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -286,12 +358,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const createProfile = async (profileData: any) => {
+    try {
+      if (!user) {
+        return { success: false, error: 'No authenticated user' };
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: user.id,
+          email: user.email,
+          ...profileData
+        })
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      setProfile(data);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'An unexpected error occurred' };
+    }
+  };
+
+  const updateProfile = async (updates: any) => {
+    try {
+      if (!user) {
+        return { success: false, error: 'No authenticated user' };
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('user_id', user.id)
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      setProfile(data);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'An unexpected error occurred' };
+    }
+  };
+
   const clearError = () => {
     setError(null);
   };
 
   const value = {
     user,
+    session,
+    profile,
     loading,
     isConfigured,
     isProfileComplete,
@@ -302,6 +427,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     refreshProfileCompletion,
     markOnboardingComplete,
+    createProfile,
+    updateProfile,
     clearError,
   };
 
