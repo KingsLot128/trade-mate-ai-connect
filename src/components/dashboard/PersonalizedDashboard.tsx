@@ -16,7 +16,7 @@ const PersonalizedDashboard = () => {
   const navigate = useNavigate();
   const { preferences, availableWidgets, loading } = useDashboard();
 
-  if (loading || !preferences) {
+  if (loading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -26,16 +26,20 @@ const PersonalizedDashboard = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
+          {[...Array(3)].map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardContent className="p-6">
-                <div className="h-32 bg-muted rounded"></div>
+                <div className="h-24 bg-muted rounded"></div>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
     );
+  }
+
+  if (!preferences) {
+    return <div>No dashboard preferences found. Please refresh the page.</div>;
   }
 
   const getRoleIcon = (role: string) => {

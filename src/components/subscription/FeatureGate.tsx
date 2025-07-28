@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Lock, Crown, Sparkles } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface FeatureGateProps {
   feature?: string;
@@ -25,9 +26,12 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
   requiredTier = "Professional"
 }) => {
   const { hasFeatureAccess, hasPremiumAccess, subscription, plans, createCheckout } = useSubscription();
+  const { user } = useAuth();
 
   // Check access based on feature or premium requirement
-  const hasAccess = feature ? hasFeatureAccess(feature) : (requiresPremium ? hasPremiumAccess() : true);
+  // Admin users (kingslotenterprises@gmail.com) get full access
+  const isAdmin = user?.email === 'kingslotenterprises@gmail.com';
+  const hasAccess = isAdmin || (feature ? hasFeatureAccess(feature) : (requiresPremium ? hasPremiumAccess() : true));
 
   if (hasAccess) {
     return <>{children}</>;
