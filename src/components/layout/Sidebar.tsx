@@ -73,7 +73,7 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
     
     { name: 'Revenue Recovery', href: '/revenue-recovery', icon: DollarSign, badge: 'AI', badgeColor: 'bg-green-500' },
     { name: 'Smart AI', href: '/ai-recommendations', icon: Brain, badge: 'PRO', badgeColor: 'bg-purple-500' },
-    { name: 'Call Log', href: '/calls', icon: Phone },
+    { name: 'AI Calls', href: '/calls', icon: Phone, badge: 'AI', badgeColor: 'bg-blue-500' },
     { name: 'Contacts', href: '/contacts', icon: Users },
     { name: 'Deals Pipeline', href: '/deals', icon: TrendingUp },
     { name: 'Smart Tools', href: '/tools', icon: Settings, badge: 'SMART', badgeColor: 'bg-blue-500' },

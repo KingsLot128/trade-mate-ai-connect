@@ -41,6 +41,7 @@ import MultiStreamFeed from "./components/enhanced-feed/MultiStreamFeed";
 import UserProfile from "./components/profile/UserProfile";
 import WebsiteAnalyzer from "./components/website/WebsiteAnalyzer";
 import CallsManager from "./components/calls/CallsManager";
+import CallSetupGuide from "./components/calls/CallSetupGuide";
 import ContactsManager from "./components/contacts/ContactsManager";
 import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -99,6 +100,8 @@ const App = () => {
                 
                 <Route path="revenue-recovery" element={<RevenueRecoveryDashboard />} />
                 <Route path="ai-recommendations" element={<SmartRecommendationEngine />} />
+                <Route path="calls" element={<CallsManager />} />
+                <Route path="calls/setup" element={<CallSetupGuide />} />
                 <Route path="contacts" element={<ContactsManager />} />
                 <Route path="deals" element={<DealsPipeline />} />
                 <Route path="tools" element={<SmartCRM />} />
