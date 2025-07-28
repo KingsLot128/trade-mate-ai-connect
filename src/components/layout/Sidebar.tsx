@@ -25,7 +25,8 @@ import {
   Menu,
   X,
   Lightbulb,
-  Building
+  Building,
+  Database
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -79,6 +80,7 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
     { name: 'Smart Tools', href: '/tools', icon: Settings, badge: 'SMART', badgeColor: 'bg-blue-500' },
     { name: 'Calendar Hub', href: '/calendar', icon: Calendar },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+    { name: 'Data Center', href: '/data-collection', icon: Database, badge: 'NEW', badgeColor: 'bg-green-500' },
     { name: 'Integrations', href: '/integrations', icon: Settings },
     { name: 'Website', href: '/website', icon: Globe }
   ];

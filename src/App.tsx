@@ -48,6 +48,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Billing from "./pages/Billing";
 import SmartCRM from "./components/builtin-tools/SmartCRM";
 import DealsPipeline from "./components/deals/DealsPipeline";
+import DataCollection from "./pages/DataCollection";
 
 const AppWithIntegration = () => {
   useIntelligenceIntegration();
@@ -111,6 +112,7 @@ const App = () => {
                 <Route path="integrations" element={<VisualIntegrationHub />} />
                 <Route path="website" element={<WebsiteAnalyzer />} />
                 <Route path="profile" element={<UserProfile />} />
+                <Route path="data-collection" element={<DataCollection />} />
                 <Route path="settings" element={<Settings />} />
                 <Route path="settings/billing" element={<Billing />} />
                 <Route path="billing" element={<Navigate to="/settings/billing" replace />} />

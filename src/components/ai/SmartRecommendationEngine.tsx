@@ -16,11 +16,13 @@ import {
   Settings,
   BarChart3,
   Users,
-  DollarSign
+  DollarSign,
+  Database
 } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import DataQualityPrompt from '@/components/insights/DataQualityPrompt';
 
 interface SmartRecommendation {
   id: string;
@@ -249,6 +251,9 @@ const SmartRecommendationEngine = () => {
           </Button>
         </div>
       </div>
+
+      {/* Data Quality Prompt */}
+      <DataQualityPrompt showInRecommendations={true} />
 
       {/* Business Health Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
