@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import ClarityMetricsGrid from '@/components/clarity/ClarityMetrics';
 import DataQualityIndicator from '@/components/clarity/DataQualityIndicator';
+import ClarityDataGuide from '@/components/clarity/ClarityDataGuide';
 import { 
   Eye, 
   Brain, 
@@ -606,6 +607,8 @@ const ClarityLens = () => {
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Data Insufficiency Guide */}
+          <ClarityDataGuide dataQuality={dataQuality} loadingTime={loadingTime} />
           {/* Data Quality Indicator */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-1">
