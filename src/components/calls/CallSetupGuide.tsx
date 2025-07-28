@@ -14,6 +14,7 @@ import {
   PhoneCall
 } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
+import VoiceCallInterface from './VoiceCallInterface';
 
 const CallSetupGuide = () => {
   const { toast } = useToast();
@@ -83,9 +84,10 @@ const CallSetupGuide = () => {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
+          <TabsTrigger value="voice">Voice AI</TabsTrigger>
           <TabsTrigger value="configuration">Configuration</TabsTrigger>
           <TabsTrigger value="testing">Testing</TabsTrigger>
         </TabsList>
@@ -367,6 +369,10 @@ const CallSetupGuide = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="voice" className="space-y-6">
+          <VoiceCallInterface />
         </TabsContent>
       </Tabs>
     </div>
