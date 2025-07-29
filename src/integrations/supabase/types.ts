@@ -849,6 +849,313 @@ export type Database = {
         }
         Relationships: []
       }
+      email_accounts: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          email_address: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          last_sync_at: string | null
+          provider: string
+          refresh_token: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          email_address: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          provider: string
+          refresh_token?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          email_address?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          provider?: string
+          refresh_token?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_automation_rules: {
+        Row: {
+          actions: Json
+          created_at: string
+          id: string
+          is_active: boolean | null
+          rule_name: string
+          trigger_conditions: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actions: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          rule_name: string
+          trigger_conditions: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actions?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          rule_name?: string
+          trigger_conditions?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_conversations: {
+        Row: {
+          clarity_score: number | null
+          contact_id: string | null
+          conversation_stage: string | null
+          created_at: string
+          deal_id: string | null
+          email_account_id: string
+          id: string
+          last_activity_at: string | null
+          participants: Json | null
+          sentiment_score: number | null
+          subject: string | null
+          thread_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          clarity_score?: number | null
+          contact_id?: string | null
+          conversation_stage?: string | null
+          created_at?: string
+          deal_id?: string | null
+          email_account_id: string
+          id?: string
+          last_activity_at?: string | null
+          participants?: Json | null
+          sentiment_score?: number | null
+          subject?: string | null
+          thread_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          clarity_score?: number | null
+          contact_id?: string | null
+          conversation_stage?: string | null
+          created_at?: string
+          deal_id?: string | null
+          email_account_id?: string
+          id?: string
+          last_activity_at?: string | null
+          participants?: Json | null
+          sentiment_score?: number | null
+          subject?: string | null
+          thread_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_conversations_account"
+            columns: ["email_account_id"]
+            isOneToOne: false
+            referencedRelation: "email_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_conversations_contact"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_conversations_deal"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_drafts: {
+        Row: {
+          ai_generated: boolean | null
+          body_html: string | null
+          body_text: string | null
+          conversation_id: string | null
+          created_at: string
+          id: string
+          is_sent: boolean | null
+          scheduled_for: string | null
+          subject: string | null
+          template_name: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_generated?: boolean | null
+          body_html?: string | null
+          body_text?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          is_sent?: boolean | null
+          scheduled_for?: string | null
+          subject?: string | null
+          template_name?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_generated?: boolean | null
+          body_html?: string | null
+          body_text?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          is_sent?: boolean | null
+          scheduled_for?: string | null
+          subject?: string | null
+          template_name?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_drafts_conversation"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "email_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_insights: {
+        Row: {
+          confidence_score: number | null
+          conversation_id: string
+          created_at: string
+          description: string
+          id: string
+          insight_type: string
+          is_dismissed: boolean | null
+          suggested_actions: Json | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          conversation_id: string
+          created_at?: string
+          description: string
+          id?: string
+          insight_type: string
+          is_dismissed?: boolean | null
+          suggested_actions?: Json | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          conversation_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          insight_type?: string
+          is_dismissed?: boolean | null
+          suggested_actions?: Json | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_insights_conversation"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "email_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_messages: {
+        Row: {
+          body_html: string | null
+          body_text: string | null
+          conversation_id: string
+          created_at: string
+          has_attachments: boolean | null
+          id: string
+          is_outbound: boolean | null
+          message_date: string
+          message_id: string
+          recipient_emails: Json | null
+          response_time_hours: number | null
+          sender_email: string
+          sentiment_score: number | null
+          subject: string | null
+          urgency_score: number | null
+        }
+        Insert: {
+          body_html?: string | null
+          body_text?: string | null
+          conversation_id: string
+          created_at?: string
+          has_attachments?: boolean | null
+          id?: string
+          is_outbound?: boolean | null
+          message_date: string
+          message_id: string
+          recipient_emails?: Json | null
+          response_time_hours?: number | null
+          sender_email: string
+          sentiment_score?: number | null
+          subject?: string | null
+          urgency_score?: number | null
+        }
+        Update: {
+          body_html?: string | null
+          body_text?: string | null
+          conversation_id?: string
+          created_at?: string
+          has_attachments?: boolean | null
+          id?: string
+          is_outbound?: boolean | null
+          message_date?: string
+          message_id?: string
+          recipient_emails?: Json | null
+          response_time_hours?: number | null
+          sender_email?: string
+          sentiment_score?: number | null
+          subject?: string | null
+          urgency_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_messages_conversation"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "email_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       enhanced_recommendations: {
         Row: {
           confidence_score: number | null

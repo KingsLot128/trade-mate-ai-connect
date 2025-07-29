@@ -4,20 +4,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import IntegrationHub from '@/components/integrations/IntegrationHub';
 import IntegrationsManager from '@/components/integrations/IntegrationsManager';
 import CRMAnalytics from '@/components/analytics/CRMAnalytics';
+import { SmartMailSync } from '@/components/email/SmartMailSync';
 
 const Integrations = () => {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Tabs defaultValue="hub" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="hub">Integration Hub</TabsTrigger>
+            <TabsTrigger value="email">SmartMail Sync</TabsTrigger>
             <TabsTrigger value="manage">Manage</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
           <TabsContent value="hub">
             <IntegrationHub />
+          </TabsContent>
+
+          <TabsContent value="email">
+            <SmartMailSync />
           </TabsContent>
 
           <TabsContent value="manage">

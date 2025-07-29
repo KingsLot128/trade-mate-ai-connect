@@ -36,6 +36,20 @@ const OAUTH_PROVIDERS: Record<string, OAuthProvider> = {
     tokenUrl: 'https://oauth2.googleapis.com/token',
     scopes: ['https://www.googleapis.com/auth/calendar.readonly']
   },
+  gmail: {
+    id: 'gmail',
+    name: 'Gmail',
+    authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+    tokenUrl: 'https://oauth2.googleapis.com/token',
+    scopes: ['https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/gmail.compose']
+  },
+  outlook: {
+    id: 'outlook',
+    name: 'Outlook',
+    authUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+    tokenUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+    scopes: ['https://graph.microsoft.com/Mail.ReadWrite', 'https://graph.microsoft.com/Mail.Send']
+  },
   salesforce: {
     id: 'salesforce',
     name: 'Salesforce',
