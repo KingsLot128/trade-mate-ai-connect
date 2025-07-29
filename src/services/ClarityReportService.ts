@@ -42,7 +42,7 @@ export class ClarityReportService {
 
     return {
       businessHealth,
-      keyMetrics,
+      keyMetrics: metrics,
       insights,
       recommendations,
       dataQuality: await this.getDataQuality(userId)
@@ -116,7 +116,9 @@ export class ClarityReportService {
     return data?.map(insight => ({
       title: insight.title,
       description: insight.description,
-      impact: insight.impact_estimation?.toLowerCase() || 'medium' as const,
+      impact: (insight.impact_estimation?.toLowerCase() === 'high' || 
+               insight.impact_estimation?.toLowerCase() === 'low' ? 
+               insight.impact_estimation.toLowerCase() : 'medium') as 'high' | 'medium' | 'low',
       actionable: true
     })) || [];
   }

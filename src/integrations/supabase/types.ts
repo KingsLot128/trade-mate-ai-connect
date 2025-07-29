@@ -200,6 +200,42 @@ export type Database = {
         }
         Relationships: []
       }
+      api_keys: {
+        Row: {
+          api_key: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          key_name: string
+          last_used_at: string | null
+          permissions: string[] | null
+          user_id: string
+        }
+        Insert: {
+          api_key: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_name: string
+          last_used_at?: string | null
+          permissions?: string[] | null
+          user_id: string
+        }
+        Update: {
+          api_key?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_name?: string
+          last_used_at?: string | null
+          permissions?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           created_at: string | null
@@ -384,6 +420,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      clarity_points: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          point_type: string
+          points: number
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          id?: string
+          point_type: string
+          points?: number
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          id?: string
+          point_type?: string
+          points?: number
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       crm_contacts: {
         Row: {
@@ -1534,6 +1600,45 @@ export type Database = {
           seo_score?: number | null
           user_id?: string
           website_url?: string
+        }
+        Relationships: []
+      }
+      white_label_configs: {
+        Row: {
+          agency_name: string
+          brand_colors: Json
+          created_at: string | null
+          custom_domain: string | null
+          features: string[] | null
+          id: string
+          is_active: boolean | null
+          logo: string | null
+          monthly_revenue: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          agency_name: string
+          brand_colors?: Json
+          created_at?: string | null
+          custom_domain?: string | null
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          logo?: string | null
+          monthly_revenue?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          agency_name?: string
+          brand_colors?: Json
+          created_at?: string | null
+          custom_domain?: string | null
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          logo?: string | null
+          monthly_revenue?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
