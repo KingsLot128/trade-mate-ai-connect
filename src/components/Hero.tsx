@@ -96,7 +96,7 @@ const Hero = () => {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="border-white/30 text-white hover:bg-white/10 hover:text-white text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4"
+                  className="border-2 border-[#3498DB] text-[#3498DB] bg-white/5 hover:bg-[#3498DB] hover:text-white text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 transition-all duration-300"
                   onClick={() => setShowDemoModal(true)}
                 >
                   <Play className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
