@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Calendar, DollarSign, Play } from "lucide-react";
+import { Phone, Calendar, DollarSign, Play, Users, Brain, Building, GraduationCap, Sparkles, Target } from "lucide-react";
 import TrialRegistrationModal from './modals/TrialRegistrationModal';
 import DemoModal from './modals/DemoModal';
 import FeatureCard from './ui/FeatureCard';
@@ -48,153 +47,243 @@ const Hero = () => {
             {/* Left Side - Content */}
             <div className="text-center lg:text-left space-y-6 sm:space-y-8 order-2 lg:order-1">
               <Badge className="inline-flex items-center gap-2 bg-[#1ABC9C]/20 text-[#1ABC9C] border-[#1ABC9C]/30 hover:bg-[#1ABC9C]/30 px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium">
-                🚀 AI-Powered Trade Management
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
+                Business Intelligence + Education Platform
               </Badge>
               
-              <div className="space-y-4 sm:space-y-6">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                  <span className="text-white">Transform Your</span>
-                  <br />
-                  <span className="text-[#1ABC9C]">Trade Business</span>
-                </h1>
-                
-                <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-lg mx-auto lg:mx-0 leading-relaxed px-4 lg:px-0">
-                  AI-powered call handling, CRM integration, and business automation for trade professionals. Never miss another opportunity.
-                </p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                The Complete Platform for 
+                <span className="bg-gradient-to-r from-[#1ABC9C] to-[#3498DB] bg-clip-text text-transparent block mt-2">
+                  Trade Professionals
+                </span>
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-slate-200 max-w-2xl leading-relaxed">
+                From AI-powered business intelligence to classroom-ready training tools – everything trade businesses and educational institutions need to grow, learn, and succeed.
+              </p>
+
+              {/* Dual Market Value Props */}
+              <div className="grid sm:grid-cols-2 gap-4 text-sm sm:text-base">
+                <div className="bg-white/10 backdrop-blur rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Building className="h-5 w-5 text-[#1ABC9C]" />
+                    <span className="font-semibold text-white">For Business Owners</span>
+                  </div>
+                  <p className="text-slate-200 text-xs sm:text-sm">
+                    Complete CRM, AI insights, revenue recovery, and email intelligence
+                  </p>
+                </div>
+                <div className="bg-white/10 backdrop-blur rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <GraduationCap className="h-5 w-5 text-[#3498DB]" />
+                    <span className="font-semibold text-white">For Education</span>
+                  </div>
+                  <p className="text-slate-200 text-xs sm:text-sm">
+                    Instructor dashboards, student management, and sandbox learning tools
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-4 lg:px-0">
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                 <Button 
                   size="lg" 
-                  className="tm-btn-primary text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 h-auto w-full sm:w-auto"
-                  onClick={() => setShowDemoModal(true)}
+                  className="bg-[#1ABC9C] hover:bg-[#16A085] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4"
+                  onClick={() => setShowTrialModal(true)}
                 >
-                  <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  Get Free Demo
+                  Start Free Business Trial
                 </Button>
                 <Button 
                   size="lg" 
-                  variant="outline" 
-                  className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 h-auto w-full sm:w-auto border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C] hover:text-white bg-transparent hover:scale-[1.03] transition-all duration-300"
-                  onClick={() => setShowTrialModal(true)}
+                  variant="outline"
+                  className="border-white/30 text-white hover:bg-white/10 hover:text-white text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4"
+                  onClick={() => setShowDemoModal(true)}
                 >
-                  Start Free Trial
+                  <Play className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                  Book School Demo
                 </Button>
               </div>
 
               {/* Trust Indicators */}
-              <div className="flex items-center justify-center lg:justify-start gap-6 sm:gap-8 pt-6 sm:pt-8 text-gray-400 px-4 lg:px-0">
-                <div className="text-center">
-                  <div className="text-xl sm:text-2xl font-bold text-[#1ABC9C]">500+</div>
-                  <div className="text-xs sm:text-sm">Trade Pros</div>
+              <div className="flex flex-wrap items-center gap-6 pt-6 text-slate-300">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-[#1ABC9C] rounded-full"></div>
+                  <span className="text-sm">Classroom Ready</span>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl sm:text-2xl font-bold text-[#1ABC9C]">99.9%</div>
-                  <div className="text-xs sm:text-sm">Uptime</div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-[#1ABC9C] rounded-full"></div>
+                  <span className="text-sm">Business Intelligence</span>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl sm:text-2xl font-bold text-[#1ABC9C]">40%</div>
-                  <div className="text-xs sm:text-sm">More Revenue</div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-[#1ABC9C] rounded-full"></div>
+                  <span className="text-sm">AI-Powered Insights</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Side - Fixed Dashboard Preview */}
-            <div className="relative order-1 lg:order-2 px-4 sm:px-6 lg:px-0">
-              {/* Device Frame - Fixed alignment */}
-              <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xl mx-auto max-w-sm sm:max-w-md lg:max-w-lg transform hover:scale-[1.02] transition-all duration-700">
-                {/* Screen */}
-                <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-inner">
-                  <div className="bg-gradient-to-br from-[#ECF0F1] to-blue-50 rounded-lg sm:rounded-xl p-4 sm:p-6">
-                    {/* Dashboard Header */}
-                    <div className="flex items-center justify-between mb-4 sm:mb-6">
-                      <h3 className="text-sm sm:text-lg font-semibold text-[#2C3E50] font-montserrat">TradeMate AI Dashboard</h3>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-[#1ABC9C] rounded-full animate-pulse"></div>
-                        <span className="text-xs text-[#2C3E50] font-medium">Live</span>
-                      </div>
+            {/* Right Side - Visual */}
+            <div className="relative order-1 lg:order-2">
+              <div className="relative bg-white rounded-2xl p-6 shadow-2xl max-w-lg mx-auto">
+                {/* Dashboard Preview */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800">Business Dashboard</h3>
+                    <Badge className="bg-green-100 text-green-800">Live</Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center p-3 bg-blue-50 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-600">$47K</div>
+                      <div className="text-xs text-gray-600">Revenue</div>
                     </div>
-                    
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
-                      <div className="bg-white rounded-md sm:rounded-lg p-2 sm:p-3 text-center shadow-sm border border-gray-100">
-                        <div className="text-sm sm:text-xl font-bold text-[#1ABC9C]">247</div>
-                        <div className="text-xs text-[#BDC3C7]">Calls Today</div>
-                      </div>
-                      <div className="bg-white rounded-md sm:rounded-lg p-2 sm:p-3 text-center shadow-sm border border-gray-100">
-                        <div className="text-sm sm:text-xl font-bold text-[#2C3E50]">89</div>
-                        <div className="text-xs text-[#BDC3C7]">Jobs Booked</div>
-                      </div>
-                      <div className="bg-white rounded-md sm:rounded-lg p-2 sm:p-3 text-center shadow-sm border border-gray-100">
-                        <div className="text-sm sm:text-xl font-bold text-green-600">$12K</div>
-                        <div className="text-xs text-[#BDC3C7]">Revenue</div>
-                      </div>
+                    <div className="text-center p-3 bg-green-50 rounded-lg">
+                      <div className="text-2xl font-bold text-green-600">89%</div>
+                      <div className="text-xs text-gray-600">Health Score</div>
                     </div>
-                    
-                    {/* Enhanced Chart Area */}
-                    <div className="bg-gradient-to-r from-[#1ABC9C] to-[#2C3E50] rounded-lg h-16 sm:h-24 flex items-center justify-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                      <span className="text-white font-medium text-sm sm:text-base relative z-10">Real-time Analytics</span>
+                    <div className="text-center p-3 bg-purple-50 rounded-lg">
+                      <div className="text-2xl font-bold text-purple-600">247</div>
+                      <div className="text-xs text-gray-600">Leads</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-sm font-medium">🎯 Follow up with hot leads</span>
+                      <Badge variant="secondary" className="text-xs">High</Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-sm font-medium">📧 Email campaign performance</span>
+                      <Badge variant="secondary" className="text-xs">Medium</Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-sm font-medium">📊 Revenue opportunity detected</span>
+                      <Badge variant="secondary" className="text-xs">$3.2K</Badge>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating Elements - Adjusted for mobile */}
-              <div className="absolute -top-3 -left-3 sm:-top-6 sm:-left-6 bg-[#1ABC9C] rounded-xl sm:rounded-2xl p-2 sm:p-3 shadow-xl animate-bounce">
-                <Phone className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+              {/* Floating cards */}
+              <div className="absolute -top-4 -right-4 bg-white rounded-lg shadow-lg p-3 animate-pulse">
+                <div className="flex items-center gap-2">
+                  <Brain className="h-4 w-4 text-blue-500" />
+                  <span className="text-xs font-medium">AI Analyzing...</span>
+                </div>
               </div>
 
-              <div className="absolute -bottom-3 -right-3 sm:-bottom-6 sm:-right-6 bg-[#2C3E50] rounded-xl sm:rounded-2xl p-2 sm:p-3 shadow-xl animate-pulse">
-                <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-              </div>
-
-              <div className="absolute top-1/2 -right-2 sm:-right-4 bg-gradient-to-r from-[#1ABC9C] to-green-500 rounded-lg sm:rounded-xl p-1 sm:p-2 shadow-lg animate-pulse">
-                <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+              <div className="absolute -bottom-4 -left-4 bg-white rounded-lg shadow-lg p-3">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-green-500" />
+                  <span className="text-xs font-medium">23 Students Active</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Enhanced Feature Showcase */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-[#ECF0F1] to-blue-50">
-        <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-[#2C3E50]">Powerful Features for Trade Professionals</h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4 sm:px-0">
-              Streamline your operations with AI-powered tools designed specifically for trades and service businesses.
+      {/* Features Preview Section */}
+      <section className="py-16 sm:py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 scroll-fade-in">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-gray-900">
+              Dual-Purpose Platform Excellence
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+              Built for the real world of trade professionals and the structured world of education
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-            <FeatureCard
-              icon={Phone}
-              title="24/7 AI Call Handling"
-              description="Never miss a call again. Our AI assistant handles inquiries professionally, books appointments, and captures leads even when you're busy on-site."
-              gradient="from-[#1ABC9C] to-teal-600"
-              delay="0s"
-            />
 
-            <FeatureCard
-              icon={Calendar}
-              title="Smart Scheduling"
-              description="Automatically coordinate appointments based on your real-time availability, job location, and customer preferences with intelligent routing."
-              gradient="from-blue-500 to-[#2C3E50]"
-              delay="0.2s"
-            />
+          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+            {/* Business Features */}
+            <div className="space-y-6">
+              <div className="text-center lg:text-left">
+                <Badge className="bg-blue-100 text-blue-800 mb-3">
+                  <Building className="h-4 w-4 mr-1" />
+                  Business Intelligence
+                </Badge>
+                <h3 className="text-2xl font-bold mb-4">For Trade Business Owners</h3>
+              </div>
+              
+              <div className="grid gap-4">
+                <FeatureCard
+                  icon={DollarSign}
+                  title="Revenue Recovery"
+                  description="AI identifies missed opportunities and automatically follows up with prospects"
+                />
+                <FeatureCard
+                  icon={Brain}
+                  title="Smart CRM"
+                  description="Intelligent customer management with AI-powered insights and recommendations"
+                />
+                <FeatureCard
+                  icon={Target}
+                  title="Email Intelligence"
+                  description="Automated email analysis, sentiment tracking, and response suggestions"
+                />
+              </div>
+            </div>
 
-            <FeatureCard
-              icon={DollarSign}
-              title="Revenue Recovery"
-              description="Convert every missed opportunity into revenue with smart follow-ups, automated quotes, and seamless CRM integration."
-              gradient="from-green-500 to-emerald-600"
-              delay="0.4s"
-            />
+            {/* Education Features */}
+            <div className="space-y-6">
+              <div className="text-center lg:text-left">
+                <Badge className="bg-green-100 text-green-800 mb-3">
+                  <GraduationCap className="h-4 w-4 mr-1" />
+                  Educational Excellence
+                </Badge>
+                <h3 className="text-2xl font-bold mb-4">For Trade Schools</h3>
+              </div>
+              
+              <div className="grid gap-4">
+                <FeatureCard
+                  icon={Users}
+                  title="Instructor Dashboard"
+                  description="Manage student accounts, track progress, and oversee classroom activities"
+                />
+                <FeatureCard
+                  icon={Play}
+                  title="Sandbox Learning"
+                  description="Students can reset data and practice with realistic scenarios"
+                />
+                <FeatureCard
+                  icon={Calendar}
+                  title="Guided Learning"
+                  description="Built-in tours and structured onboarding for educational environments"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center scroll-fade-in">
+            <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-4">Ready to Transform Your Organization?</h3>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Whether you're running a trade business or teaching the next generation, our platform adapts to your needs.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg"
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={() => setShowTrialModal(true)}
+                >
+                  Start Business Trial
+                </Button>
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  className="border-green-600 text-green-600 hover:bg-green-50"
+                  onClick={() => setShowDemoModal(true)}
+                >
+                  Request Education Demo
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Modals */}
       <TrialRegistrationModal open={showTrialModal} onOpenChange={setShowTrialModal} />
       <DemoModal open={showDemoModal} onOpenChange={setShowDemoModal} />
     </>

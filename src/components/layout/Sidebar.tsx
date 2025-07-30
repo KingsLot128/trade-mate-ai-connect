@@ -26,7 +26,8 @@ import {
   X,
   Lightbulb,
   Building,
-  Database
+  Database,
+  GraduationCap
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -39,12 +40,14 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isInstructor, setIsInstructor] = useState(false);
 
-  // Check admin role properly from database
+  // Check admin and instructor roles properly from database
   useEffect(() => {
-    const checkAdminRole = async () => {
+    const checkUserRoles = async () => {
       if (!user) {
         setIsAdmin(false);
+        setIsInstructor(false);
         return;
       }
 
@@ -52,18 +55,20 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
         const { data: roles } = await supabase
           .from('user_roles')
           .select('role')
-          .eq('user_id', user.id)
-          .eq('role', 'admin')
-          .single();
+          .eq('user_id', user.id);
         
-        setIsAdmin(!!roles);
-        console.log('🔰 Admin check for', user.email, ':', !!roles);
+        const userRoles = roles?.map(r => r.role) || [];
+        setIsAdmin(userRoles.includes('admin'));
+        setIsInstructor(userRoles.includes('instructor'));
+        
+        console.log('🔰 User roles for', user.email, ':', userRoles);
       } catch (error) {
         setIsAdmin(false);
+        setIsInstructor(false);
       }
     };
 
-    checkAdminRole();
+    checkUserRoles();
   }, [user]);
 
   const mainNavigation = [
@@ -88,6 +93,11 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
   const adminNavigation = [
     { name: 'Admin Dashboard', href: '/admin', icon: Shield },
     { name: 'User Management', href: '/admin/users', icon: UserCog }
+  ];
+
+  const instructorNavigation = [
+    { name: 'Instructor Dashboard', href: '/instructor', icon: GraduationCap, badge: 'EDU', badgeColor: 'bg-green-500' },
+    { name: 'Student Management', href: '/instructor', icon: Users },
   ];
 
   const userNavigation = [
@@ -198,8 +208,23 @@ export const Sidebar = ({ currentPath, sidebarOpen, setSidebarOpen }: SidebarPro
               </div>
             )}
 
+            {/* Instructor Section */}
+            {isInstructor && (
+              <div>
+                <div className="flex items-center px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                  <GraduationCap className="mr-2 h-3 w-3" />
+                  <span>Education</span>
+                </div>
+                <div className="space-y-1">
+                  {instructorNavigation.map((item) => (
+                    <NavItem key={item.name} item={item} isActive={currentPath === item.href} />
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* User Profile Section - Only for regular users */}
-            {!isAdmin && (
+            {!isAdmin && !isInstructor && (
               <div>
                 <div className="flex items-center px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                   <User className="mr-2 h-3 w-3" />
