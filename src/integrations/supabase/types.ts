@@ -1352,9 +1352,11 @@ export type Database = {
           daily_overwhelm_score: number | null
           email: string | null
           full_name: string | null
+          has_completed_tour: boolean | null
           id: string
           industry: string | null
           industry_percentile: number | null
+          instructor_id: string | null
           last_login_at: string | null
           location: string | null
           next_billing_date: string | null
@@ -1402,9 +1404,11 @@ export type Database = {
           daily_overwhelm_score?: number | null
           email?: string | null
           full_name?: string | null
+          has_completed_tour?: boolean | null
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          instructor_id?: string | null
           last_login_at?: string | null
           location?: string | null
           next_billing_date?: string | null
@@ -1452,9 +1456,11 @@ export type Database = {
           daily_overwhelm_score?: number | null
           email?: string | null
           full_name?: string | null
+          has_completed_tour?: boolean | null
           id?: string
           industry?: string | null
           industry_percentile?: number | null
+          instructor_id?: string | null
           last_login_at?: string | null
           location?: string | null
           next_billing_date?: string | null

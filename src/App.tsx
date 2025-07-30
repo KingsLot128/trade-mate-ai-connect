@@ -45,6 +45,7 @@ import CallSetupGuide from "./components/calls/CallSetupGuide";
 import ContactsManager from "./components/contacts/ContactsManager";
 import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import { InstructorDashboard } from "./components/admin/InstructorDashboard";
 import Billing from "./pages/Billing";
 import SmartCRM from "./components/builtin-tools/SmartCRM";
 import DealsPipeline from "./components/deals/DealsPipeline";
@@ -118,6 +119,7 @@ const App = () => {
                 <Route path="billing" element={<Navigate to="/settings/billing" replace />} />
                 <Route path="admin" element={<AdminDashboard />} />
                 <Route path="admin/users" element={<div>User Management - Coming Soon</div>} />
+                <Route path="instructor" element={<InstructorDashboard />} />
               </Route>
 
               {/* OAuth callback */}

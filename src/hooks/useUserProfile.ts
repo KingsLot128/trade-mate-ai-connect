@@ -13,6 +13,8 @@ export interface UserProfile {
   full_name: string | null;
   email: string | null;
   phone: string | null;
+  has_completed_tour: boolean | null;
+  instructor_id: string | null;
 }
 
 export const useUserProfile = () => {
@@ -41,7 +43,9 @@ export const useUserProfile = () => {
           clarity_zone,
           full_name,
           email,
-          phone
+          phone,
+          has_completed_tour,
+          instructor_id
         `)
         .eq('user_id', user.id)
         .single();

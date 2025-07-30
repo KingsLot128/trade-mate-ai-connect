@@ -20,7 +20,9 @@ import {
   Globe,
   Loader2,
   Save,
-  RefreshCw
+  RefreshCw,
+  RotateCcw,
+  Plus
 } from 'lucide-react';
 
 interface UserProfile {
@@ -269,6 +271,60 @@ const Settings: React.FC = () => {
       toast({
         title: "Error",
         description: "Failed to save AI preferences",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const resetSandboxData = async () => {
+    if (!user) return;
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.functions.invoke('reset-user-data', {
+        body: { userId: user.id }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Your sandbox data has been reset successfully! You can now start fresh."
+      });
+    } catch (error) {
+      console.error('Error resetting sandbox data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reset sandbox data",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const populateSampleData = async () => {
+    if (!user) return;
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.functions.invoke('populate-sample-data', {
+        body: { userId: user.id }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Sample data has been added to your account! Check your dashboard to see the new data."
+      });
+    } catch (error) {
+      console.error('Error populating sample data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to populate sample data",
         variant: "destructive"
       });
     } finally {
@@ -582,6 +638,65 @@ const Settings: React.FC = () => {
                 {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                 Save AI Settings
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Classroom Features */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Classroom & Learning Tools</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground mb-4">
+                Perfect for educational environments and practice scenarios.
+              </p>
+              
+              <div className="space-y-3">
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <h4 className="font-medium">Reset My Sandbox</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Clear all data and start fresh with a clean slate
+                      </p>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      onClick={resetSandboxData} 
+                      disabled={isSaving}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RotateCcw className="w-4 h-4 mr-2" />}
+                      Reset Data
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <h4 className="font-medium">Add Sample Data</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Populate your account with realistic sample data for practice
+                      </p>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      onClick={populateSampleData} 
+                      disabled={isSaving}
+                    >
+                      {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+                      Add Sample Data
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded">
+                <strong>Note:</strong> These tools are designed for educational and practice use. 
+                Reset functionality allows you to start assignments fresh, while sample data 
+                helps you explore features without manual data entry.
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

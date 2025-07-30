@@ -5,6 +5,7 @@ import { QuickMetricsGrid } from '@/components/dashboard/QuickMetricsGrid';
 import ProfileCompletionGuide from '@/components/profile/ProfileCompletionGuide';
 import RecommendationBootstrap from '@/components/ai/RecommendationBootstrap';
 import DashboardCustomizer from '@/components/dashboard/DashboardCustomizer';
+import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -108,8 +109,9 @@ const PersonalizedDashboard = () => {
 
   return (
     <div className="space-y-6">
+      <WelcomeTour />
       {/* Enhanced Header with Role Badge */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" data-tour="dashboard-overview">
         <div>
           <div className="flex items-center gap-3 mb-2">
             {getRoleIcon(preferences.dashboard_role)}
